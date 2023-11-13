@@ -1,4 +1,4 @@
-# Social Networking App - Product Specification Document
+# lethop.com App - Product Specification Document
 
 ## 1. Introduction
 
