@@ -1,4 +1,4 @@
-# lethop.com App - Product Specification Document
+# lethop App - Product Specification Document
 
 ## 1. Introduction
 
