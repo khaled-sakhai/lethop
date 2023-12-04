@@ -1,0 +1,88 @@
+package com.example.springsocial.entity.userRelated;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.example.springsocial.base.BaseEntity;
+import com.example.springsocial.enums.AuthProvider;
+import com.example.springsocial.entity.Post;
+import com.example.springsocial.security.Token.Token;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import lombok.*;
+
+@Entity
+@Table(name = "users")
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+//to fix nested recursions problem between 1-1 relationship
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class,
+  property = "id"
+)
+public class User extends BaseEntity<Long> {
+
+  private String email;
+
+  private String password;
+
+
+private String imageUrl;
+
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String providerId;
+
+    
+
+  @Column(name = "isActive", columnDefinition = "boolean default true")
+  private boolean isActive = false;
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+    name = "user_roles",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id")
+  )
+  @OrderColumn(name = "id")
+  private Set<Role> roles = new HashSet<>();
+
+  @OneToOne(cascade = CascadeType.ALL,optional = false)
+  @JoinColumn(name = "profile_id", referencedColumnName = "id")
+  private Profile userProfile;
+
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",cascade = CascadeType.MERGE)
+  private Token token;
+
+
+  @OneToMany(fetch = FetchType.LAZY)
+   @JoinTable(
+    name = "user_posts",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "post_id")
+  )
+  private List<Post> posts = new ArrayList<>();
+}
