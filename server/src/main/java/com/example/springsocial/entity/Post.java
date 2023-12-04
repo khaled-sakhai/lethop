@@ -45,7 +45,6 @@ public class Post extends BaseEntity<Long> {
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
 
-
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
     name = "post_image",
@@ -55,8 +54,6 @@ public class Post extends BaseEntity<Long> {
   private List<Image> listImages=new ArrayList<>();
 
   private boolean isActive;
-
-
    public void setTagPost(String postTag){
     if(Tag.isInEnum(postTag)){
       tag = Tag.valueOf(postTag);

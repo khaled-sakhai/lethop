@@ -42,10 +42,9 @@
 //   private GoogleCloudService googleCloudService;
 
 //     @PostMapping(path = "api/v1/post/create")
-//       @PreAuthorize("hasAuthority('ROLE_USER')")
+//     @PreAuthorize("hasAuthority('ROLE_USER')")
 //     public ResponseEntity<String> createPost(@RequestPart("post") PostDto posttDto,
-//       @RequestParam(required = false) List<MultipartFile> images,
-       
+//     @RequestParam(required = false) List<MultipartFile> images,
 //         Principal principal) throws Exception{
 //         // convert Dao to Post  
 //         Post newPost = new Post();
@@ -64,66 +63,8 @@
 //     }
 
 
-//     @PostMapping(path = "api/v1/post/update/image")
-//     @PreAuthorize("hasAuthority('ROLE_USER')")
-//     public ResponseEntity<String> createPost(
-//         @RequestParam(required = false) List<MultipartFile> images,
-//         Long postId
-//         ) throws Exception{
-//           Post post = postService.findById(postId).orElse(null);
-//           if(post!=null){
-//             post=postService.uploadImagesForNewPost(post, images);
-//             postService.updatePost(post);
-//           }
-         
-//         return ResponseEntity.ok("Images added to post");
-//     }
 
 
-//     @GetMapping(path = "api/v1/post/get/{postId}")
-//     public PostDao getPost(@PathVariable Long postId) throws IOException{
-//       Post post = postService.findById(postId).orElseThrow(null);
-//       PostDao postDao = new PostDao();
-//       postDao.setContent(post.getContent());
-//       postDao.setTitle(post.getTitle());
-//       postDao.setUserName(post.getUser().getUserProfile().getFirstName() + " " + post.getUser().getUserProfile().getLastName());
-//       postDao.setCreatedAt(post.getCreatedDate().toString());
-//       if(post.getListImages().size()>0){
-//         for(Image imgUrl:post.getListImages()){
-//          postDao.getPostListImages().add( googleCloudService.generateServingUrl(imgUrl.getUrl()));
-//         }
-//       }
-//       return postDao;
-//     }
-
-//     @GetMapping(path = "api/v1/post/get/all/{userId}")
-//     public List<PostDao> getPostsByUserId(@PathVariable Long userId){
-//       List<PostDao> posts = new ArrayList<>();
-//       for(Post post:postService.findByUserId(userId)){
-//         PostDao postDao = new PostDao();
-//         postDao.setContent(post.getContent());
-//         postDao.setCreatedAt(post.getCreatedDate().toString());
-//         postDao.setTitle(post.getTitle());
-        
-//         postDao.setUserName(post.getUser().getEmail());
-//         post.getListImages().forEach(e-> {
-//           try {
-//             postDao.getPostListImages().add(googleCloudService.generateServingUrl(e.getUrl()));
-//           } catch (IOException e1) {
-//             e1.printStackTrace();
-//           }
-//         });
-//         posts.add(postDao);
-//       }
-//       return posts;
-//     }
-
-// /*
-// user register (email + password)
-// email sent with code reg or link
-// user activated
-// user login + fill profile form
-//  */
-
+ 
 
 // }

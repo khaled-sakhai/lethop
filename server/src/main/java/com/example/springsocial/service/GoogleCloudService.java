@@ -48,11 +48,13 @@ public class GoogleCloudService {
     return list;
   }
 
+
   public  byte[] downloadFile(String imgUrl) throws IOException {
     Blob blob = storage.get(bucketName, imgUrl);
     ByteArrayResource resource = new ByteArrayResource(blob.getContent());
     return resource.getByteArray();
   }
+
 
   public  String generateServingUrl(String imgUrl) throws IOException {
     Blob blob = storage.get(bucketName, imgUrl);
@@ -66,16 +68,18 @@ public class GoogleCloudService {
   }
 
 
+  /// this method returns the link of the image being uploaded /// uploaded to my google cloud storage 
+
   public String uploadFile(MultipartFile file, boolean isProfile)
     throws Exception {
     //check if its an image or not
-
     if (!isFileAnImage(file.getOriginalFilename())) {
       throw new Exception(
         "Image type is invalid, please use:jpg, jpeg, png, gif"
       );
     }
     ///generate id for file names;
+    // if profile pic the url will be : google.../profile/xxx.jpg if post: google.../post/xxx.jpg
    String type = isProfile ? "profile" : "post";
    String fileName = generateFileName(file.getOriginalFilename(), type);
 
@@ -86,7 +90,7 @@ public class GoogleCloudService {
       .setContentType(file.getContentType())
       .build();
     Blob blob = storage.create(blobInfo, file.getBytes());
-    return blob.getName();
+    return blob.getMediaLink();
   }
 
 

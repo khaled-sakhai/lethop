@@ -38,8 +38,8 @@ public class GoogleStorageController {
   @PostMapping("post")
   public ResponseEntity<String> uploadFile(@RequestParam MultipartFile file)
     throws Exception {
-    googleCloudService.uploadFile(file, false);
-    return ResponseEntity.ok("File uploaded successfully");
+   String urlAfterUpload =  googleCloudService.uploadFile(file, false);
+    return ResponseEntity.ok("File uploaded successfully" + urlAfterUpload);
   }
 
   //Upload file
