@@ -1,4 +1,4 @@
-package com.example.springsocial.Dao;
+package com.example.springsocial.dto;
 
 import java.time.LocalDate;
 
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize
-public class ProfileDao {
+public class ProfileSuccessResponse {
     
   private Long id;
  

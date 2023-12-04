@@ -1,4 +1,4 @@
-package com.example.springsocial.Dao;
+package com.example.springsocial.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize
-public class PostDao {
+public class PostSuccessResponse {
     private String title;
     private String userName;
     private String createdAt;
