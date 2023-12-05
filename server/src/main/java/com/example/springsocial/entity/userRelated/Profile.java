@@ -5,11 +5,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.example.springsocial.base.BaseEntity;
+import com.example.springsocial.enums.Country;
+import com.example.springsocial.enums.Tag;
+import com.example.springsocial.util.ProjectUtil;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.servlet.http.Cookie;
 import javax.persistence.CascadeType;
@@ -64,9 +69,6 @@ public class Profile {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
   private LocalDate birthDate;
 
-  @Column(name = "country")
-  private String country;
-
   @Column(name = "city")
   private String city;
 
@@ -77,4 +79,20 @@ public class Profile {
   private User user;
 
   private String profilePictureRef;
+
+  @Enumerated(EnumType.STRING)
+  private Country country;
+
+
+  public void setProfileCountry(String country){
+    //if you send united states of america--- it'll become UNITED_STATES_OF_AMERICA
+    if(ProjectUtil.isInEnum(Country.class,country)){
+      this.country = Country.valueOf(country.replaceAll("\\s+", "_").toUpperCase());
+     }
+    else{
+      this.country=Country.UNITED_STATES_OF_AMERICA;
+     }
+    }
+
+
 }

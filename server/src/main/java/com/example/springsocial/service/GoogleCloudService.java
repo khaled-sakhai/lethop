@@ -47,23 +47,10 @@ public class GoogleCloudService {
     }
     return list;
   }
-
-
-  public  byte[] downloadFile(String imgUrl) throws IOException {
-    Blob blob = storage.get(bucketName, imgUrl);
-    ByteArrayResource resource = new ByteArrayResource(blob.getContent());
-    return resource.getByteArray();
-  }
-
-
-  public  String generateServingUrl(String imgUrl) throws IOException {
-    Blob blob = storage.get(bucketName, imgUrl);
-    return blob.getMediaLink();
-  }
+ 
 
   public boolean deleteFile(String fileName) {
     Blob blob = storage.get(bucketName, fileName);
-
     return blob.delete();
   }
 
@@ -110,4 +97,21 @@ public class GoogleCloudService {
   private String generateFileName(String fileName, String type) {
     return type + "/image-" + new Date().getTime() + "" + fileName;
   }
+
+
+   /// those are extra functionalities
+  
+  // public  byte[] downloadFile(String imgUrl) throws IOException {
+  //   Blob blob = storage.get(bucketName, imgUrl);
+  //   ByteArrayResource resource = new ByteArrayResource(blob.getContent());
+  //   return resource.getByteArray();
+  // }
+
+
+  // public  String generateServingUrl(String imgUrl) throws IOException {
+  //   Blob blob = storage.get(bucketName, imgUrl);
+  //   return blob.getMediaLink();
+  // }
+
+
 }

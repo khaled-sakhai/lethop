@@ -53,7 +53,9 @@ public class Post extends BaseEntity<Long> {
   )
   private List<Image> listImages=new ArrayList<>();
 
+  
   private boolean isActive;
+
    public void setTagPost(String postTag){
     if(Tag.isInEnum(postTag)){
       tag = Tag.valueOf(postTag);

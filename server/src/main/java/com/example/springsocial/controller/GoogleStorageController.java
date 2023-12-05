@@ -60,24 +60,24 @@ public class GoogleStorageController {
   }
 
   //Download file
-  @GetMapping("download/{name}")
-  public ResponseEntity<byte[]> downloadFile(@PathVariable String url) throws IOException {
-    byte[] resource = googleCloudService.downloadFile(url);
+  // @GetMapping("download/{name}")
+  // public ResponseEntity<byte[]> downloadFile(@PathVariable String url) throws IOException {
+  //   byte[] resource = googleCloudService.downloadFile(url);
 
-    HttpHeaders headers = new HttpHeaders();
+  //   HttpHeaders headers = new HttpHeaders();
 
-    headers.add(
-      HttpHeaders.CONTENT_DISPOSITION,
-      "attachment; filename=\"" + url + "\""
-    );
-    headers.add("Content-type", MediaType.IMAGE_JPEG_VALUE);
+  //   headers.add(
+  //     HttpHeaders.CONTENT_DISPOSITION,
+  //     "attachment; filename=\"" + url + "\""
+  //   );
+  //   headers.add("Content-type", MediaType.IMAGE_JPEG_VALUE);
 
-    return ResponseEntity
-      .ok()
-      .contentType(MediaType.APPLICATION_OCTET_STREAM)
-      .headers(headers)
-      .body(resource);
-  }
+  //   return ResponseEntity
+  //     .ok()
+  //     .contentType(MediaType.APPLICATION_OCTET_STREAM)
+  //     .headers(headers)
+  //     .body(resource);
+  // }
 
 @GetMapping("all")
 public List<String> load(){

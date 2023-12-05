@@ -47,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.svg",
                         "/**/*.jpg",
                         "/**/*.html",
-                        "/**/*.css",
+                        "/**/*.css","/swagger-ui/**", 
+                        "/v3/api-docs/**",
                         "/**/*.js"};
     private static final String[] ADMIN_LIST_URL = {"/api/v1/admin/**"};
     

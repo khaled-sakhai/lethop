@@ -7,12 +7,14 @@ import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.enums.AuthProvider;
+import com.example.springsocial.enums.Country;
 import com.example.springsocial.enums.Tag;
 import com.example.springsocial.repository.PostRepo;
 import com.example.springsocial.repository.ProfileRepo;
 import com.example.springsocial.repository.RoleRepo;
 import com.example.springsocial.repository.UserRepo;
 import com.example.springsocial.service.AuthService;
+import com.nimbusds.openid.connect.sdk.assurance.claims.CountryCode;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -81,20 +83,19 @@ public class StartApp implements CommandLineRunner {
     user3.setActive(true);
     user3.setRoles(allRoles);
     user3.setProvider(AuthProvider.local);
-
-
-
-
+    
 
     Profile profile1 = new Profile();
     profile1.setBirthDate(LocalDate.of(1995, 12, 21));
     profile1.setCity("annaba");
-    profile1.setCountry("algeria");
     profile1.setFirstName("khaled");
     profile1.setLastName("sakhai");
     profile1.setSummary(
       "Welcome, Hi to my profile page, hope this works one day"
     );
+
+
+   profile1.setProfileCountry("Algeria");
     profile1.setUser(user1);
     user1.setUserProfile(profile1);
     profileRepo.save(profile1);
@@ -104,7 +105,6 @@ public class StartApp implements CommandLineRunner {
     Profile profile2 = new Profile();
     profile2.setBirthDate(LocalDate.of(1995, 12, 21));
     profile2.setCity("annaba");
-    profile2.setCountry("alger");
     profile2.setFirstName("khal");
     profile2.setLastName("sak");
     profile2.setSummary(
@@ -119,7 +119,6 @@ public class StartApp implements CommandLineRunner {
 
     Profile profile3 = new Profile();
     profile3.setBirthDate(LocalDate.of(2000, 12, 21));
-    profile3.setCountry("algeria");
     profile3.setCity("annaba");
     profile3.setFirstName("ahmed");
     profile3.setLastName("meftah");

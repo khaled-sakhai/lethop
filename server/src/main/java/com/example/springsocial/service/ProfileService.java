@@ -14,6 +14,8 @@ public class ProfileService {
 
   @Autowired
   private ProfileRepo profileRepo;
+  @Autowired
+  private UserRepo userRepo;
 
 
   public Profile createNewProfile(Profile profile) {
@@ -22,8 +24,12 @@ public class ProfileService {
 
   public Optional<Profile> FindById(Long id){
    return profileRepo.findById( id);
-   
   }
 
+  // public Profile updateProfileImage(Long userId,String imageUrl){
+  //   Profile profile = profileRepo.FindProfileByUser(userId);
+  //   profile.setProfilePictureRef(imageUrl);
+  //   return profileRepo.save(profile);
+  // }
  }
 
