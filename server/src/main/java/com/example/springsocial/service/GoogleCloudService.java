@@ -43,21 +43,25 @@ public class GoogleCloudService {
     List<String> list = new ArrayList<>();
     Page<Blob> blobs = storage.list(bucketName);
     for (Blob blob : blobs.iterateAll()) {
-      list.add(blob.getName());
+      list.add("File_Name:"+blob.getName()+" , FileUrl: "+ blob.getMediaLink());
     }
     return list;
   }
  
 
+  // delete is only possible by fileName
   public boolean deleteFile(String fileName) {
     Blob blob = storage.get(bucketName, fileName);
     return blob.delete();
   }
 
 
-  /// this method returns the link of the image being uploaded /// uploaded to my google cloud storage 
+  /// this method returns the Blob of the image being uploaded /// uploaded to my google cloud storage 
+  // to access content: 
+  //  blob.getName() --- returns the name of the file ie: image2.jpg
+  //  blob.getMediaLink() returns the full url (serving url) ie: google.com/asdasd/545/image2.jpg
 
-  public String uploadFile(MultipartFile file, boolean isProfile)
+  public Blob uploadFile(MultipartFile file, boolean isProfile)
     throws Exception {
     //check if its an image or not
     if (!isFileAnImage(file.getOriginalFilename())) {
@@ -77,7 +81,7 @@ public class GoogleCloudService {
       .setContentType(file.getContentType())
       .build();
     Blob blob = storage.create(blobInfo, file.getBytes());
-    return blob.getMediaLink();
+    return blob;
   }
 
 

@@ -32,17 +32,17 @@ public class OpenAPIConfig {
         prodServer.setDescription("Server URL in Production environment");
 
         Contact contact = new Contact();
-        contact.setEmail("bezkoder@gmail.com");
-        contact.setName("BezKoder");
-        contact.setUrl("https://www.bezkoder.com");
+        contact.setEmail("lethop@gmail.com");
+        contact.setName("LetHop");
+        contact.setUrl("https://www.lethop.com");
 
-        License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
+        License mitLicense = new License().name("MIT License").url("https://lethop.com/licenses/mit/");
 
         Info info = new Info()
-                .title("Tutorial Management API")
+                .title("lethop Management API")
                 .version("1.0")
                 .contact(contact)
-                .description("This API exposes endpoints to manage tutorials.").termsOfService("https://www.bezkoder.com/terms")
+                .description("This API documentation.").termsOfService("https://www.lethop.com")
                 .license(mitLicense);
 
         return new OpenAPI().info(info).servers(List.of(devServer, prodServer));

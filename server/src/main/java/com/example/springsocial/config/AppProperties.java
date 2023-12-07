@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+//Oauth 2 related config
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
     private final OAuth2 oauth2 = new OAuth2();

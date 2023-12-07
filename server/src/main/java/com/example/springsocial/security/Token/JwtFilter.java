@@ -44,7 +44,6 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
     try {
         String jwt = getJwtFromRequest(request);
         if (jwt==null) {
-            System.out.println("xxxxxx");
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,7 +51,7 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
         String email = jwtService.extractUsername(jwt);
         Optional<Token> tokenFromDB = tokenService.findByToken(jwt);
 
-        if (StringUtils.hasText(jwt) && jwtService.isTokenValid(jwt,email) && tokenFromDB.get().getAccessToken().equals(jwt)) {
+        if (jwt!=null && jwtService.isTokenValid(jwt,email) && tokenFromDB.get().getAccessToken().equals(jwt)) {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

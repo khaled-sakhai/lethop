@@ -59,7 +59,7 @@ public class ProfileController {
     public ResponseEntity<String> udateProfilePic(@RequestParam MultipartFile file,Principal principal) throws Exception{
      
     Profile profile = getProfileFromPrincipal(principal);
-    String url =  googleCloudService.uploadFile(file, true);
+    String url =  googleCloudService.uploadFile(file, true).getMediaLink();
     profile.setProfilePictureRef(url);
     profileService.createNewProfile(profile);
     return ResponseEntity.ok().body("photo uploaded successefully, Url: "+ url);

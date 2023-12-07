@@ -17,17 +17,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.springsocial.entity.Image;
+import com.example.springsocial.repository.ImageRepo;
 import com.example.springsocial.service.GoogleCloudService;
+import com.google.cloud.storage.Blob;
 
-
+//This class is just for testing google storage --- 
 @RestController
 public class GoogleStorageController {
     
   @Autowired
   private GoogleCloudService googleCloudService;
 
-  //List all file name
-  @GetMapping
+  @Autowired
+  private ImageRepo imageRepo;
+
+  //List all file name + fileUrl --- this can be customized in the googleCloudService class
+  @GetMapping("/allfiles")
   public ResponseEntity<List<String>> listOfFiles() {
     List<String> files = googleCloudService.listOfFiles();
 
@@ -38,19 +44,16 @@ public class GoogleStorageController {
   @PostMapping("post")
   public ResponseEntity<String> uploadFile(@RequestParam MultipartFile file)
     throws Exception {
-   String urlAfterUpload =  googleCloudService.uploadFile(file, false);
-    return ResponseEntity.ok("File uploaded successfully" + urlAfterUpload);
+   Blob blob =  googleCloudService.uploadFile(file, false);
+   String imageUrl = blob.getMediaLink();
+   String imageFileName = blob.getName();
+   Image image = new Image(imageUrl,imageFileName);
+   imageRepo.save(image);
+
+    return ResponseEntity.ok("File uploaded successfully" +"name: "+imageFileName +"url:" + imageUrl);
   }
 
-  //Upload file
-  @PostMapping("profile")
-  public ResponseEntity<String> uploadImage(@RequestParam MultipartFile file)
-    throws Exception {
-    googleCloudService.uploadFile(file, true);
-
-    return ResponseEntity.ok("File uploaded successfully");
-  }
-
+ 
   //Delete file
   @DeleteMapping("delete")
   public ResponseEntity<String> deleteFile(@RequestParam String fileName) {

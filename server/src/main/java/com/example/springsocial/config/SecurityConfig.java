@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/login/**",
                         "/checkemail",
                         "/as/**",
+                        "/xx/**",
                         "/auth/**",
                         "/oauth2/**",
                         "/error",
@@ -136,8 +137,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(WHITE_LIST_URL)
                         .permitAll()
                     .antMatchers(ADMIN_LIST_URL).hasAnyRole("ADMIN","MODERATOR")
-                    .antMatchers("/xx/**")
-                        .permitAll()
                     .anyRequest()
                         .authenticated();
                 
@@ -161,12 +160,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout().addLogoutHandler(logoutHandler).logoutUrl("/logout")
                      .logoutSuccessHandler((request, response, authentication) ->
                                                  SecurityContextHolder.clearContext());
-        // Add our custom Token based authentication filter
+        // Add our custom Token-based authentication filter
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        ///add filter for login only
-        // JWTAuthenticationFilter customFilter = new JWTAuthenticationFilter(authenticationManager());
-        // customFilter.setFilterProcessesUrl("/api/login");
+    
     }
 
 

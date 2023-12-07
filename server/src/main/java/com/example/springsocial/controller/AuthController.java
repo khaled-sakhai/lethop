@@ -125,7 +125,7 @@ public class AuthController {
   ) throws IOException {
     String userAgent = request.getHeader("User-Agent");
     return authService.refreshToken(
-      //now this only requires refresh token in the header, access token not required
+      //his method only requires refresh token in the header, access token not required
       request.getHeader(HttpHeaders.AUTHORIZATION),userAgent
     );
   }
