@@ -37,6 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] WHITE_LIST_URL = {
                         "/api/v1/public/**",
+                        "/confirm-account/**",
+                        "/signup/**",
+                        "/login/**",
+                        "/checkemail",
                         "/as/**",
                         "/auth/**",
                         "/oauth2/**",

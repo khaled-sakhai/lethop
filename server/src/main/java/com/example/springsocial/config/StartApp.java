@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +46,8 @@ public class StartApp implements CommandLineRunner {
 
   @Autowired
   private AuthService authService;
+
+
 
   @Override
   public void run(String... args) throws Exception {
@@ -139,18 +143,6 @@ public class StartApp implements CommandLineRunner {
 
 
     Image img = new Image();
-    
-
-
-
-
-
-
-
-    authService.authenticateAndGetToken("as", "as","test pc");
-
-
-
     
   }
 }

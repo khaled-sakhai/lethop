@@ -6,16 +6,20 @@ import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.exception.BadRequestException;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
+import com.example.springsocial.entity.userRelated.UserVerificationCode;
 import com.example.springsocial.security.Token.TokenResponse;
 import com.example.springsocial.service.AuthService;
 import com.example.springsocial.service.ProfileService;
 import com.example.springsocial.service.UserService;
+import com.example.springsocial.service.UserVerificationCodeService;
+import com.example.springsocial.service.emailService.EmailSenderService;
 import com.example.springsocial.util.ProjectUtil;
 import org.springframework.http.HttpHeaders;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -40,6 +43,12 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private UserVerificationCodeService userVerificationCodeService;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
 
 
@@ -66,17 +75,17 @@ public class AuthController {
         user.setPassword(registerDto.getPassword());
         user.setProvider(AuthProvider.local);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        //new profile to user
         Profile profile = new Profile();
         profile.setUser(user);
-        profileService.createNewProfile(profile);
         user.setUserProfile(profile);
+        profileService.createNewProfile(profile);
         userService.updateUser(user);
-
+       // set confirmation code
+        confirmationCodeSend(user);
         return ResponseEntity.ok()
-        .body( "User registered successfully@ please login using the login information");
+        .body( "User registered successfully@ please login using the login information , pleaase verify your email, an email was send to: "+ user.getEmail());
     }
-
-
 
     @PostMapping("/checkemail")
     public ResponseEntity<?> isEmailTaken(@RequestBody RegisterDto registerDto){
@@ -87,6 +96,24 @@ public class AuthController {
         }
         return ResponseEntity.badRequest()
         .body( "You can't use this email, it's already registred for another user");
+    }
+
+
+
+
+    @GetMapping(path = "/confirm-account")
+    public ResponseEntity<String> userEmailVerification(@RequestParam("verify") String verificationCode){
+      UserVerificationCode userVerificationCode = userVerificationCodeService.findByConfirmationCode(verificationCode);
+      if (userVerificationCode !=null) {
+        User user = userService.findByEmail(userVerificationCode.getUser().getEmail()).get();
+        user.setActive(true);
+        userService.updateUser(user);
+
+        //we remove the verification code once the user used it,just to clear space
+        userVerificationCodeService.removeAfterVerify(userVerificationCode);
+        return ResponseEntity.ok().body("Congratulations! your account is fully activated");
+      }
+      return ResponseEntity.badRequest().body("verification code is not valid");
     }
 
 
@@ -103,4 +130,19 @@ public class AuthController {
     );
   }
 
+  //helper
+  private void confirmationCodeSend(User user){
+     UserVerificationCode userVerificationCode = new UserVerificationCode(user);
+     userVerificationCodeService.save(userVerificationCode);
+
+     SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Complete Registration!");
+        mailMessage.setFrom("mohdz2024@hotmail.com");
+        mailMessage.setText("To confirm your account, please click here : "
+            +"http://localhost:8080/confirm-account?verify="+userVerificationCode.getConfirmationCode());
+
+
+        emailSenderService.sendEmail(mailMessage);
+  }
 }
