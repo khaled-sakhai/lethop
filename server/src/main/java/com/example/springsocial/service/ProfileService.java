@@ -26,6 +26,10 @@ public class ProfileService {
    return profileRepo.findById( id);
   }
 
+  public void deleteProfile(Profile profile) {
+    profileRepo.delete(profile);
+  }
+
   // public Profile updateProfileImage(Long userId,String imageUrl){
   //   Profile profile = profileRepo.FindProfileByUser(userId);
   //   profile.setProfilePictureRef(imageUrl);

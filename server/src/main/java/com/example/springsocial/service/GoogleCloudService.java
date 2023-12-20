@@ -1,29 +1,17 @@
 package com.example.springsocial.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import com.google.api.gax.paging.Page;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
-import com.example.springsocial.repository.ImageRepo;
 
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
@@ -35,8 +23,7 @@ public class GoogleCloudService {
     @Autowired
     private Storage storage;
 
-  @Autowired
-  private ImageRepo imageRepo;
+  
 
 
   public List<String> listOfFiles() {
@@ -99,6 +86,7 @@ public class GoogleCloudService {
   }
 
   private String generateFileName(String fileName, String type) {
+    // returns ==> directory : post or profile / currentdate + fileName --- this ensures all files are unique
     return type + "/image-" + new Date().getTime() + "" + fileName;
   }
 

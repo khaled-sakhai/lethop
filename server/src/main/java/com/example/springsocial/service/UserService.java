@@ -3,11 +3,17 @@ package com.example.springsocial.service;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
+import com.example.springsocial.enums.APPRole;
 import com.example.springsocial.repository.RoleRepo;
 import com.example.springsocial.repository.UserRepo;
 import com.example.springsocial.util.ProjectUtil;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,38 +40,20 @@ public class UserService {
     return userRepo.existsByEmail(email);
   }
 
-  public User addUser(User user) throws Exception {
-    if (isEmailTaken(user.getEmail())) {
-      throw new Exception("This email is already been used");
-    }
+  public User addUser(User user)  {
 
-    User newUser = new User();
-    // create Profile
-    Profile profile = new Profile();
-    profile.setFirstName("New");
-    profile.setLastName("User");
-    profile.setUser(newUser);    
-    newUser.setUserProfile(profile);
-    /////
-    /// will implement send regId TO EMAIL to activate user
-
-    // we set it to true for now
-    newUser.setActive(true);
-    newUser.setEmail(user.getEmail());
-    newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-    Role roleUser = roleRepo.findByName("ROLE_USER");
-    roleRepo.save(roleUser);
-    newUser.getRoles().add(roleUser);
-    newUser.setLastModifiedBy(user.getEmail());
-
-    profileService.createNewProfile(profile);
-
-    return userRepo.save(newUser);
+    return userRepo.save(user);
   }
 
   public User updateUser(User user) {
     return userRepo.save(user);
   }
+
+  public void deleteUser(User user){
+    userRepo.delete(user);
+  }
+
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.example.springsocial.entity.userRelated;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.example.springsocial.base.BaseEntity;
 import com.example.springsocial.enums.AuthProvider;
@@ -43,11 +44,9 @@ import lombok.*;
 public class User extends BaseEntity<Long> {
 
   private String email;
-
+  @JsonIgnore
   private String password;
 
-
-private String imageUrl;
 
 
     @NotNull
@@ -61,28 +60,40 @@ private String imageUrl;
   @Column(name = "isActive", columnDefinition = "boolean default true")
   private boolean isActive = false;
 
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL )
   @JoinTable(
     name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id")
   )
-  @OrderColumn(name = "id")
   private Set<Role> roles = new HashSet<>();
 
-  @OneToOne(cascade = CascadeType.ALL,optional = false)
+  @OneToOne(cascade = CascadeType.ALL) //optional = false)
   @JoinColumn(name = "profile_id", referencedColumnName = "id")
   private Profile userProfile;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",cascade = CascadeType.MERGE)
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",cascade = CascadeType.ALL)
   private Token token;
 
 
-  @OneToMany(fetch = FetchType.LAZY)
+  @OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
    @JoinTable(
     name = "user_posts",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "post_id")
   )
   private List<Post> posts = new ArrayList<>();
+
+/////helpers
+
+public void addRoles(Role ...role) {
+  for(Role myRole:role){
+    this.roles.add(myRole);
+  }
+  }
+
+  public void removeAllRoles(){
+    this.roles=new HashSet<>();
+  }
+  
 }

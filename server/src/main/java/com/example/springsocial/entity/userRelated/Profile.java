@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.example.springsocial.base.BaseEntity;
+import com.example.springsocial.entity.Image;
 import com.example.springsocial.enums.Country;
 import com.example.springsocial.enums.Tag;
 import com.example.springsocial.util.ProjectUtil;
@@ -77,7 +78,9 @@ public class Profile {
   @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL )
   private User user;
 
-  private String profilePictureRef;
+  @OneToOne(cascade=CascadeType.ALL)
+  @JoinColumn(name = "profile_image_id", referencedColumnName = "id")
+  private Image profilePicture;
 
   @Enumerated(EnumType.STRING)
   private Country country;

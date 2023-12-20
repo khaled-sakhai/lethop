@@ -1,6 +1,7 @@
 package com.example.springsocial.security.oauth2;
 
 import com.example.springsocial.exception.OAuth2AuthenticationProcessingException;
+import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.enums.AuthProvider;
@@ -11,6 +12,7 @@ import com.example.springsocial.security.Token.Token;
 import com.example.springsocial.security.Token.TokenService;
 import com.example.springsocial.security.oauth2.user.OAuth2UserInfo;
 import com.example.springsocial.security.oauth2.user.OAuth2UserInfoFactory;
+import com.example.springsocial.service.ImageService;
 import com.example.springsocial.service.ProfileService;
 import com.example.springsocial.service.UserService;
 
@@ -41,6 +43,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private ImageService imageService;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
@@ -68,6 +73,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if(userOptional.isPresent()) {
             user = userOptional.get();
             if(!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
+               
                 throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
                         user.getProvider() + " account. Please use your " + user.getProvider() +
                         " account to login.");
@@ -85,23 +91,24 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
         user.setEmail(oAuth2UserInfo.getEmail());
-        user.setImageUrl(oAuth2UserInfo.getImageUrl());
+       // user.setImageUrl(oAuth2UserInfo.getImageUrl());
         /// since the user signed up with a social media -- no need for extra email verification
         user.setActive(true);
 
         Profile profile = new Profile();
-        profile.setProfilePictureRef(oAuth2UserInfo.getImageUrl());
+        Image image = new Image();
+        image.setUrl(oAuth2UserInfo.getImageUrl());
+        image.setFileName("oauth2-image");
+        profile.setProfilePicture(image);
         profile.setFirstName(oAuth2UserInfo.getName());
         profile.setUser(user);
         user.setUserProfile(profile);
         profileService.createNewProfile(profile);
-
-
         return userService.updateUser(user);
     }
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        existingUser.getUserProfile().setProfilePictureRef(oAuth2UserInfo.getImageUrl());
+        /// update existed user--- nothing to update for now
         return userService.updateUser(existingUser);
     }
 

@@ -1,24 +1,17 @@
 package com.example.springsocial.controller;
 
 
-import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.springsocial.entity.Image;
-import com.example.springsocial.repository.ImageRepo;
 import com.example.springsocial.service.GoogleCloudService;
 import com.google.cloud.storage.Blob;
 
@@ -29,8 +22,7 @@ public class GoogleStorageController {
   @Autowired
   private GoogleCloudService googleCloudService;
 
-  @Autowired
-  private ImageRepo imageRepo;
+ 
 
   //List all file name + fileUrl --- this can be customized in the googleCloudService class
   @GetMapping("/allfiles")
@@ -47,8 +39,8 @@ public class GoogleStorageController {
    Blob blob =  googleCloudService.uploadFile(file, false);
    String imageUrl = blob.getMediaLink();
    String imageFileName = blob.getName();
-   Image image = new Image(imageUrl,imageFileName);
-   imageRepo.save(image);
+  //  Image image = new Image(imageUrl,imageFileName);
+  //  imageRepo.save(image);
 
     return ResponseEntity.ok("File uploaded successfully" +"name: "+imageFileName +"url:" + imageUrl);
   }

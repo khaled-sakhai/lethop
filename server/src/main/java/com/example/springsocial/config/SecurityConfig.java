@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css","/swagger-ui/**", 
                         "/v3/api-docs/**",
                         "/**/*.js"};
-    private static final String[] ADMIN_LIST_URL = {"/api/v1/admin/**"};
+    private static final String[] ADMIN_LIST_URL = {"/api/admin/**"};
     
 
     @Autowired
@@ -136,7 +136,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers(WHITE_LIST_URL)
                         .permitAll()
-                    .antMatchers(ADMIN_LIST_URL).hasAnyRole("ADMIN","MODERATOR")
+                    .antMatchers(ADMIN_LIST_URL).hasAnyRole("ADMIN","USER")
                     .anyRequest()
                         .authenticated();
                 
