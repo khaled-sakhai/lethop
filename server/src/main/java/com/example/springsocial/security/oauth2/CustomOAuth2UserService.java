@@ -99,8 +99,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Image image = new Image();
         image.setUrl(oAuth2UserInfo.getImageUrl());
         image.setFileName("oauth2-image");
+      
         profile.setProfilePicture(image);
         profile.setFirstName(oAuth2UserInfo.getName());
+
+        String fullNameString = oAuth2UserInfo.getName();
+        String[] fullName = fullNameString.split("\\s+");
+        if(!fullNameString.isEmpty() && fullName.length>=0){
+            profile.setFirstName(fullName[0]);
+            if (fullName.length==2) {
+                profile.setLastName(fullName[1]);
+            }
+        }
+
         profile.setUser(user);
         user.setUserProfile(profile);
         profileService.createNewProfile(profile);

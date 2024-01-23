@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.example.springsocial.base.BaseEntity;
 import com.example.springsocial.entity.Image;
 import com.example.springsocial.enums.Country;
-import com.example.springsocial.enums.Tag;
 import com.example.springsocial.util.ProjectUtil;
 
 import java.time.LocalDate;

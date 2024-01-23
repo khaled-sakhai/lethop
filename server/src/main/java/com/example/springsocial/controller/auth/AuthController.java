@@ -1,4 +1,4 @@
-package com.example.springsocial.controller;
+package com.example.springsocial.controller.auth;
 
 import com.example.springsocial.dto.LoginDto;
 import com.example.springsocial.dto.RegisterDto;
@@ -71,7 +71,8 @@ public class AuthController {
         }
         // Creating user's account
         User user = new User();
-        user.setEmail(registerDto.getEmail());
+        
+        user.setEmail(registerDto.getEmail().toLowerCase());
         user.setPassword(registerDto.getPassword());
         user.setProvider(AuthProvider.local);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -80,8 +81,8 @@ public class AuthController {
         profile.setUser(user);
         user.setUserProfile(profile);
         profileService.createNewProfile(profile);
-        userService.updateUser(user);
-       // set confirmation code
+        userService.addUser(user);
+        // set confirmation code
         confirmationCodeSend(user);
         return ResponseEntity.ok()
         .body( "User registered successfully@ please login using the login information , pleaase verify your email, an email was send to: "+ user.getEmail());

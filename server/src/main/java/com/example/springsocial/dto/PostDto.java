@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
+import org.springframework.web.multipart.MultipartFile;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,5 +17,6 @@ import lombok.Setter;
 public class PostDto {
     private String title;
     private String content;
-    private String tag;
+    private String tags;
+    private String Category;
 }

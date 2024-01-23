@@ -1,7 +1,7 @@
 package com.example.springsocial.repository;
 
 import com.example.springsocial.base.BaseRepository;
-import com.example.springsocial.entity.Post;
+import com.example.springsocial.entity.postRelated.Post;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.springsocial.controller;
+package com.example.springsocial.controller.user;
 
 import com.example.springsocial.exception.ResourceNotFoundException;
 import com.example.springsocial.repository.RoleRepo;
@@ -14,11 +14,14 @@ import com.example.springsocial.service.UserService;
 import java.security.Principal;
 import java.util.Optional;
 
+import org.springdoc.core.GenericResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,13 +46,10 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
     }
 
-
     @DeleteMapping("/user/")
     public ResponseEntity<String> removeUser(Principal principal){
         Optional<User> user = userService.findByEmail(principal.getName());
         if (user.isPresent()) {
-            System.out.println(principal.getName() + " --- id -- "+principal.getName());
-            
             user.get().removeAllRoles();   
             userService.deleteUser(user.get());
 
@@ -57,6 +57,42 @@ public class UserController {
         }
 
         return ResponseEntity.badRequest().body("user removing failed");
+    }
+
+
+
+    public ResponseEntity<String> updatePassword(Principal principal,
+                                                  @RequestParam("password") String newPassword, 
+                                                  @RequestParam("oldpassword") String oldPassword){
+
+      Optional<User> user = userService.findByEmail(principal.getName());
+
+           if (user.isPresent()) {
+            if(!user.get().getProvider().toString().equalsIgnoreCase("local")){
+                throw new IllegalArgumentException("not a local user");
+            }
+             if(userService.checkIfValidOldPassword(oldPassword, user.get())){
+                throw new IllegalArgumentException("password doesnt match the original one");
+            }
+
+            userService.changePassword(newPassword, user.get());
+            return ResponseEntity.ok().body("change password!");
+           }
+            return ResponseEntity.badRequest().body("password change has failed!");
+    }
+
+
+    @PostMapping("/user/email/update")
+    public ResponseEntity<String> updateUserEmail(Principal principal,String email){
+        Optional<User> user = userService.findByEmail(principal.getName());
+        if (user.isPresent()) {
+           if(userService.updateEmail(user.get(), email)){
+                return ResponseEntity.ok().body("email has been updated");
+           }
+
+        }
+
+        return ResponseEntity.badRequest().body("user email update failed");
     }
 
     

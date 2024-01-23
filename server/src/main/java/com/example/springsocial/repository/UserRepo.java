@@ -4,6 +4,7 @@ import com.example.springsocial.base.BaseRepository;
 import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.enums.APPRole;
+import com.example.springsocial.enums.AuthProvider;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,5 +20,10 @@ public interface UserRepo extends BaseRepository<User, Long> {
   Optional<User> findByEmail(String email);
 
   boolean existsByEmail(String email);
+
+  List<User> findByIsActiveTrueAndProvider(AuthProvider provider);
+
+  List<User> findByIsActiveFalseAndProvider(AuthProvider provider);
+  
 
 }

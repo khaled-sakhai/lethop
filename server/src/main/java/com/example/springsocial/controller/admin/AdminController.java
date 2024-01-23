@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.enums.APPRole;
+import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.service.UserService;
 import java.util.Arrays;
 
@@ -25,8 +26,20 @@ public class AdminController {
     private UserService userService;
 
 
-@GetMapping(value = "/api/admin/usersByRole/")    
-public List<User> getAllUsers(Principal principal){
-        return null;
+   @GetMapping(value = "/api/admin/users")    
+   public List<User> getAllUsers(Principal principal){
+        return userService.findAll();
+   }
+
+    @GetMapping(value = "/api/admin/users/active/{provider}")    
+    public List<User> getActiveByProvider(@PathVariable AuthProvider provider){
+        return userService.findAllActiveUsers(provider);
     }
+
+    @GetMapping(value = "/api/admin/users/unactive/{provider}")    
+    public List<User> getNonActiveByProvider(@PathVariable AuthProvider provider){
+        return userService.findAllNonActiveUsers(provider);
+    }
+    
 }
+
