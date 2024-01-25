@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -63,6 +64,7 @@ public class PostController {
         newPost.setTitle(posttDto.getTitle());
         newPost.setContent(posttDto.getContent());
         //tag
+
         String [] items = posttDto.getTags().split("\\s*,\\s*");
         Set<Tag> tags = new HashSet<>();
         for(String tag: items){
@@ -70,11 +72,15 @@ public class PostController {
             tags.add(tagDb);
         }
         newPost.setListTags(tags);
+        /// post settings
+        newPost.setPublic(posttDto.isPublic());
+        newPost.setAnonymous(posttDto.isAnonymous());
         ///category
         Category categoryObj = new Category(posttDto.getCategory());
         Category category = categoryService.saveCategory(categoryObj);
         category.getPosts().add(newPost);
         newPost.setCategory(category);
+        
 
         ///images
         if(postImage!=null){
@@ -83,18 +89,63 @@ public class PostController {
         imageRepo.save(image);
         newPost.setPostImage(image);
         }
-     
         /// set user for the post
         User user= userService.findByEmail(principal.getName()).get();
         newPost.setUser(user);
+        user.getPosts().add(newPost);
+        userService.updateUser(user);
         //save post
        postService.createNewPost(newPost);
        return ResponseEntity.ok("Post added succesfully");
     }
 
+    @PostMapping(path = "api/v1/post/edit/{postid}")
+    public ResponseEntity<String> editPost(@PathVariable(required = true) Long postid,@RequestPart("post") PostDto posttDto, 
+                                           @RequestParam(required = false) MultipartFile postImage,
+                                           Principal principal){
+        Optional<Post> postObj = postService.findById(postid);
+        if(postObj.isPresent()){
+            Post post = postObj.get();
+            User user= userService.findByEmail(principal.getName()).get();
+            if(postService.isPostUserMatch(user, post)){
+                   ///post settings
+                   post.setPublic(posttDto.isPublic());
+                   post.setAnonymous(posttDto.isAnonymous());
+                   //title
+                   post.setTitle(posttDto.getTitle());
+                   //// content
+                   post.setContent(posttDto.getContent());
+                   //tags
+                   if(posttDto.isTagModifies()){
+                     Set<Tag> oldTags= post.getListTags();
+                     String [] itemsTags = posttDto.getTags().split("\\s*,\\s*");
+                     Set<Tag> tags = new HashSet<>();
+                     for(String tag: itemsTags){
+                        Tag tagDb = tagService.saveTag(new Tag(tag));
+                        tags.add(tagDb);
+                      }
 
+                    post.setListTags(tags);
+                   }
+                   // update category
+                   if(posttDto.isCategoryModifies() &&
+                   !posttDto.getCategory().toLowerCase().equalsIgnoreCase(post.getCategory().getCategory())){
 
+                    post.getCategory().removePostFromCategoryById(postid);
 
- 
+                    Category categoryObj = new Category(posttDto.getCategory());
+                    Category category = categoryService.saveCategory(categoryObj);
+                    category.getPosts().add(post);
+                    post.setCategory(category);
+                   }
+                   ///update post
+                   postService.updatePost(post);
+                   return ResponseEntity.ok("Post updated succesfully");
+            }
+        }
+
+        
+         return ResponseEntity.badRequest().body("Post was not updated succesfully");     
+    }
 
 }

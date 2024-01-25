@@ -3,6 +3,12 @@ package com.example.springsocial.entity.postRelated;
 import com.example.springsocial.base.BaseEntity;
 import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.userRelated.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.CascadeType;
 
@@ -32,6 +38,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class Post extends BaseEntity<Long> {
   private String content;
 
@@ -44,26 +52,29 @@ public class Post extends BaseEntity<Long> {
     joinColumns = @JoinColumn(name = "post_id"),
     inverseJoinColumns = @JoinColumn(name = "tag_id")
   )
-    private Set<Tag> listTags;
 
+    private Set<Tag> listTags;
 
   @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, 
                        CascadeType.DETACH,  CascadeType.REFRESH})
   @JoinColumn(name="category_id", referencedColumnName = "id")
+   @JsonIgnore
   private Category category;
 
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
+  @JsonIgnore
   private User user;
 
   @OneToOne(cascade=CascadeType.ALL)
-  @JoinColumn(name = "profile_image_id", referencedColumnName = "id")
+  @JoinColumn(name = "post_image_id", referencedColumnName = "id")
+  @JsonIgnore
   private Image postImage;
 
   
-  private boolean isActive;
-
+  private boolean isPublic=true;
+  private boolean isAnonymous= false;
 
   @ManyToMany(mappedBy = "savedPosts")
   private Set<User> savedByUsers;

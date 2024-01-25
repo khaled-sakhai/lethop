@@ -9,6 +9,8 @@ import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,4 +21,10 @@ public class PostDto {
     private String content;
     private String tags;
     private String Category;
+    private boolean isPublic=true;
+    private boolean isAnonymous=false;
+    @JsonProperty("is_tag_modified")
+    private boolean isTagModifies=false;
+    @JsonProperty("is_category_modified")
+    private boolean isCategoryModifies=false;
 }

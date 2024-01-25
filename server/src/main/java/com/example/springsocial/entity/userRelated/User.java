@@ -87,6 +87,7 @@ public class User extends BaseEntity<Long> {
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "post_id")
   )
+
   private List<Post> posts = new ArrayList<>();
 
   @Column(name = "isSavedPostPrivate", columnDefinition = "boolean default true")

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.postRelated.Post;
+import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.ImageRepo;
 import com.example.springsocial.repository.PostRepo;
 
@@ -41,4 +42,13 @@ public class PostService {
         return postRepo.findPostsByUserId(userId);
     }
 
+    public boolean isPostUserMatch(User user,Post post){
+
+        if(post.getUser()==user && user.getPosts().contains(post)){
+            return true;
+        }
+        return false;
+    }
+
+    
 }
