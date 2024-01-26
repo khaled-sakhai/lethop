@@ -76,9 +76,19 @@ public class Post extends BaseEntity<Long> {
   private boolean isPublic=true;
   private boolean isAnonymous= false;
 
-  @ManyToMany(mappedBy = "savedPosts")
+  @ManyToMany(mappedBy = "savedPosts",fetch = FetchType.LAZY , cascade = CascadeType.ALL)
   private Set<User> savedByUsers;
 
+  public void removePostFromSavedLists(Post post) throws Exception{
+    for(User user:this.savedByUsers){
+      user.unsavePost(post);
+    }
+    this.savedByUsers.clear();
+  }
+
+  public void removePostfromUserSavedList(Post post,User user){
+    this.savedByUsers.remove(user);
+  }
   // ... getters and setters
 
   public int getSavedCount() {

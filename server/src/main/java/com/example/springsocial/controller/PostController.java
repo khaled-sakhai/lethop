@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,9 +80,7 @@ public class PostController {
         Category categoryObj = new Category(posttDto.getCategory());
         Category category = categoryService.saveCategory(categoryObj);
         category.getPosts().add(newPost);
-        newPost.setCategory(category);
-        
-
+        newPost.setCategory(category);    
         ///images
         if(postImage!=null){
         Blob imgBlob=googleCloudService.uploadFile(postImage, false);
@@ -93,7 +92,6 @@ public class PostController {
         User user= userService.findByEmail(principal.getName()).get();
         newPost.setUser(user);
         user.getPosts().add(newPost);
-        userService.updateUser(user);
         //save post
        postService.createNewPost(newPost);
        return ResponseEntity.ok("Post added succesfully");
@@ -147,5 +145,49 @@ public class PostController {
         
          return ResponseEntity.badRequest().body("Post was not updated succesfully");     
     }
+
+
+    @DeleteMapping(path = "api/v1/post/{postid}/delete")
+    public ResponseEntity<String> removePost(@PathVariable Long postid,Principal principal) throws Exception{
+      User user= userService.findByEmail(principal.getName()).get();
+      Optional<Post> post = postService.findById(postid);
+      if(post.isPresent() && post.get().getUser()==user){
+        Post postObj = post.get();
+        postObj.getCategory().removePostFromCategoryById(postObj.getId());
+        postService.removePost(postObj, user);
+        return ResponseEntity.ok("Post removed succesfully");
+      }
+    
+      return ResponseEntity.badRequest().body("Post was not removed succesfully");     
+    }
+
+
+    @PostMapping(path = "api/v1/post/{postid}/save")
+    public ResponseEntity<String> savePost(@PathVariable Long postid,Principal principal) throws Exception{
+      User user= userService.findByEmail(principal.getName()).get();
+      Optional<Post> post = postService.findById(postid);
+      if(post.isPresent()){
+
+        postService.savePost(post.get(), user);
+
+      return ResponseEntity.ok("Post saved succesfully");
+      }
+      return ResponseEntity.badRequest().body("Post was not saved succesfully");     
+    }
+
+    @PostMapping(path = "api/v1/post/{postid}/unsave")
+    public ResponseEntity<String> unSavePost(@PathVariable Long postid,Principal principal) throws Exception{
+      User user= userService.findByEmail(principal.getName()).get();
+      Optional<Post> post = postService.findById(postid);
+      if(post.isPresent()){
+
+        postService.removePostFromUserSavedList(user, post.get());
+
+      return ResponseEntity.ok("Post unsaved succesfully");
+      }
+      return ResponseEntity.badRequest().body("Post was not unsaved succesfully");     
+    }
+
+
 
 }

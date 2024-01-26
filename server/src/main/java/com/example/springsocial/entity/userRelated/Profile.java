@@ -50,11 +50,7 @@ import org.springframework.format.annotation.DateTimeFormat;
   generator = ObjectIdGenerators.PropertyGenerator.class,
   property = "id"
 )
-public class Profile {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+public class Profile extends BaseEntity<Long>{
 
 
   @Column(name = "first_name")

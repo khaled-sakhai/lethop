@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.springsocial.entity.Image;
@@ -14,6 +15,7 @@ import com.example.springsocial.repository.ImageRepo;
 import com.example.springsocial.repository.PostRepo;
 
 @Service
+@Transactional
 public class PostService {
 
     @Autowired
@@ -24,6 +26,9 @@ public class PostService {
 
     @Autowired
     private ImageRepo imageRepo;
+
+    @Autowired
+    private UserService userService;
     
     public Post createNewPost(Post post){
         
@@ -50,5 +55,26 @@ public class PostService {
         return false;
     }
 
+    public void removePostById(Long id){
+         postRepo.deleteById(id);
+    }
+
+    public void removePost(Post post,User user) throws Exception{
+        user.removePostFromPostsList(post);
+        post.removePostFromSavedLists(post);
+        postRepo.delete(post);
+    }
+
+    public void savePost(Post post,User user) throws Exception{
+        user.savePost(post);
+        userService.updateUser(user);
+    }
+
+    public void removePostFromUserSavedList(User user,Post post) throws Exception{
+        user.unsavePost(post);
+        post.removePostfromUserSavedList(post, user);
+        userService.updateUser(user);
+        postRepo.save(post);
+    }
     
 }

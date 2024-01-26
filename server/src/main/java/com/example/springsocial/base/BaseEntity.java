@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.SequenceGenerator;
 
 import lombok.Builder;
 import lombok.Data;
@@ -26,9 +27,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners({ AuditingEntityListener.class })
 public abstract class BaseEntity<ID> {
 
+  // @Id
+  // @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entity_sequence")
+  @SequenceGenerator(name = "entity_sequence", sequenceName = "entity_sequence", initialValue = 1000, allocationSize = 20)
+
   private Long id;
 
   @CreatedBy

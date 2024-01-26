@@ -81,7 +81,7 @@ public class User extends BaseEntity<Long> {
 
 
   //posts and saved posts
-  @OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL,orphanRemoval = true)
    @JoinTable(
     name = "user_posts",
     joinColumns = @JoinColumn(name = "user_id"),
@@ -93,7 +93,7 @@ public class User extends BaseEntity<Long> {
   @Column(name = "isSavedPostPrivate", columnDefinition = "boolean default true")
   private boolean isSavedPostPrivate=true;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
   @JoinTable(name = "saved_posts",
              joinColumns = @JoinColumn(name = "user_id"),
              inverseJoinColumns = @JoinColumn(name = "post_id"))
@@ -101,6 +101,7 @@ public class User extends BaseEntity<Long> {
 
   @Column(name = "saved_posts_count")
   private int savedPostsCount;
+
 
 /////helpers
 public void addRoles(Role ...role) {
@@ -111,6 +112,34 @@ public void addRoles(Role ...role) {
 
   public void removeAllRoles(){
     this.roles=new HashSet<>();
+  }
+
+  public void savePost(Post post) throws Exception{
+    if(this.savedPostsCount<10){
+     this.getSavedPosts().add(post);
+     this.savedPostsCount++;
+    }
+    else{
+      throw new Exception("You can't save more than 10 posts, remove posts from your list to be able to save this post");
+    }
+  }
+
+  public void unsavePost(Post post) throws Exception{
+    if(this.getSavedPosts().contains(post)){
+      this.getSavedPosts().remove(post);
+      this.savedPostsCount--;
+    }
+    else{
+      throw new Exception("This post is not on your saved posts list, you can't unsave what's not saved");
+    }
+  }
+
+  public void removePostFromPostsList(Post post) throws Exception{
+    if(post.getUser()==this){
+      this.getPosts().remove(post);
+    }else{
+      throw new Exception("Not published by you! you can't remove a post that's not yours!");
+    }
   }
   
 }
