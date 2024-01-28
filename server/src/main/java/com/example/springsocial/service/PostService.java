@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.postRelated.Post;
+import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.ImageRepo;
 import com.example.springsocial.repository.PostRepo;
@@ -29,9 +30,9 @@ public class PostService {
 
     @Autowired
     private UserService userService;
+
     
-    public Post createNewPost(Post post){
-        
+    public Post createNewPost(Post post){  
         return postRepo.save(post);
     }
 
@@ -39,12 +40,17 @@ public class PostService {
         return postRepo.save(post);
     }
 
+
     public Optional<Post> findById(Long id){
         return postRepo.findById(id);
     }
 
     public List<Post> findByUserId(Long userId){
         return postRepo.findPostsByUserId(userId);
+    }
+
+    public List<Post> findByTag(String tag){
+        return postRepo.findByListTagsTagName(tag);
     }
 
     public boolean isPostUserMatch(User user,Post post){
@@ -67,7 +73,9 @@ public class PostService {
 
     public void savePost(Post post,User user) throws Exception{
         user.savePost(post);
+        post.getSavedByUsers().add(user);
         userService.updateUser(user);
+        postRepo.save(post);
     }
 
     public void removePostFromUserSavedList(User user,Post post) throws Exception{
@@ -76,5 +84,7 @@ public class PostService {
         userService.updateUser(user);
         postRepo.save(post);
     }
+
+
     
 }

@@ -38,11 +38,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
 public class Post extends BaseEntity<Long> {
-  private String content;
 
+  private String content;
   private String title;
 
 
@@ -72,10 +71,12 @@ public class Post extends BaseEntity<Long> {
   @JsonIgnore
   private Image postImage;
 
-  
+  @JsonIgnore
   private boolean isPublic=true;
+  @JsonIgnore
   private boolean isAnonymous= false;
 
+  @JsonIgnore
   @ManyToMany(mappedBy = "savedPosts",fetch = FetchType.LAZY , cascade = CascadeType.ALL)
   private Set<User> savedByUsers;
 
@@ -91,8 +92,12 @@ public class Post extends BaseEntity<Long> {
   }
   // ... getters and setters
 
+
   public int getSavedCount() {
-      return savedByUsers.size();
+    if(savedByUsers!=null){
+       return savedByUsers.size();
+    }
+     return 0;
   }
 
 

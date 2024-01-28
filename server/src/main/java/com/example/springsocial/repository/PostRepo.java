@@ -14,4 +14,5 @@ public interface PostRepo extends BaseRepository<Post, Long> {
 
    // @Query("SELECT * FROM posts p WHERE p.user_id=:userId")    
     List<Post> findPostsByUserId(@Param("userId") Long userId);
+    List<Post> findByListTagsTagName(String tagName);
 }

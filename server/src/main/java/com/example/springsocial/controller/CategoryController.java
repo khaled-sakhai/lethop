@@ -18,11 +18,11 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("api/v1/public/posts/{category}")
+    @GetMapping("api/v1/public/posts/category/{category}")
     public ResponseEntity<List<Post>> findPostsByCategory(@PathVariable String category){
         // we can also do posts.findbyCategory(Category category)
         List<Post> posts = categoryService.findPostsByCategory(category);
-        
+
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 }

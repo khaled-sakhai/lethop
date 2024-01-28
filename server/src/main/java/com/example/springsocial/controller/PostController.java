@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -188,6 +189,10 @@ public class PostController {
       return ResponseEntity.badRequest().body("Post was not unsaved succesfully");     
     }
 
-
+    @GetMapping("api/v1/public/posts/tag/{tag}")
+    public ResponseEntity<List<Post>> getPostsByTag(@PathVariable String tag){
+      List<Post> posts= postService.findByTag(tag);
+      return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
 
 }
