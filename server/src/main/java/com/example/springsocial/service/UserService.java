@@ -38,6 +38,10 @@ public class UserService {
     return userRepo.findByEmail(email);
   }
 
+  public Optional<User> findById(Long id){
+    return userRepo.findById(id);
+  }
+
   public boolean isEmailTaken(String email){
     return userRepo.existsByEmail(email);
   }
@@ -74,6 +78,7 @@ public class UserService {
   }
 
   public void changePassword(String newPassword,User user){
+    System.out.println("new password: "+ newPassword);
     user.setPassword(passwordEncoder.encode(newPassword));
     userRepo.save(user);
   }

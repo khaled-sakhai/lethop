@@ -25,4 +25,8 @@ public class TagService {
         }
     }
 
+    public Optional<Tag> findByTag(String tag){
+        return tagRepo.findByTagName(tag);
+    }
+
 }

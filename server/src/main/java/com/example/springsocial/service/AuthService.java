@@ -5,7 +5,11 @@ import com.example.springsocial.security.Token.JwtService;
 import com.example.springsocial.security.Token.Token;
 import com.example.springsocial.security.Token.TokenResponse;
 import com.example.springsocial.security.Token.TokenService;
+import com.google.cloud.storage.Option;
+
 import java.io.IOException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +33,9 @@ public class AuthService {
   @Autowired
   private UserService userService;
 
+
   public TokenResponse authenticateAndGetToken(String email, String password,String userAgent) {
+    
     Authentication authentication = authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(email, password)
     );
@@ -43,6 +49,9 @@ public class AuthService {
       throw new UsernameNotFoundException("invalid user request !");
     }
   }
+
+
+
 
   public TokenResponse refreshToken(String authHeader,String userAgent) throws IOException {
     String refreshToken;
@@ -83,4 +92,8 @@ public class AuthService {
     tokenService.addToken(token,userAgent);
     return token;
   }
+
+
 }
+
+

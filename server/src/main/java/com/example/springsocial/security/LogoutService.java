@@ -1,5 +1,7 @@
 package com.example.springsocial.security;
 
+import com.example.springsocial.entity.userRelated.User;
+import com.example.springsocial.repository.UserRepo;
 import com.example.springsocial.security.Token.Token;
 import com.example.springsocial.security.Token.TokenRepo;
 import java.util.Optional;
@@ -19,6 +21,8 @@ public class LogoutService implements LogoutHandler {
   @Autowired
   private TokenRepo tokenRepo;
 
+  @Autowired
+  private UserRepo userRepo;
   @Override
   public void logout(
     HttpServletRequest request,
@@ -31,10 +35,13 @@ public class LogoutService implements LogoutHandler {
       return;
     }
     jwt = authHeader.substring(7);
-
+System.out.println("logout");
+System.out.println(jwt);
     Optional<Token> token = tokenRepo.findByAccessToken(jwt);
     if (token.isPresent()) {
-      tokenRepo.delete(token.get());
+      User user = token.get().getUser();
+      user.setToken(null);
+      userRepo.save(user);
       SecurityContextHolder.clearContext();
     }
   }

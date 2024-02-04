@@ -76,7 +76,8 @@ public class User extends BaseEntity<Long> {
   @JoinColumn(name = "profile_id", referencedColumnName = "id")
   private Profile userProfile;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",cascade = CascadeType.ALL)
+  @JsonIgnore
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval=true)
   private Token token;
 
 

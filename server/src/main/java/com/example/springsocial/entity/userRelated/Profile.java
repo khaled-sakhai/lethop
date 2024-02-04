@@ -3,6 +3,7 @@ package com.example.springsocial.entity.userRelated;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.example.springsocial.base.BaseEntity;
 import com.example.springsocial.entity.Image;
@@ -70,6 +71,7 @@ public class Profile extends BaseEntity<Long>{
   @Column(name = "summary")
   private String summary;
 
+  @JsonIgnore
   @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL )
   private User user;
 
@@ -89,6 +91,10 @@ public class Profile extends BaseEntity<Long>{
     else{
       this.country=Country.UNITED_STATES_OF_AMERICA;
      }
+    }
+
+    public String getFullName(){
+      return this.getFirstName() + " " + this.getLastName();
     }
 
 

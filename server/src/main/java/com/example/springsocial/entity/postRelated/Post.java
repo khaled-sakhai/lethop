@@ -15,6 +15,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.FetchType;
 
 import javax.persistence.JoinColumn;
@@ -23,8 +27,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -43,19 +46,17 @@ public class Post extends BaseEntity<Long> {
 
   private String content;
   private String title;
-
-
-  @ManyToMany(fetch = FetchType.EAGER)
+  
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
     name = "post_tag",
     joinColumns = @JoinColumn(name = "post_id"),
     inverseJoinColumns = @JoinColumn(name = "tag_id")
   )
-
     private Set<Tag> listTags;
 
   @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, 
-                       CascadeType.DETACH,  CascadeType.REFRESH})
+                       CascadeType.DETACH,  CascadeType.REFRESH},fetch = FetchType.LAZY)
   @JoinColumn(name="category_id", referencedColumnName = "id")
    @JsonIgnore
   private Category category;
@@ -78,7 +79,7 @@ public class Post extends BaseEntity<Long> {
 
   @JsonIgnore
   @ManyToMany(mappedBy = "savedPosts",fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-  private Set<User> savedByUsers;
+  private Set<User> savedByUsers = new HashSet<>();
 
   public void removePostFromSavedLists(Post post) throws Exception{
     for(User user:this.savedByUsers){
@@ -94,10 +95,7 @@ public class Post extends BaseEntity<Long> {
 
 
   public int getSavedCount() {
-    if(savedByUsers!=null){
-       return savedByUsers.size();
-    }
-     return 0;
+     return savedByUsers.size();
   }
 
 

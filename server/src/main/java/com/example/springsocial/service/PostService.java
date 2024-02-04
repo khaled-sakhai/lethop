@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import com.example.springsocial.dto.post.PostDto;
 import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.postRelated.Tag;
+import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.ImageRepo;
 import com.example.springsocial.repository.PostRepo;
@@ -40,19 +44,27 @@ public class PostService {
         return postRepo.save(post);
     }
 
-
     public Optional<Post> findById(Long id){
         return postRepo.findById(id);
     }
 
-    public List<Post> findByUserId(Long userId){
-        return postRepo.findPostsByUserId(userId);
+    public Page<Post> findByUserId(Long userId,Pageable pageable){
+        return postRepo.findPostsByUserId(userId,pageable);
     }
 
-    public List<Post> findByTag(String tag){
-        return postRepo.findByListTagsTagName(tag);
+    public Page<Post> findByTag(String tag,Pageable pageable){
+        return postRepo.findByListTagsTagName(tag,pageable);
     }
 
+    public Page<Post> findByCategory(String category,Pageable pageable){
+        return postRepo.findByCategoryCategory(category,pageable);
+    }
+
+    public Page<Post> findPostsByTagOrCategory(String tag,String category,Pageable pageable){
+        return postRepo.findByListTagsTagNameOrCategoryCategory(tag,category,pageable);
+    }
+
+    
     public boolean isPostUserMatch(User user,Post post){
 
         if(post.getUser()==user && user.getPosts().contains(post)){
@@ -86,5 +98,4 @@ public class PostService {
     }
 
 
-    
 }

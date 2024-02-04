@@ -4,9 +4,12 @@ import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.springsocial.dto.ProfileDto;
+import com.example.springsocial.dto.profile.ProfileDto;
+import com.example.springsocial.dto.profile.ProfileResponse;
 import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
@@ -110,6 +114,15 @@ public class ProfileController {
     }
     }
 
+    @GetMapping("api/v1/public/user/{userid}")
+    public ResponseEntity<ProfileResponse> getUserProfile(@PathVariable Long userid){
+      Optional<User> user = userService.findById(userid);
+      if(user.isPresent()){
+        return ResponseEntity.status(HttpStatus.OK).body(new ProfileResponse(user.get()));
+      }
+      else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+
 
     //helper
     private User getUserFromPrincipal(Principal principal){
@@ -120,6 +133,7 @@ public class ProfileController {
         }
         return user.get();
     }
+
 
 
 
