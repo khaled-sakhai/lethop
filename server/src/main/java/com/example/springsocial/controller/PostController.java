@@ -79,9 +79,6 @@ public class PostController {
 
     // Optional<Tag> tagDb = tagService.findByTag(tag);
 
-
-   
-
          // Define the sorting direction and property
           Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), "lastModifiedDate");
 
@@ -201,20 +198,16 @@ public class PostController {
         // Retrieve paginated and sorted posts
         Page<Post> postsPage = postService.findByUserId(userid, pageable);
 
-
         // Get the content (posts) from the Page object
         List<PostDto> postDtos = postsPage.getContent().stream()
         .map(PostDto::new)
         .collect(Collectors.toList());
-
-
 
         return new ResponseEntity<>(postDtos, HttpStatus.OK);
       }
       
       return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
-
 
     @GetMapping("api/v1/public/post/saved/{postid}")
     public Set<User> getPostSavedBy(@PathVariable Long postid){
@@ -245,7 +238,6 @@ public class PostController {
         newPost.setTitle(postRequest.getTitle());
         newPost.setContent(postRequest.getContent());
         //tag
-
         String [] items = postRequest.getTags().split("\\s*,\\s*");
         Set<Tag> tags = new HashSet<>();
         for(String tag: items){
@@ -285,7 +277,7 @@ public class PostController {
         if(postObj.isPresent()){
             Post post = postObj.get();
             User user= userService.findByEmail(principal.getName()).get();
-            if(postService.isPostUserMatch(user, post)){
+            if(postService.isPostedByUser(user, post)){
                    ///post settings
                    post.setPublic(postRequest.isPublic());
                    post.setAnonymous(postRequest.isAnonymous());
@@ -331,14 +323,12 @@ public class PostController {
     public ResponseEntity<String> removePost(@PathVariable Long postid,Principal principal) throws Exception{
       User user= userService.findByEmail(principal.getName()).get();
       Optional<Post> post = postService.findById(postid);
-      if(post.isPresent() && post.get().getUser()==user){
-        Post postObj = post.get();
-        postObj.getCategory().removePostFromCategoryById(postObj.getId());
-        postService.removePost(postObj, user);
+      if(post.isPresent()){
+        postService.archivePost(post.get(),user);
         return ResponseEntity.ok("Post removed succesfully");
       }
     
-      return ResponseEntity.badRequest().body("Post was not removed succesfully");     
+      return ResponseEntity.badRequest().body("Post was not removed succesfully, please try again");     
     }
 
 
@@ -361,7 +351,7 @@ public class PostController {
       Optional<Post> post = postService.findById(postid);
       if(post.isPresent()){
 
-        postService.removePostFromUserSavedList(user, post.get());
+        postService.unsavePost(user, post.get());
 
       return ResponseEntity.ok("Post unsaved succesfully");
       }
@@ -369,10 +359,56 @@ public class PostController {
     }
 
   
+    @PostMapping(path = "api/v1/post/{postid}/like")
+    public ResponseEntity<String> likePost(@PathVariable Long postid,Principal principal) throws Exception{
+      User user= userService.findByEmail(principal.getName()).get();
+      Optional<Post> post = postService.findById(postid);
+      if(post.isPresent()){
+
+        postService.likePost( user,post.get());
+
+      return ResponseEntity.ok("Post liked succesfully");
+      }
+      return ResponseEntity.badRequest().body("Post was not liked succesfully");     
+    }
+
+    @PostMapping(path = "api/v1/post/{postid}/unlike")
+    public ResponseEntity<String> unlikePost(@PathVariable Long postid,Principal principal) throws Exception{
+      User user= userService.findByEmail(principal.getName()).get();
+      Optional<Post> post = postService.findById(postid);
+      if(post.isPresent()){
+
+        postService.unlikePost(user, post.get());
+
+      return ResponseEntity.ok("Post unliked succesfully");
+      }
+      return ResponseEntity.badRequest().body("Post was not unliked succesfully");     
+    }
 
 
+    @PostMapping(path = "api/v1/post/{postid}/public")
+    public ResponseEntity<String> makePostPublic(@PathVariable Long postid,Principal principal) throws Exception{
+      User user= userService.findByEmail(principal.getName()).get();
+      Optional<Post> post = postService.findById(postid);
+      if(post.isPresent()){
+        postService.makePostPublic(post.get(), user);
+        return ResponseEntity.ok().body("you've made this post public");
+      }  
+        return ResponseEntity.badRequest().body("Error, please try again!");
+    }
+
+
+    @PostMapping(path = "api/v1/post/{postid}/nonpublic")
+    public ResponseEntity<String> makePostNotPublic(@PathVariable Long postid,Principal principal) throws Exception{
+      User user= userService.findByEmail(principal.getName()).get();
+      Optional<Post> post = postService.findById(postid);
+      if(post.isPresent()){
+        postService.makePostNonPublic(post.get(), user);
+        return ResponseEntity.ok().body("you've made this post not public");
+      }  
+        return ResponseEntity.badRequest().body("Error, please try again!");
+    }
     
-
 
 
 

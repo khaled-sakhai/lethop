@@ -67,7 +67,6 @@ public class UserController {
                                                   @RequestParam("oldpassword") String oldPassword){
 
       Optional<User> user = userService.findByEmail(principal.getName());
-
            if (user.isPresent()) {
             if(!user.get().getProvider().toString().equalsIgnoreCase("local")){
                 throw new IllegalArgumentException("not a local user");

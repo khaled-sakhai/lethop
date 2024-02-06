@@ -100,9 +100,19 @@ public class User extends BaseEntity<Long> {
              inverseJoinColumns = @JoinColumn(name = "post_id"))
   private List<Post> savedPosts=new ArrayList<>();
 
-  @Column(name = "saved_posts_count")
-  private int savedPostsCount;
+  @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+  @JoinTable(name = "liked_posts",
+             joinColumns = @JoinColumn(name = "user_id"),
+             inverseJoinColumns = @JoinColumn(name = "post_id"))
+  private List<Post> likedPosts=new ArrayList<>();
 
+
+  @Column(name = "saved_posts_count")
+  private int savedPostsCount=this.savedPosts.size();
+
+
+  @Column(name = "liked_posts_count")
+  private int likedPostsCount=this.likedPosts.size();
 
 /////helpers
 public void addRoles(Role ...role) {
@@ -115,32 +125,12 @@ public void addRoles(Role ...role) {
     this.roles=new HashSet<>();
   }
 
-  public void savePost(Post post) throws Exception{
-    if(this.savedPostsCount<10){
-     this.getSavedPosts().add(post);
-     this.savedPostsCount++;
-    }
-    else{
-      throw new Exception("You can't save more than 10 posts, remove posts from your list to be able to save this post");
-    }
+  public void updateSavedCounter(){
+    this.savedPostsCount=this.getSavedPosts().size();
   }
+  public void updateLikedCounter(){
+    this.likedPostsCount=this.getLikedPosts().size();
+  }
+  //// likes
 
-  public void unsavePost(Post post) throws Exception{
-    if(this.getSavedPosts().contains(post)){
-      this.getSavedPosts().remove(post);
-      this.savedPostsCount--;
-    }
-    else{
-      throw new Exception("This post is not on your saved posts list, you can't unsave what's not saved");
-    }
-  }
-
-  public void removePostFromPostsList(Post post) throws Exception{
-    if(post.getUser()==this){
-      this.getPosts().remove(post);
-    }else{
-      throw new Exception("Not published by you! you can't remove a post that's not yours!");
-    }
-  }
-  
 }

@@ -9,16 +9,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.postRelated.Tag;
-import com.example.springsocial.entity.userRelated.Profile;
-import com.example.springsocial.entity.userRelated.User;
+
 
 @Getter
 @Setter
@@ -33,17 +27,17 @@ public class PostDto {
     private String Category;
     private String lastModifiedDate;
     // user id + full name + profile image + last modify date
-    private Long userId;
-    private String userName;
-    private String userImageUrl;
+    private boolean isAnonymous=false;
+    private PostUserInfo postUserInfo;
     private int savedCounter=0;
+    private int likedCounter=0;
 
     public PostDto(Post post){
         // for security -- front end must subtract 12345 from user id
         this.postId=post.getId() + 12345;
         this.title = post.getTitle();
         this.content = post.getContent();
-
+        this.isAnonymous=post.isAnonymous();
         for(Tag tag:post.getListTags()){
             this.tags.add(tag.getTagName());
         }
@@ -57,14 +51,19 @@ public class PostDto {
         // Format the LocalDateTime to show year, month, day, and hours
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.lastModifiedDate = localDateTime.format(formatter);
-
-        this.savedCounter=post.getSavedCount();
+        this.likedCounter=post.getLikesCount();
+        
+        this.savedCounter=post.getSavesCount();
         this.Category = post.getCategory().getCategory();
-        this.userImageUrl = post.getUser().getUserProfile().getProfilePicture().getUrl();
-
+        
+        if(!isAnonymous){
+        this.postUserInfo=new PostUserInfo();   
+        this.postUserInfo.setUserImageUrl(post.getUser().getUserProfile().getProfilePicture().getUrl()) ;
         // for security -- front end must subtract 54321 from user id
-        this.userId = post.getUser().getId() + 54321;
-        this.userName=post.getUser().getUserProfile().getFullName();
+        this.postUserInfo.setUserId(post.getUser().getId() + 54321) ;
+        this.postUserInfo.setUserName(post.getUser().getUserProfile().getFullName());
+        }
+    
 
     }
     

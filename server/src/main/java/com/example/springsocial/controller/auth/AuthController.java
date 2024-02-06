@@ -16,6 +16,7 @@ import com.example.springsocial.service.emailService.EmailSenderService;
 import com.example.springsocial.util.ProjectUtil;
 import org.springframework.http.HttpHeaders;
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -103,10 +104,14 @@ public class AuthController {
 
 
     @GetMapping(path = "/confirm-account")
-    public ResponseEntity<String> userEmailVerification(@RequestParam("verify") String verificationCode){
+    public ResponseEntity<String> userEmailVerification(@RequestParam("verify") String verificationCode) throws Exception{
       UserVerificationCode userVerificationCode = userVerificationCodeService.findByConfirmationCode(verificationCode);
       if (userVerificationCode !=null) {
-        User user = userService.findByEmail(userVerificationCode.getUser().getEmail()).get();
+        Optional<User> userOptional = userService.findByEmail(userVerificationCode.getUser().getEmail());
+        if(!userOptional.isPresent()){
+          throw new Exception("User doesn't exist, please verify your verification code and try again!");
+        }
+        User user = userOptional.get();
         user.setActive(true);
         userService.updateUser(user);
 

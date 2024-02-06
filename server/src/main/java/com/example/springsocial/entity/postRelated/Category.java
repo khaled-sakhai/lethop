@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.example.springsocial.base.BaseEntity;
+import com.example.springsocial.util.Constants;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -51,7 +52,7 @@ public class Category extends BaseEntity<Long>{
 }
 
    public Category(String category){
-       if( ArrayUtils.contains(AllowedCategory, category.toLowerCase())){
+       if( ArrayUtils.contains(Constants.AllowedCategory, category.toLowerCase())){
         this.category=category.toLowerCase();
        }
        else{
@@ -59,6 +60,5 @@ public class Category extends BaseEntity<Long>{
        }
     }
 
-    private static String[] AllowedCategory = {"good","learn","question"};
 
 }

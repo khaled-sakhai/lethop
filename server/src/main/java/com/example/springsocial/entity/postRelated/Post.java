@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.CascadeType;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import javax.persistence.Table;
@@ -46,6 +46,8 @@ public class Post extends BaseEntity<Long> {
 
   private String content;
   private String title;
+
+  private boolean isArchived=false;
   
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
@@ -81,22 +83,28 @@ public class Post extends BaseEntity<Long> {
   @ManyToMany(mappedBy = "savedPosts",fetch = FetchType.LAZY , cascade = CascadeType.ALL)
   private Set<User> savedByUsers = new HashSet<>();
 
-  public void removePostFromSavedLists(Post post) throws Exception{
-    for(User user:this.savedByUsers){
-      user.unsavePost(post);
-    }
-    this.savedByUsers.clear();
-  }
+  @JsonIgnore
+  @ManyToMany(mappedBy = "likedPosts",fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+  private Set<User> likedByUsers = new HashSet<>();
 
-  public void removePostfromUserSavedList(Post post,User user){
-    this.savedByUsers.remove(user);
-  }
+    @Column(name = "saved_posts_count")
+  private int savesCount;
+
+
+  @Column(name = "liked_posts_count")
+  private int likesCount;
+
+
   // ... getters and setters
 
 
-  public int getSavedCount() {
-     return savedByUsers.size();
+  public void updateSavedCount() {
+    this.savesCount= savedByUsers.size();
   }
+
+  public void  updateLikedCount() {
+    this.likesCount= likedByUsers.size();
+ }
 
 
 
