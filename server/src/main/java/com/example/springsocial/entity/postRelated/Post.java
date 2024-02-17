@@ -94,6 +94,7 @@ public class Post extends BaseEntity<Long> {
   @Column(name = "liked_posts_count")
   private int likesCount;
 
+  private boolean hasComments;
 
   // ... getters and setters
 

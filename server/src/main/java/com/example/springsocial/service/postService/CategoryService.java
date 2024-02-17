@@ -1,4 +1,4 @@
-package com.example.springsocial.service;
+package com.example.springsocial.service.postService;
 
 import java.util.List;
 import java.util.Optional;

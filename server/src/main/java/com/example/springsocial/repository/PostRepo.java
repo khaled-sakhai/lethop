@@ -16,9 +16,10 @@ import org.springframework.stereotype.Repository;
 public interface PostRepo extends BaseRepository<Post, Long> {
 
    // @Query("SELECT * FROM posts p WHERE p.user_id=:userId")    
-   Optional<Post> findPostByIdAndIsArchivedFalseAndIsPublic(Long userId,boolean isPublic);
+   Optional<Post> findPostByIdAndIsArchivedFalseAndIsPublic(Long postid,boolean isPublic);
 
-   Page<Post> findPostsByUserIdAndIsArchivedFalseAndIsPublic(Long userId, Pageable pageable,boolean isPublic);
+
+   Page<Post> findPostsByUserIdAndIsArchivedFalseAndIsPublic(Long postid, Pageable pageable,boolean isPublic);
     Page<Post> findByListTagsTagNameAndIsArchivedFalseAndIsPublic(String tagName,Pageable pageable,boolean isPublic);
     Page<Post> findByCategoryCategoryAndIsArchivedFalseAndIsPublic(String category, Pageable pageable,boolean isPublic);
 

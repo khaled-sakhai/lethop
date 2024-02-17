@@ -1,4 +1,4 @@
-package com.example.springsocial.service;
+package com.example.springsocial.service.postService;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +18,8 @@ import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.ImageRepo;
 import com.example.springsocial.repository.PostRepo;
+import com.example.springsocial.service.GoogleCloudService;
+import com.example.springsocial.service.UserService;
 
 @Service
 @Transactional

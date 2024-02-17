@@ -35,11 +35,11 @@ import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.ImageRepo;
-import com.example.springsocial.service.CategoryService;
 import com.example.springsocial.service.GoogleCloudService;
-import com.example.springsocial.service.PostService;
-import com.example.springsocial.service.TagService;
 import com.example.springsocial.service.UserService;
+import com.example.springsocial.service.postService.CategoryService;
+import com.example.springsocial.service.postService.PostService;
+import com.example.springsocial.service.postService.TagService;
 import com.example.springsocial.util.Constants;
 import com.google.cloud.storage.Blob;
 
@@ -226,8 +226,10 @@ public class PostController {
       }
       else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
+    @GetMapping("api/v1/public/post/user/{}")
     
 
+/// post settings // only for authenticated users
 
     @PostMapping(path = "api/v1/post/create")
     public ResponseEntity<String> createPost(@RequestPart("post") PostRequest postRequest,

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springsocial.entity.postRelated.Post;
-import com.example.springsocial.service.CategoryService;
+import com.example.springsocial.service.postService.CategoryService;
 
 @RestController
 public class CategoryController {
