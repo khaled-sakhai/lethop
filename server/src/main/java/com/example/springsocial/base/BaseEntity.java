@@ -35,6 +35,8 @@ public abstract class BaseEntity<ID> {
 
   private Long id;
 
+  private boolean isDeleted= Boolean.FALSE;
+
   @CreatedBy
   private String createdBy;
 

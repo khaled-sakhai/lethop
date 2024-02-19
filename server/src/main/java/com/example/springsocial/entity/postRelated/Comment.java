@@ -2,6 +2,7 @@ package com.example.springsocial.entity.postRelated;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -49,5 +50,21 @@ public class Comment extends BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private Set<Reply> replies;
+
+    private int numberOfReplies=0;
+
+    public void addReplayToComment(Reply reply){
+        this.replies.add(reply);
+    }
+    public void removeReplayFromComment(Reply reply){
+        this.replies.remove(reply);
+    }
+    public void updateNumberOfReplies(){
+        this.numberOfReplies=replies.size();
+    }
+
     
 }

@@ -1,5 +1,7 @@
 package com.example.springsocial.entity.userRelated;
 
+import com.example.springsocial.entity.postRelated.Comment;
+import com.example.springsocial.entity.postRelated.Reply;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -8,10 +10,7 @@ import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.security.Token.Token;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -108,17 +107,22 @@ public class User extends BaseEntity<Long> {
 
 
   @Column(name = "saved_posts_count")
-  private int savedPostsCount=this.savedPosts.size();
+  private int savedPostsCount;
 
 
   @Column(name = "liked_posts_count")
-  private int likedPostsCount=this.likedPosts.size();
+  private int likedPostsCount;
+
+  /// comments
+  @OneToMany(mappedBy = "user")
+  private Set<Comment> userComments = new HashSet<>();
+
+  @OneToMany(mappedBy = "user")
+  private Set<Reply> userReplies = new HashSet<>();
 
 /////helpers
 public void addRoles(Role ...role) {
-  for(Role myRole:role){
-    this.roles.add(myRole);
-  }
+  this.roles.addAll(Arrays.asList(role));
   }
 
   public void removeAllRoles(){

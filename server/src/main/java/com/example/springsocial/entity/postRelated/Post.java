@@ -10,22 +10,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
-import javax.persistence.FetchType;
-
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -87,7 +75,7 @@ public class Post extends BaseEntity<Long> {
   @ManyToMany(mappedBy = "likedPosts",fetch = FetchType.LAZY , cascade = CascadeType.ALL)
   private Set<User> likedByUsers = new HashSet<>();
 
-    @Column(name = "saved_posts_count")
+  @Column(name = "saved_posts_count")
   private int savesCount;
 
 
@@ -95,6 +83,22 @@ public class Post extends BaseEntity<Long> {
   private int likesCount;
 
   private boolean hasComments;
+
+  /// comments
+  @JsonIgnore
+  @OneToMany(mappedBy = "post")
+  private Set<Comment> postComments =new HashSet<>();
+
+  public int getNumberOfComments(){
+    int count=0;
+    for(Comment comment: this.postComments){
+      if(comment.getNumberOfReplies()>0){
+        count =+comment.getNumberOfReplies();
+      }
+      count++;
+    }
+    return count;
+  }
 
   // ... getters and setters
 

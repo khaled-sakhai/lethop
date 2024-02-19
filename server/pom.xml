@@ -55,7 +55,11 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
 		<!--Oauth2 dependency (social media signup/login)-->
         <dependency>
             <groupId>org.springframework.security</groupId>
