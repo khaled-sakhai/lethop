@@ -11,6 +11,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 @Entity
 @Table(name = "tags")
@@ -18,6 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Tag extends BaseEntity<Long>{
+    @Field
     private String tagName;
 
     public Tag(String tag){

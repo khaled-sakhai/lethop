@@ -22,6 +22,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 @Entity
 @Table(name = "posts")
@@ -29,26 +34,29 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-
+@SQLDelete(sql = "UPDATE posts SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
+@Indexed
 public class Post extends BaseEntity<Long> {
-
+  @Field
   private String content;
+  @Field
   private String title;
 
-  private boolean isArchived=false;
-  
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
     name = "post_tag",
     joinColumns = @JoinColumn(name = "post_id"),
     inverseJoinColumns = @JoinColumn(name = "tag_id")
   )
+  @IndexedEmbedded
     private Set<Tag> listTags;
 
   @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, 
                        CascadeType.DETACH,  CascadeType.REFRESH},fetch = FetchType.LAZY)
   @JoinColumn(name="category_id", referencedColumnName = "id")
    @JsonIgnore
+  @IndexedEmbedded
   private Category category;
 
 

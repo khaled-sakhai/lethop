@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -15,6 +18,8 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE images SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Image extends BaseEntity<Long> {
     private String url;
     private String fileName;

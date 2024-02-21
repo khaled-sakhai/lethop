@@ -31,7 +31,7 @@ public class CommentReplayService {
 
      public Comment addCommentForPost(Long postId, Comment comment) {
         // Fetch the post by ID and set it for the comment
-        Post post = postRepo.findPostByIdAndIsArchivedFalseAndIsPublic(postId,true)
+        Post post = postRepo.findPostByIdAndIsPublic(postId,true)
         .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 
         comment.setPost(post);

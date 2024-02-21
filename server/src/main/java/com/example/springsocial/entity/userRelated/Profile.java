@@ -38,6 +38,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -46,11 +48,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 @Getter
 @Setter
+
 //to fix nested recursions problem between 1-1 relationship
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class,
   property = "id"
 )
+@SQLDelete(sql = "UPDATE profiles SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Profile extends BaseEntity<Long>{
 
 

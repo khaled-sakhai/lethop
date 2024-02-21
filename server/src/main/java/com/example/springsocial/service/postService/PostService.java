@@ -3,7 +3,12 @@ package com.example.springsocial.service.postService;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.springsocial.specification.PostSpecification;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +26,9 @@ import com.example.springsocial.repository.PostRepo;
 import com.example.springsocial.service.GoogleCloudService;
 import com.example.springsocial.service.UserService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @Service
 @Transactional
 public class PostService {
@@ -36,8 +44,32 @@ public class PostService {
 
     @Autowired
     private UserService userService;
+    @PersistenceContext
+    private EntityManager entityManager;
+    public List<Post> searchPosts(String searchText) {
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
+                .buildQueryBuilder()
+                .forEntity(Post.class)
+                .get();
 
-    
+        org.apache.lucene.search.Query luceneQuery = queryBuilder
+                .keyword()
+                .onField("title").boostedTo(2)  // Boost title matches for better relevance
+                .andField("content").boostedTo(1.5F)  // Boost content matches slightly
+                .andField("listTags.tagName")
+                .andField("category.category")  // Assuming searchable fields in Category
+                .matching(searchText)
+                .createQuery();
+
+        javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Post.class);
+
+        return jpaQuery.getResultList();
+    }
+    public List<Post> getbyLikes(){
+        Specification<Post> spec = Specification.where(PostSpecification.hasLikesInRange(0,100));
+        return postRepo.findAll(spec);
+    }
     public Post createNewPost(Post post){  
         return postRepo.save(post);
     }
@@ -52,24 +84,24 @@ public class PostService {
 
     
     public Optional<Post> findById(Long id){
-        return postRepo.findPostByIdAndIsArchivedFalseAndIsPublic(id,true);
+        return postRepo.findPostByIdAndIsPublic(id,true);
     }
 
     public Page<Post> findByUserId(Long userId,Pageable pageable){
-        return postRepo.findPostsByUserIdAndIsArchivedFalseAndIsPublic(userId,pageable,true);
+        return postRepo.findPostsByUserIdAndIsPublic(userId,pageable,true);
     }
 
     public Page<Post> findByTag(String tag,Pageable pageable){
-        return postRepo.findByListTagsTagNameAndIsArchivedFalseAndIsPublic(tag,pageable,true);
+        return postRepo.findByListTagsTagNameAndIsPublic(tag,pageable,true);
     }
 
     public Page<Post> findByCategory(String category,Pageable pageable){
-        return postRepo.findByCategoryCategoryAndIsArchivedFalseAndIsPublic(category,pageable,true);
+        return postRepo.findByCategoryCategoryAndIsPublic(category,pageable,true);
     }
 
     //feed page
     public Page<Post> findPostsByTagOrCategory(String tag,String category,Pageable pageable){
-        return postRepo.findByListTagsTagNameOrCategoryCategoryAndIsArchivedFalseAndIsPublicTrue(tag,category,pageable);
+        return postRepo.findByListTagsTagNameOrCategoryCategoryAndIsPublicTrue(tag,category,pageable);
     }
 
     public boolean isPostedByUser(User user,Post post){
@@ -84,13 +116,6 @@ public class PostService {
          postRepo.deleteById(id);
     }
 
-    public void archivePost(Post post,User user){
-        if(isPostedByUser(user, post)){
-        post.setArchived(true);
-        postRepo.save(post);
-        }
-       
-    }
 
     public void savePost(Post post,User user) throws Exception{
         if(user.getSavedPostsCount()>=10){

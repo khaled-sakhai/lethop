@@ -226,8 +226,7 @@ public class PostController {
       }
       else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
-    @GetMapping("api/v1/public/post/user/{}")
-    
+
 
 /// post settings // only for authenticated users
 
@@ -326,7 +325,7 @@ public class PostController {
       User user= userService.findByEmail(principal.getName()).get();
       Optional<Post> post = postService.findById(postid);
       if(post.isPresent()){
-        postService.archivePost(post.get(),user);
+        //postService.archivePost(post.get(),user);
         return ResponseEntity.ok("Post removed succesfully");
       }
     

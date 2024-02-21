@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.search.annotations.Field;
 
 
 @Entity
@@ -36,6 +37,7 @@ import lombok.Setter;
 
 public class Category extends BaseEntity<Long>{
   @NotNull
+  @Field
   private String category;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
