@@ -74,7 +74,7 @@ public class StartApp implements CommandLineRunner {
     profile1.setUser(user1);
     user1.setUserProfile(profile1);
 
- userRepo.save(user1);
+  userRepo.save(user1);
 
     User user2 = new User();
     user2.setEmail("sa@as.com");

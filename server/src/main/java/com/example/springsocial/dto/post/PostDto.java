@@ -31,6 +31,7 @@ public class PostDto {
     private PostUserInfo postUserInfo;
     private int savedCounter=0;
     private int likedCounter=0;
+    private int commentCounter=0;
 
     public PostDto(Post post){
         // for security -- front end must subtract 12345 from user id
@@ -47,12 +48,12 @@ public class PostDto {
                 .toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
-
         // Format the LocalDateTime to show year, month, day, and hours
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.lastModifiedDate = localDateTime.format(formatter);
         this.likedCounter=post.getLikesCount();
         
+        this.commentCounter=post.getCommentsCount();
         this.savedCounter=post.getSavesCount();
         this.Category = post.getCategory().getCategory();
         

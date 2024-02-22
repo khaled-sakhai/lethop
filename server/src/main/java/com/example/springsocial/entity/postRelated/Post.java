@@ -90,35 +90,30 @@ public class Post extends BaseEntity<Long> {
   @Column(name = "liked_posts_count")
   private int likesCount;
 
-  private boolean hasComments;
+  @Column(name = "comments_posts_count")
+  private int commentsCount=0;
 
+  
   /// comments
   @JsonIgnore
   @OneToMany(mappedBy = "post")
   private Set<Comment> postComments =new HashSet<>();
-
-  public int getNumberOfComments(){
-    int count=0;
-    for(Comment comment: this.postComments){
-      if(comment.getNumberOfReplies()>0){
-        count =+comment.getNumberOfReplies();
-      }
-      count++;
-    }
-    return count;
-  }
-
   // ... getters and setters
 
 
+  public void updateCommentCount() {
+    this.commentsCount= postComments.size();
+  }
   public void updateSavedCount() {
     this.savesCount= savedByUsers.size();
   }
-
   public void  updateLikedCount() {
     this.likesCount= likedByUsers.size();
  }
 
+ public void removeCommentFromPost(Comment comment){
+  this.postComments.remove(comment);
+ }
 
 
 }

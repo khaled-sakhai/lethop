@@ -20,6 +20,7 @@ import com.example.springsocial.base.BaseEntity;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.util.Constants;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -46,10 +47,12 @@ public class Comment extends BaseEntity<Long> {
 
     private boolean hasReplies;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -62,9 +65,11 @@ public class Comment extends BaseEntity<Long> {
     public void addReplayToComment(Reply reply){
         this.replies.add(reply);
     }
+
     public void removeReplayFromComment(Reply reply){
         this.replies.remove(reply);
     }
+    
     public void updateNumberOfReplies(){
         this.numberOfReplies=replies.size();
     }

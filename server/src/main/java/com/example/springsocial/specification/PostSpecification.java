@@ -49,7 +49,7 @@ public class PostSpecification {
         };
     }
 
-    public static Specification<Post> postWithCategory(String tag,String defaultTagName){
+    public static Specification<Post> postWithTag(String tag,String defaultTagName){
         return(
                 Root<Post> root,
                 CriteriaQuery<?> criteriaQuery,

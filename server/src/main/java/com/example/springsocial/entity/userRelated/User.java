@@ -66,7 +66,7 @@ public class User extends BaseEntity<Long> {
   private boolean needProfileUpdate = true;
 
   // user relationships
-  @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL )
+  @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
   @JoinTable(
     name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
@@ -80,12 +80,12 @@ public class User extends BaseEntity<Long> {
   private Profile userProfile;
 
   @JsonIgnore
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval=true)
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval=true)
   private Token token;
 
 
   //posts and saved posts
-  @OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL,orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE,orphanRemoval = true)
    @JoinTable(
     name = "user_posts",
     joinColumns = @JoinColumn(name = "user_id"),
@@ -97,13 +97,13 @@ public class User extends BaseEntity<Long> {
   @Column(name = "isSavedPostPrivate", columnDefinition = "boolean default true")
   private boolean isSavedPostPrivate=true;
 
-  @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+  @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
   @JoinTable(name = "saved_posts",
              joinColumns = @JoinColumn(name = "user_id"),
              inverseJoinColumns = @JoinColumn(name = "post_id"))
   private List<Post> savedPosts=new ArrayList<>();
 
-  @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+  @ManyToMany(fetch = FetchType.LAZY ,cascade = CascadeType.REMOVE)
   @JoinTable(name = "liked_posts",
              joinColumns = @JoinColumn(name = "user_id"),
              inverseJoinColumns = @JoinColumn(name = "post_id"))
@@ -116,12 +116,13 @@ public class User extends BaseEntity<Long> {
 
   @Column(name = "liked_posts_count")
   private int likedPostsCount;
-
+  @Column(name = "comment_posts_count")
+  private int commentPostsCount;
   /// comments
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE, orphanRemoval=true)
   private Set<Comment> userComments = new HashSet<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE, orphanRemoval=true)
   private Set<Reply> userReplies = new HashSet<>();
 
 /////helpers
@@ -138,6 +139,13 @@ public void addRoles(Role ...role) {
   }
   public void updateLikedCounter(){
     this.likedPostsCount=this.getLikedPosts().size();
+  }
+
+  public void updateCommentsCounter(){
+    this.commentPostsCount = this.userComments.size();
+  }
+  public void updateRepliesCounter(){
+    this.commentPostsCount = this.userReplies.size();
   }
   //// likes
 

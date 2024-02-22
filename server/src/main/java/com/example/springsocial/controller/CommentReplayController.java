@@ -23,8 +23,5 @@ public class CommentReplayController {
     @Autowired
     private PostService postService;
 
-    @PostMapping(path = "api/v1/post/{postid}/comment")
-    public ResponseEntity<String> commentOnPost(@PathVariable(required = true) Long postid ){
-        return null;
-    }
+  
 }
