@@ -33,9 +33,10 @@ public class CommentReplayService {
     private PostService postService;
 
 
+
      public Comment addCommentForPost(Long postId, Comment comment,User user) {
         // Fetch the post by ID and set it for the comment
-        Post post = postRepo.findPostByIdAndIsPublic(postId,true)
+        Post post = postRepo.findPostById(postId)
         .orElseThrow(() -> new EntityNotFoundException("Post not found"));
         comment.setPost(post);
         user.getUserComments().add(comment);

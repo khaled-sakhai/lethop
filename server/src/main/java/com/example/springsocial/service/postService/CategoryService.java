@@ -40,7 +40,6 @@ public class CategoryService {
         Category categoryObj = findByCategory(category);
         if(categoryObj!=null){
             List<Post> publicPosts= categoryObj.getPosts();
-            publicPosts.removeIf(post->post.isPublic()==false);
             return publicPosts;
         }
         return null;

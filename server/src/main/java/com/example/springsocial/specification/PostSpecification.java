@@ -26,14 +26,7 @@ public class PostSpecification {
             return builder.equal(root.get("deleted"),isDeleted);
         };
     }
-    public static Specification<Post> isPublic(boolean isPublic){
-        return(
-                Root<Post> root,
-                CriteriaQuery<?> criteriaQuery,
-                CriteriaBuilder builder) ->{
-            return builder.equal(root.get("isPublic"),isPublic);
-        };
-    }
+ 
     public static Specification<Post> postWithCategory(String category){
         return(
                 Root<Post> root,
@@ -44,7 +37,7 @@ public class PostSpecification {
             }
             Join<Post, Category> categoryjoin = root.join("category");
 
-            return builder.equal(builder.lower(root.get("category")),
+            return builder.equal(builder.lower(categoryjoin.get("category")),
                     category.toLowerCase());
         };
     }
@@ -105,6 +98,16 @@ public class PostSpecification {
         };
     }
 
+    public static Specification<Post> hasCommentsInRange(int minComments, int maxComments) {
+        // how to use this?
+        //    int minComments = 10; // Replace with desired minimum likes
+        //    int maxComments = Integer.MAX_VALUE; // Replace with desired maximum likes (Integer.MAX_VALUE for unlimited)
+        //    Sort sort = Sort.by(Sort.Direction.ASC, "commentsCount");
+        //    List<Post> posts = postRepository.findAll(hasCommentsInRange(minComments, maxComments), sort);
+                return (root, query, criteriaBuilder) -> {
+                    return criteriaBuilder.between(root.get("commentsCount"), minComments, maxComments);
+                };
+            }
 
 
 }

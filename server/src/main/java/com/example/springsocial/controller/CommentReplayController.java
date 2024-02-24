@@ -23,5 +23,4 @@ public class CommentReplayController {
     @Autowired
     private PostService postService;
 
-  
 }

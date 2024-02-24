@@ -71,8 +71,6 @@ public class Post extends BaseEntity<Long> {
   private Image postImage;
 
   @JsonIgnore
-  private boolean isPublic=true;
-  @JsonIgnore
   private boolean isAnonymous= false;
 
   @JsonIgnore

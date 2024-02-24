@@ -247,7 +247,6 @@ public class PostController {
         }
         newPost.setListTags(tags);
         /// post settings
-        newPost.setPublic(postRequest.isPublic());
         newPost.setAnonymous(postRequest.isAnonymous());
         ///category
         Category categoryObj = new Category(postRequest.getCategory());
@@ -280,7 +279,6 @@ public class PostController {
             User user= userService.findByEmail(principal.getName()).get();
             if(postService.isPostedByUser(user, post)){
                    ///post settings
-                   post.setPublic(postRequest.isPublic());
                    post.setAnonymous(postRequest.isAnonymous());
                    //title
                    post.setTitle(postRequest.getTitle());
@@ -325,7 +323,8 @@ public class PostController {
       User user= userService.findByEmail(principal.getName()).get();
       Optional<Post> post = postService.findById(postid);
       if(post.isPresent()){
-        //postService.archivePost(post.get(),user);
+        
+        postService.removePostById(postid);
         return ResponseEntity.ok("Post removed succesfully");
       }
     
@@ -385,32 +384,5 @@ public class PostController {
       }
       return ResponseEntity.badRequest().body("Post was not unliked succesfully");     
     }
-
-
-    @PostMapping(path = "api/v1/post/{postid}/public")
-    public ResponseEntity<String> makePostPublic(@PathVariable Long postid,Principal principal) throws Exception{
-      User user= userService.findByEmail(principal.getName()).get();
-      Optional<Post> post = postService.findById(postid);
-      if(post.isPresent()){
-        postService.makePostPublic(post.get(), user);
-        return ResponseEntity.ok().body("you've made this post public");
-      }  
-        return ResponseEntity.badRequest().body("Error, please try again!");
-    }
-
-
-    @PostMapping(path = "api/v1/post/{postid}/nonpublic")
-    public ResponseEntity<String> makePostNotPublic(@PathVariable Long postid,Principal principal) throws Exception{
-      User user= userService.findByEmail(principal.getName()).get();
-      Optional<Post> post = postService.findById(postid);
-      if(post.isPresent()){
-        postService.makePostNonPublic(post.get(), user);
-        return ResponseEntity.ok().body("you've made this post not public");
-      }  
-        return ResponseEntity.badRequest().body("Error, please try again!");
-    }
-    
-
-
 
 }

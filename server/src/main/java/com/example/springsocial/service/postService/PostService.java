@@ -11,15 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
-import com.example.springsocial.dto.post.PostDto;
-import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.postRelated.Post;
-import com.example.springsocial.entity.postRelated.Tag;
-import com.example.springsocial.entity.userRelated.Profile;
+
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.ImageRepo;
 import com.example.springsocial.repository.PostRepo;
@@ -70,6 +67,8 @@ public class PostService {
         Specification<Post> spec = Specification.where(PostSpecification.hasLikesInRange(0,100));
         return postRepo.findAll(spec);
     }
+
+
     public Post createNewPost(Post post){  
         return postRepo.save(post);
     }
@@ -84,24 +83,24 @@ public class PostService {
 
     
     public Optional<Post> findById(Long id){
-        return postRepo.findPostByIdAndIsPublic(id,true);
+        return postRepo.findPostById(id);
     }
 
     public Page<Post> findByUserId(Long userId,Pageable pageable){
-        return postRepo.findPostsByUserIdAndIsPublic(userId,pageable,true);
+        return postRepo.findPostsByUserId(userId,pageable);
     }
 
     public Page<Post> findByTag(String tag,Pageable pageable){
-        return postRepo.findByListTagsTagNameAndIsPublic(tag,pageable,true);
+        return postRepo.findByListTagsTagName(tag,pageable);
     }
 
     public Page<Post> findByCategory(String category,Pageable pageable){
-        return postRepo.findByCategoryCategoryAndIsPublic(category,pageable,true);
+        return postRepo.findByCategoryCategory(category,pageable);
     }
 
     //feed page
     public Page<Post> findPostsByTagOrCategory(String tag,String category,Pageable pageable){
-        return postRepo.findByListTagsTagNameOrCategoryCategoryAndIsPublicTrue(tag,category,pageable);
+        return postRepo.findByListTagsTagNameOrCategoryCategory(tag,category,pageable);
     }
 
     public boolean isPostedByUser(User user,Post post){
@@ -172,20 +171,6 @@ public class PostService {
         postRepo.save(post);
     }
 
-    
-    public void makePostPublic(Post post,User user) throws Exception{
-        if(isPostedByUser(user,post) && !post.isPublic()){
-            post.setPublic(true);
-        }
-        throw new Exception("failed, please try again");
-    }
-
-    public void makePostNonPublic(Post post,User user) throws Exception{
-        if(isPostedByUser(user,post)  && post.isPublic()){
-            post.setPublic(false);
-        }
-        throw new Exception("failed, please try again");
-    }
 
 
 
