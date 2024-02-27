@@ -1,7 +1,10 @@
 package com.example.springsocial.service.postService;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
+import com.example.springsocial.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +20,20 @@ public class TagService {
 
       public Tag saveTag(Tag tag){
         Optional<Tag> tagFromDB = tagRepo.findByTagName(tag.getTagName());
-        if(!tagFromDB.isPresent()){
-            return tagRepo.save(tag);
+          return tagFromDB.orElseGet(() -> tagRepo.save(tag));
+    }
+
+    public Set<Tag> setTagsToPost(String tagsListAsString){
+        Set<Tag> tags = new HashSet<>();
+        if(tagsListAsString!=null && !tagsListAsString.isBlank() && tagsListAsString.trim().length()>9) {
+            String []  items = tagsListAsString.split("\\s*,\\s*");
+            for(String tag: items){
+                Tag tagDb = this.saveTag(new Tag(tag));
+                tags.add(tagDb);
+            }
         }
-        else{
-            return tagFromDB.get();
-        }
+        else tags.add(this.saveTag(new Tag(Constants.AllowedTags[0])));
+        return tags;
     }
 
     public Optional<Tag> findByTag(String tag){

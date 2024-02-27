@@ -22,15 +22,4 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 public class Tag extends BaseEntity<Long>{
     @Field
     private String tagName;
-
-    public Tag(String tag){
-       if( ArrayUtils.contains(Constants.AllowedTags, tag)){
-        this.tagName=tag;
-       }
-       else{
-        this.tagName="motivation";
-       }
-    }
-
-   
 }

@@ -1,7 +1,14 @@
 package com.example.springsocial.service.postService;
 
-import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
+import com.example.springsocial.entity.Image;
+import com.example.springsocial.entity.postRelated.Category;
+import com.example.springsocial.entity.postRelated.Tag;
+import com.example.springsocial.entity.userRelated.User;
+import com.example.springsocial.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +31,7 @@ public class PostService2 {
      public Page<Post> getFeedPosts(String category,String TagName,
                                        int pageNo,int pageSize,String sortBy,String sortDirection){
 
-        Specification<Post> spec = userSpec(category, TagName, pageNo, pageSize, sortBy, sortDirection);
+        Specification<Post> spec = userSpec(category, TagName);
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
 
@@ -33,11 +40,27 @@ public class PostService2 {
         return postRepo.findAll(spec,paging);
     }
 
+    public Post getPostById(Long postId){
+        Optional<Post> post = postRepo.findById(postId);
+        return post.orElseThrow();
+    }
 
-    private Specification<Post> userSpec(String category,String TagName,int pageNo,int pageSize,String sortBy,String sortDirection){
+    public void addPost(Post post, User user, Set<Tag> tags, Category category, List<Image> images){
+        post.setUser(user);
+        category.getPosts().add(post);
+        post.setCategory(category);
+        post.setListTags(tags);
+
+        if(user.addPost(post)){
+            postRepo.save(post);
+        }
+    }
+
+
+    private Specification<Post> userSpec(String category,String TagName){
         return Specification
-        .where(PostSpecification.postWithCategory(category))
-              .and(PostSpecification.postWithTag(TagName, "Motivation"));
+        .where(PostSpecification.postWithCategory(category, Constants.AllowedCategory[0]))
+              .and(PostSpecification.postWithTag(TagName, Constants.AllowedTags[0]));
     }
 
     private Specification<Post> adminSpec(boolean isDelete,boolean isAnonymous){

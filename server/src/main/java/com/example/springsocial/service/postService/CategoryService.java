@@ -1,8 +1,10 @@
 package com.example.springsocial.service.postService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.springsocial.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,14 @@ public class CategoryService {
         }
     }
 
+    public Category SetPostCategory(String categoryString){
+        if (categoryString==null || categoryString.isBlank() || !Arrays.asList(Constants.AllowedCategory).contains(categoryString.toLowerCase())){
+            throw new IllegalArgumentException("Please use a valid category");
+        }
+
+        Category categoryObj = new Category(categoryString.toLowerCase());
+        return this.saveCategory(categoryObj);
+    }
     public Category findByCategory(String category){
         Optional<Category> categoryFromDB = categoryRepo.findByCategory(category);
         

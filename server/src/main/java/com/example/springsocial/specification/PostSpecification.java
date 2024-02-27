@@ -27,7 +27,7 @@ public class PostSpecification {
         };
     }
  
-    public static Specification<Post> postWithCategory(String category){
+    public static Specification<Post> postWithCategory(String category,String defaultCategory){
         return(
                 Root<Post> root,
                 CriteriaQuery<?> criteriaQuery,
@@ -37,8 +37,15 @@ public class PostSpecification {
             }
             Join<Post, Category> categoryjoin = root.join("category");
 
-            return builder.equal(builder.lower(categoryjoin.get("category")),
-                    category.toLowerCase());
+            // Check if the provided category exists
+            Predicate categoryPredicate = builder.equal(builder.lower(categoryjoin.get("tagName")), category.toLowerCase());
+
+            // If the provided category does not exist, apply the filter for the default category
+            if (criteriaQuery.where(categoryPredicate).getRestriction() == null) {
+                categoryPredicate = builder.equal(builder.lower(categoryjoin.get("category")), defaultCategory.toLowerCase());
+            }
+
+            return categoryPredicate;
         };
     }
 

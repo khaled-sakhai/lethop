@@ -133,7 +133,14 @@ public void addRoles(Role ...role) {
   public void removeAllRoles(){
     this.roles=new HashSet<>();
   }
+public boolean addPost(Post post){
+  if(!this.posts.contains(post)){
+    this.posts.add(post);
+    return true;
+  }
 
+  return false;
+}
   public void updateSavedCounter(){
     this.savedPostsCount=this.getSavedPosts().size();
   }

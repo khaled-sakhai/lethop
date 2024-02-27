@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.example.springsocial.service.postService.PostService2;
 import org.springframework.data.domain.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private PostService2 postService2;
 
     @Autowired
     private ImageRepo imageRepo;
@@ -238,21 +243,9 @@ public class PostController {
         Post newPost = new Post();
         newPost.setTitle(postRequest.getTitle());
         newPost.setContent(postRequest.getContent());
-        //tag
-        String [] items = postRequest.getTags().split("\\s*,\\s*");
-        Set<Tag> tags = new HashSet<>();
-        for(String tag: items){
-            Tag tagDb = tagService.saveTag(new Tag(tag));
-            tags.add(tagDb);
-        }
-        newPost.setListTags(tags);
         /// post settings
         newPost.setAnonymous(postRequest.isAnonymous());
         ///category
-        Category categoryObj = new Category(postRequest.getCategory());
-        Category category = categoryService.saveCategory(categoryObj);
-        category.getPosts().add(newPost);
-        newPost.setCategory(category);    
         ///images
         if(postImage!=null){
         Blob imgBlob=googleCloudService.uploadFile(postImage, false);
@@ -262,11 +255,9 @@ public class PostController {
         }
         /// set user for the post
         User user= userService.findByEmail(principal.getName()).get();
-        newPost.setUser(user);
-        user.getPosts().add(newPost);
         //save post
-       postService.createNewPost(newPost);
-       return ResponseEntity.ok("Post added succesfully");
+        postService2.addPost(newPost,user,tagService.setTagsToPost(postRequest.getTags()),categoryService.SetPostCategory(postRequest.getCategory()),null);
+       return ResponseEntity.ok("Post added successfully");
     }
 
     @PostMapping(path = "api/v1/post/edit/{postid}")
