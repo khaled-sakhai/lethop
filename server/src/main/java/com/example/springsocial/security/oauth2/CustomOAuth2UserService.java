@@ -1,10 +1,13 @@
 package com.example.springsocial.security.oauth2;
 
+import com.example.springsocial.entity.userRelated.Role;
+import com.example.springsocial.enums.APPRole;
 import com.example.springsocial.exception.OAuth2AuthenticationProcessingException;
 import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.enums.AuthProvider;
+import com.example.springsocial.repository.RoleRepo;
 import com.example.springsocial.repository.UserRepo;
 import com.example.springsocial.security.UserPrincipal;
 import com.example.springsocial.security.Token.JwtService;
@@ -45,6 +48,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private RoleRepo roleRepo;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -95,6 +100,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         /// since the user signed up with a social media -- no need for extra email verification
         user.setActive(true);
 
+
+
         Profile profile = new Profile();
         Image image = new Image();
         image.setUrl(oAuth2UserInfo.getImageUrl());
@@ -103,18 +110,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         profile.setProfilePicture(image);
         profile.setFirstName(oAuth2UserInfo.getName());
 
-        String fullNameString = oAuth2UserInfo.getName();
-        String[] fullName = fullNameString.split("\\s+");
-        if(!fullNameString.isEmpty() && fullName.length>=0){
-            profile.setFirstName(fullName[0]);
-            if (fullName.length==2) {
-                profile.setLastName(fullName[1]);
-            }
-        }
+      //  String fullNameString = oAuth2UserInfo.getName();
+       // String[] fullName = fullNameString.split("\\s+");
+//        if(!fullNameString.isEmpty() && fullName.length>=0){
+//            profile.setFirstName(fullName[0]);
+//            if (fullName.length==2) {
+//                profile.setLastName(fullName[1]);
+//            }
+//        }
 
         profile.setUser(user);
         user.setUserProfile(profile);
         profileService.createNewProfile(profile);
+        user.addRoles(roleRepo.findByName(APPRole.ROLE_USER));
         return userService.updateUser(user);
     }
 

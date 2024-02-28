@@ -8,6 +8,7 @@ import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.postRelated.Category;
 import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.User;
+import com.example.springsocial.service.permessions.PostOwner;
 import com.example.springsocial.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,7 +46,7 @@ public class PostService2 {
         return post.orElseThrow();
     }
 
-    public void addPost(Post post, User user, Set<Tag> tags, Category category, List<Image> images){
+    public void addPost(Post post, User user, Set<Tag> tags, Category category){
         post.setUser(user);
         category.getPosts().add(post);
         post.setCategory(category);
@@ -56,6 +57,18 @@ public class PostService2 {
         }
     }
 
+
+    @PostOwner
+    public void deletePost(Post post){
+        postRepo.delete(post);
+    }
+
+    @PostOwner
+    public void updatePost(Post post){
+
+
+        postRepo.save(post);
+    }
 
     private Specification<Post> userSpec(String category,String TagName){
         return Specification

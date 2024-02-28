@@ -9,7 +9,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.example.springsocial.entity.userRelated.Role;
+import com.example.springsocial.service.ImageService;
+import com.example.springsocial.service.UtilService;
+import com.example.springsocial.service.permessions.PostOwner;
 import com.example.springsocial.service.postService.PostService2;
+import jdk.jshell.execution.Util;
 import org.springframework.data.domain.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,6 +74,12 @@ public class PostController {
 
   @Autowired
   private TagService tagService;
+
+  @Autowired
+  private ImageService imageService;
+
+  @Autowired
+  private UtilService utilService;
 
   /// feed page (category= good)
   @GetMapping("api/v1/public/posts")
@@ -236,117 +248,95 @@ public class PostController {
 /// post settings // only for authenticated users
 
     @PostMapping(path = "api/v1/post/create")
-    public ResponseEntity<String> createPost(@RequestPart("post") PostRequest postRequest,
-    @RequestParam(required = false) MultipartFile postImage,
+    public ResponseEntity<String> createPost(@RequestPart(value = "post",required = true) PostRequest postRequest,
+    @RequestParam(required = false) List<MultipartFile> postImages,
         Principal principal) throws Exception{
         // convert Dao to Post
         Post newPost = new Post();
         newPost.setTitle(postRequest.getTitle());
         newPost.setContent(postRequest.getContent());
-        /// post settings
         newPost.setAnonymous(postRequest.isAnonymous());
-        ///category
-        ///images
-        if(postImage!=null){
-        Blob imgBlob=googleCloudService.uploadFile(postImage, false);
-        Image image = new Image(imgBlob.getMediaLink(),imgBlob.getName());
-        imageRepo.save(image);
-        newPost.setPostImage(image);
+        if (postImages!=null && !postImages.isEmpty()){
+            newPost.setPostImages(imageService.saveListImagePost(postImages));
+
         }
         /// set user for the post
-        User user= userService.findByEmail(principal.getName()).get();
+        User user= utilService.getUserFromPrincipal(principal);
         //save post
-        postService2.addPost(newPost,user,tagService.setTagsToPost(postRequest.getTags()),categoryService.SetPostCategory(postRequest.getCategory()),null);
+        postService2.addPost(newPost,user,tagService.setTagsToPost(postRequest.getTags()),categoryService.SetPostCategory(postRequest.getCategory()));
        return ResponseEntity.ok("Post added successfully");
     }
 
-    @PostMapping(path = "api/v1/post/edit/{postid}")
-    public ResponseEntity<String> editPost(@PathVariable(required = true) Long postid,@RequestPart("post") PostRequest postRequest, 
+    @PostMapping(path = "api/v1/post/edit/{postId}")
+    public ResponseEntity<String> editPost(@PathVariable() Long postId, @RequestPart("post") PostRequest postRequest,
                                            @RequestParam(required = false) MultipartFile postImage,
                                            Principal principal){
-        Optional<Post> postObj = postService.findById(postid);
+        Optional<Post> postObj = postService.findById(postId);
         if(postObj.isPresent()){
             Post post = postObj.get();
-            User user= userService.findByEmail(principal.getName()).get();
-            if(postService.isPostedByUser(user, post)){
-                   ///post settings
-                   post.setAnonymous(postRequest.isAnonymous());
-                   //title
-                   post.setTitle(postRequest.getTitle());
-                   //// content
-                   post.setContent(postRequest.getContent());
-                   //tags
-                   if(postRequest.isTagModifies()){
-                     Set<Tag> oldTags= post.getListTags();
-                     String [] itemsTags = postRequest.getTags().split("\\s*,\\s*");
-                     Set<Tag> tags = new HashSet<>();
-                     for(String tag: itemsTags){
-                        Tag tagDb = tagService.saveTag(new Tag(tag));
-                        tags.add(tagDb);
-                      }
-
-                    post.setListTags(tags);
-                   }
-                   // update category
-                   if(postRequest.isCategoryModifies() &&
-                   !postRequest.getCategory().toLowerCase().equalsIgnoreCase(post.getCategory().getCategory())){
-
-                    post.getCategory().removePostFromCategoryById(postid);
-
-                    Category categoryObj = new Category(postRequest.getCategory());
-                    Category category = categoryService.saveCategory(categoryObj);
-                    category.getPosts().add(post);
-                    post.setCategory(category);
-                   }
-                   ///update post
-                   postService.updatePost(post);
-                   return ResponseEntity.ok("Post updated succesfully");
+            User user= utilService.getUserFromPrincipal(principal);
+            post.setAnonymous(postRequest.isAnonymous());
+            post.setTitle(postRequest.getTitle());
+            post.setContent(postRequest.getContent());
+            if(postRequest.isTagModifies()){
+                post.removeTags();
+                Set<Tag> tags= tagService.setTagsToPost(postRequest.getTags());
             }
+            if(postRequest.isCategoryModifies()){
+            post.getCategory().removePostFromCategoryById(postId);
+            Category category = categoryService.SetPostCategory(postRequest.getCategory());
+            }
+            if (postRequest.isImagesModifies()){
+                imageService.removeImagesFromPost(post);
+            }
+            postService2.updatePost(post);
+
+            return ResponseEntity.ok("Post updated successfully");
         }
-
-        
-         return ResponseEntity.badRequest().body("Post was not updated succesfully");     
+         return ResponseEntity.badRequest().body("Post was not updated successfully");
     }
 
+    @DeleteMapping(path = "api/v1/post/{postId}/delete")
+    public ResponseEntity<String> removePost(@PathVariable Long postId,
+                                             Principal principal) throws Exception{
+        User user= utilService.getUserFromPrincipal(principal);
 
-    @DeleteMapping(path = "api/v1/post/{postid}/delete")
-    public ResponseEntity<String> removePost(@PathVariable Long postid,Principal principal) throws Exception{
-      User user= userService.findByEmail(principal.getName()).get();
-      Optional<Post> post = postService.findById(postid);
+        for (Role role: user.getRoles()){
+            System.out.println(role.getName());
+        }
+      Optional<Post> post = postService.findById(postId);
       if(post.isPresent()){
-        
-        postService.removePostById(postid);
-        return ResponseEntity.ok("Post removed succesfully");
+        postService2.deletePost(post.get());
+        return ResponseEntity.ok("Post removed successfully");
       }
-    
-      return ResponseEntity.badRequest().body("Post was not removed succesfully, please try again");     
+      return ResponseEntity.badRequest().body("Post was not removed successfully, please try again");
     }
 
 
-    @PostMapping(path = "api/v1/post/{postid}/save")
-    public ResponseEntity<String> savePost(@PathVariable Long postid,Principal principal) throws Exception{
-      User user= userService.findByEmail(principal.getName()).get();
-      Optional<Post> post = postService.findById(postid);
+    @PostMapping(path = "api/v1/post/{postId}/save")
+    public ResponseEntity<String> savePost(@PathVariable Long postId,Principal principal) throws Exception{
+        User user= utilService.getUserFromPrincipal(principal);
+      Optional<Post> post = postService.findById(postId);
       if(post.isPresent()){
 
         postService.savePost(post.get(), user);
 
-      return ResponseEntity.ok("Post saved succesfully");
+      return ResponseEntity.ok("Post saved successfully");
       }
-      return ResponseEntity.badRequest().body("Post was not saved succesfully");     
+      return ResponseEntity.badRequest().body("Post was not saved successfully");
     }
 
-    @PostMapping(path = "api/v1/post/{postid}/unsave")
-    public ResponseEntity<String> unSavePost(@PathVariable Long postid,Principal principal) throws Exception{
-      User user= userService.findByEmail(principal.getName()).get();
-      Optional<Post> post = postService.findById(postid);
+    @PostMapping(path = "api/v1/post/{postId}/unsave")
+    public ResponseEntity<String> unSavePost(@PathVariable Long postId,Principal principal) throws Exception{
+        User user= utilService.getUserFromPrincipal(principal);
+      Optional<Post> post = postService.findById(postId);
       if(post.isPresent()){
 
         postService.unsavePost(user, post.get());
 
-      return ResponseEntity.ok("Post unsaved succesfully");
+      return ResponseEntity.ok("Post unsaved successfully");
       }
-      return ResponseEntity.badRequest().body("Post was not unsaved succesfully");     
+      return ResponseEntity.badRequest().body("Post was not unsaved successfully");
     }
 
   
@@ -375,5 +365,7 @@ public class PostController {
       }
       return ResponseEntity.badRequest().body("Post was not unliked succesfully");     
     }
+
+
 
 }

@@ -60,7 +60,7 @@ public class StartApp implements CommandLineRunner {
     user1.setEmail("as@as.com");
     user1.setPassword(passwordEncoder.encode("as"));
     user1.setActive(true);
-    user1.addRoles(user);
+    user1.addRoles(user,admin);
     user1.setProvider(AuthProvider.local);
     Profile profile1 = new Profile();
     profile1.setBirthDate(LocalDate.of(1995, 12, 21));
@@ -75,35 +75,35 @@ public class StartApp implements CommandLineRunner {
     user1.setUserProfile(profile1);
 
   userRepo.save(user1);
-
-    User user2 = new User();
-    user2.setEmail("sa@as.com");
-    user2.setActive(true);
-    user2.setPassword(passwordEncoder.encode("sa"));
-    user2.addRoles(admin);
-    user2.setProvider(AuthProvider.local);
-
-userRepo.save(user2);
-
-
-
-User user3 = new User();
-user3.setEmail("as@as.net");
-user3.setPassword(passwordEncoder.encode("as"));
-user3.setProvider(AuthProvider.local);
-Profile profile3 = new Profile();
-profile1.setBirthDate(LocalDate.of(1995, 12, 21));
-profile1.setCity("annaba");
-profile1.setFirstName("khaled");
-profile1.setLastName("sakhai");
-profile1.setSummary(
-  "Welcome, Hi to my profile page, hope this works one day"
-);
-profile3.setProfileCountry("Algeria");
-profile3.setUser(user3);
-user3.setUserProfile(profile3);
-
-userRepo.save(user3);
+//
+//    User user2 = new User();
+//    user2.setEmail("sa@as.com");
+//    user2.setActive(true);
+//    user2.setPassword(passwordEncoder.encode("sa"));
+//    user2.addRoles(admin);
+//    user2.setProvider(AuthProvider.local);
+//
+//userRepo.save(user2);
+//
+//
+//
+//User user3 = new User();
+//user3.setEmail("as@as.net");
+//user3.setPassword(passwordEncoder.encode("as"));
+//user3.setProvider(AuthProvider.local);
+//Profile profile3 = new Profile();
+//profile1.setBirthDate(LocalDate.of(1995, 12, 21));
+//profile1.setCity("annaba");
+//profile1.setFirstName("khaled");
+//profile1.setLastName("sakhai");
+//profile1.setSummary(
+//  "Welcome, Hi to my profile page, hope this works one day"
+//);
+//profile3.setProfileCountry("Algeria");
+//profile3.setUser(user3);
+//user3.setUserProfile(profile3);
+//
+//userRepo.save(user3);
 
 
 

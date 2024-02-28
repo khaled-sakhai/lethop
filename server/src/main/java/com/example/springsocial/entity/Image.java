@@ -23,4 +23,7 @@ import javax.persistence.Table;
 public class Image extends BaseEntity<Long> {
     private String url;
     private String fileName;
+
+
+
 }

@@ -15,7 +15,9 @@ import javax.persistence.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -65,10 +67,9 @@ public class Post extends BaseEntity<Long> {
   @JsonIgnore
   private User user;
 
-  @OneToOne(cascade=CascadeType.ALL)
-  @JoinColumn(name = "post_image_id", referencedColumnName = "id")
+  @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
   @JsonIgnore
-  private Image postImage;
+  private List<Image> postImages=new ArrayList<>();
 
   @JsonIgnore
   private boolean isAnonymous= false;
@@ -97,6 +98,11 @@ public class Post extends BaseEntity<Long> {
   @OneToMany(mappedBy = "post")
   private Set<Comment> postComments =new HashSet<>();
   // ... getters and setters
+
+  public void removeTags(){
+    listTags.clear();
+  }
+
 
 
   public void updateCommentCount() {

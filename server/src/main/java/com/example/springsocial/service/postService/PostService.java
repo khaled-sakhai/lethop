@@ -3,6 +3,7 @@ package com.example.springsocial.service.postService;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.springsocial.service.permessions.PostOwner;
 import com.example.springsocial.specification.PostSpecification;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
@@ -113,6 +114,11 @@ public class PostService {
 
     public void removePostById(Long id){
          postRepo.deleteById(id);
+    }
+
+    @PostOwner
+    public void deletePost(Post post){
+        postRepo.delete(post);
     }
 
 

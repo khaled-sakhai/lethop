@@ -24,4 +24,8 @@ public class PostRequest {
     private boolean isTagModifies=false;
     @JsonProperty("is_category_modified")
     private boolean isCategoryModifies=false;
+    @JsonProperty("is_images_modified")
+    private boolean isImagesModifies=false;
+
+
 }
