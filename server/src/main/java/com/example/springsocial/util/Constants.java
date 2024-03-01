@@ -8,6 +8,7 @@ public class Constants {
                                              "health","religion"};
 
     public static String[] AllowedCategory = {"good","learn","question"};
-
+    public static String[] AllowedPostSorting ={"createdDate","lastModifiedDate","likesCount","commentsCount","savesCount"};
+    public static String[] AllowedCommentSorting ={"createdDate","lastModifiedDate","numberOfReplies"};
 
 }

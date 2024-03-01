@@ -1,4 +1,4 @@
-package com.example.springsocial.service.permessions;
+package com.example.springsocial.validator.permessions;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

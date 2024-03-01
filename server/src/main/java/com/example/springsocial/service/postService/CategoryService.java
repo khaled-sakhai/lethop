@@ -34,24 +34,15 @@ public class CategoryService {
             throw new IllegalArgumentException("Please use a valid category");
         }
 
-        Category categoryObj = new Category(categoryString.toLowerCase());
-        return this.saveCategory(categoryObj);
+        Optional<Category> categoryObj = categoryRepo.findByCategory(categoryString);
+        return categoryObj.orElseThrow();
     }
     public Category findByCategory(String category){
         Optional<Category> categoryFromDB = categoryRepo.findByCategory(category);
-        
-        if (categoryFromDB.isPresent()) {
-            return categoryFromDB.get();
-        }
-        return null;
+        return categoryFromDB.orElse(null);
     }
 
-    public List<Post> findPostsByCategory(String category){
-        Category categoryObj = findByCategory(category);
-        if(categoryObj!=null){
-            List<Post> publicPosts= categoryObj.getPosts();
-            return publicPosts;
-        }
-        return null;
-    }
+
+
+
 }

@@ -1,6 +1,5 @@
-package com.example.springsocial.service.permessions;
+package com.example.springsocial.validator.permessions;
 
-import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.postRelated.Reply;
 
 @EntityOwner(Reply.class)

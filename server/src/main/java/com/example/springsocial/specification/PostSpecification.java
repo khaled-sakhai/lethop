@@ -3,6 +3,7 @@ package com.example.springsocial.specification;
 import com.example.springsocial.entity.postRelated.Category;
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.postRelated.Tag;
+import com.example.springsocial.entity.userRelated.User;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -69,6 +70,19 @@ public class PostSpecification {
             }
 
             return tagPredicate;
+        };
+    }
+
+    public static Specification<Post> postByUserId(Long userId){
+        return(
+                Root<Post> root,
+                CriteriaQuery<?> criteriaQuery,
+                CriteriaBuilder builder) ->{
+            if(  userId<=0){
+                return null;
+            }
+            Join<Post, User> userJoin = root.join("user");
+            return builder.equal(userJoin.get("id"),userId);
         };
     }
 

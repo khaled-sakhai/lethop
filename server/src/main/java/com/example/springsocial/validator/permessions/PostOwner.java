@@ -1,4 +1,4 @@
-package com.example.springsocial.service.permessions;
+package com.example.springsocial.validator.permessions;
 
 import com.example.springsocial.entity.postRelated.Post;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,3 +14,4 @@ import java.lang.annotation.Target;
 public @interface PostOwner {
 
 }
+

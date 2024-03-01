@@ -49,10 +49,7 @@ private PostService postService;
         return postService.getbyLikes();
     }
 
-    @GetMapping("/api/v1/public/search")
-    public  List<Post>  searchPosts(@RequestParam String searchText) {
-        return postService.searchPosts(searchText);
-    }
+
 
     @PostMapping(path = "api/v1/post/{postid}/comment")
     public String addCommentToPost(
