@@ -52,7 +52,7 @@ public class Post extends BaseEntity<Long> {
     inverseJoinColumns = @JoinColumn(name = "tag_id")
   )
   @IndexedEmbedded
-    private Set<Tag> listTags;
+    private Set<Tag> listTags= new HashSet<>();
 
   @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, 
                        CascadeType.DETACH,  CascadeType.REFRESH},fetch = FetchType.LAZY)

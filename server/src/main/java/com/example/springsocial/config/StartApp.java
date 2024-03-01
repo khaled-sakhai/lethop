@@ -2,16 +2,20 @@ package com.example.springsocial.config;
 
 import com.example.springsocial.dto.LoginDto;
 import com.example.springsocial.entity.Image;
+import com.example.springsocial.entity.postRelated.Category;
 import com.example.springsocial.entity.postRelated.Post;
+import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.enums.APPRole;
 import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.enums.Country;
+import com.example.springsocial.repository.CategoryRepo;
 import com.example.springsocial.repository.PostRepo;
 import com.example.springsocial.repository.ProfileRepo;
 import com.example.springsocial.repository.RoleRepo;
+import com.example.springsocial.repository.TagRepo;
 import com.example.springsocial.repository.UserRepo;
 import com.example.springsocial.service.AuthService;
 import com.nimbusds.openid.connect.sdk.assurance.claims.CountryCode;
@@ -47,6 +51,11 @@ public class StartApp implements CommandLineRunner {
   @Autowired
   private AuthService authService;
 
+  @Autowired
+  private CategoryRepo categoryRepo;
+  @Autowired
+  private TagRepo tagRepo;
+ 
 
 
   @Override
@@ -60,7 +69,7 @@ public class StartApp implements CommandLineRunner {
     user1.setEmail("as@as.com");
     user1.setPassword(passwordEncoder.encode("as"));
     user1.setActive(true);
-    user1.addRoles(user,admin);
+    user1.addRoles(admin);
     user1.setProvider(AuthProvider.local);
     Profile profile1 = new Profile();
     profile1.setBirthDate(LocalDate.of(1995, 12, 21));
@@ -73,8 +82,91 @@ public class StartApp implements CommandLineRunner {
     profile1.setProfileCountry("Algeria");
     profile1.setUser(user1);
     user1.setUserProfile(profile1);
-
+    
   userRepo.save(user1);
+
+
+  User user2 = new User();
+  user2.setEmail("as@as.net");
+  user2.setPassword(passwordEncoder.encode("as"));
+  user2.setActive(true);
+  user2.addRoles(user);
+  user2.setProvider(AuthProvider.local);
+  Profile profile2 = new Profile();
+  profile1.setUser(user2);
+  user2.setUserProfile(profile2);
+  
+userRepo.save(user2);
+
+//////////
+
+Category good = new Category("good");
+Category question = new Category("question");
+Category learn = new Category("learn");
+
+
+Tag tag = new Tag("motivation");
+Tag tag2 = new Tag("addiction");
+Tag tag3 = new Tag("success");
+
+tagRepo.save(tag);tagRepo.save(tag2);tagRepo.save(tag3);
+
+Set<Tag> tags1 = new HashSet<>();
+tags1.add(tag);tags1.add(tag2);
+
+Set<Tag> tags2 = new HashSet<>();
+tags2.add(tag);tags2.add(tag3);
+
+Set<Tag> tags3 = new HashSet<>();
+tags3.add(tag);
+
+
+Post post1 = new Post();Post post2 = new Post();Post post3 = new Post();Post post4 = new Post();
+post1.setAnonymous(true);
+post1.setCategory(good);
+post1.setTitle("how did i lose 10kg");
+post1.setContent("This is my way to lose 10 kg in a year");
+post1.setListTags(tags3);
+post1.setUser(user2);
+
+post4.setAnonymous(true);
+post4.setCategory(good);
+post4.setTitle("how did i lose 100kg");
+post4.setContent("This is my way to lose 100 kg in a year");
+post4.setListTags(tags2);
+post4.setUser(user2);
+
+post2.setCategory(learn);
+post2.setTitle("learn from my mistake");
+post2.setContent("This is my way to lose 1 kg in a year");
+post2.setListTags(tags2);
+post2.setUser(user2);
+
+post3.setCategory(question);
+post3.setTitle("how to lose weight in a week?");
+post3.setContent("This is my way to lose 1000 kg in a year");
+post3.setListTags(tags1);
+post3.setUser(user2);
+
+
+
+
+good.addPostToCategory(post1);
+learn.addPostToCategory(post2);
+question.addPostToCategory(post3);
+good.addPostToCategory(post4);
+
+
+postRepo.save(post1);
+postRepo.save(post2);
+postRepo.save(post3);
+postRepo.save(post4);
+
+categoryRepo.save(good);categoryRepo.save(question);categoryRepo.save(learn);
+
+
+
+
 //
 //    User user2 = new User();
 //    user2.setEmail("sa@as.com");

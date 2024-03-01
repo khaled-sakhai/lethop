@@ -24,7 +24,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,6 +84,18 @@ public class PostController {
 
   @Autowired
   private UtilService utilService;
+
+  @GetMapping("api/v1/public/feed")
+  public Page<Post> getFeed(
+  @RequestParam(required = false) String category,
+  @RequestParam(required = false) String tag,
+  @RequestParam(defaultValue = "0") int page,
+  @RequestParam(defaultValue = "lastModifiedDate") String sortBy,
+  @RequestParam(defaultValue = "20") int size,
+  @RequestParam(defaultValue = "desc") String sortDirection
+  ){
+    return postService2.getFeedPosts(category, tag, page, size, sortBy, sortDirection);
+  }
 
   /// feed page (category= good)
   @GetMapping("api/v1/public/posts")
@@ -299,11 +315,8 @@ public class PostController {
     @DeleteMapping(path = "api/v1/post/{postId}/delete")
     public ResponseEntity<String> removePost(@PathVariable Long postId,
                                              Principal principal) throws Exception{
-        User user= utilService.getUserFromPrincipal(principal);
+       // User user= utilService.getUserFromPrincipal(principal);
 
-        for (Role role: user.getRoles()){
-            System.out.println(role.getName());
-        }
       Optional<Post> post = postService.findById(postId);
       if(post.isPresent()){
         postService2.deletePost(post.get());

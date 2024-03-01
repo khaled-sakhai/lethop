@@ -62,5 +62,8 @@ public class Category extends BaseEntity<Long>{
        }
     }
 
+    public void addPostToCategory(Post post){
+      this.posts.add(post);
+    }
 
 }

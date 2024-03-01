@@ -7,11 +7,10 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-//@PreAuthorize("hasAuthority('ADMIN') or {hasRole('USER') && #post.user.email == authentication.name }")
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasAuthority('ADMIN') or {hasRole('USER') && #post.user.email == authentication.name }")
+@PreAuthorize("hasAuthority('ROLE_ADMIN') or (hasAuthority('ROLE_USER') && #post.user.email == authentication.name )")
 public @interface PostOwner {
 
 }

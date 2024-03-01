@@ -3,7 +3,6 @@ package com.example.springsocial.service.postService;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.springsocial.service.permessions.PostOwner;
 import com.example.springsocial.specification.PostSpecification;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
@@ -26,6 +25,7 @@ import com.example.springsocial.service.UserService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 @Service
 @Transactional
@@ -44,6 +44,8 @@ public class PostService {
     private UserService userService;
     @PersistenceContext
     private EntityManager entityManager;
+
+    @SuppressWarnings("unchecked")
     public List<Post> searchPosts(String searchText) {
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
@@ -60,10 +62,12 @@ public class PostService {
                 .matching(searchText)
                 .createQuery();
 
-        javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Post.class);
+        Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Post.class);
 
         return jpaQuery.getResultList();
     }
+
+    
     public List<Post> getbyLikes(){
         Specification<Post> spec = Specification.where(PostSpecification.hasLikesInRange(0,100));
         return postRepo.findAll(spec);
@@ -114,11 +118,6 @@ public class PostService {
 
     public void removePostById(Long id){
          postRepo.deleteById(id);
-    }
-
-    @PostOwner
-    public void deletePost(Post post){
-        postRepo.delete(post);
     }
 
 

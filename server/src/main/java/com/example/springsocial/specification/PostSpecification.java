@@ -38,7 +38,7 @@ public class PostSpecification {
             Join<Post, Category> categoryjoin = root.join("category");
 
             // Check if the provided category exists
-            Predicate categoryPredicate = builder.equal(builder.lower(categoryjoin.get("tagName")), category.toLowerCase());
+            Predicate categoryPredicate = builder.equal(builder.lower(categoryjoin.get("category")), category.toLowerCase());
 
             // If the provided category does not exist, apply the filter for the default category
             if (criteriaQuery.where(categoryPredicate).getRestriction() == null) {
