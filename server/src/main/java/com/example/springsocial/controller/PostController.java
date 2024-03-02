@@ -70,11 +70,8 @@ public class PostController {
 
   @Autowired
   private UtilService utilService;
-    @GetMapping("/api/v1/public/search")
 
-    public  List<Post>  searchPosts(@RequestParam String searchText) {
-        return postService2.searchPosts(searchText);
-    }
+
 
   @GetMapping("api/v1/public/feed")
   public  ResponseEntity<List<PostDto>> getFeed(
@@ -99,7 +96,7 @@ public class PostController {
   }
   @GetMapping("api/v1/public/post/{postId}")
   public ResponseEntity<PostDto> getPostById(@PathVariable Long postId){
-        Optional<Post> post= postService2.findPostById(postId);
+        Optional<Post> post= postService2.getPostById(postId);
         if(post.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(new PostDto(post.get()));
         }
@@ -127,104 +124,27 @@ public class PostController {
     }
 
 
-  /// feed page (category= good)
-  @GetMapping("api/v1/public/posts/category/{category}")
-  public ResponseEntity<List<PostDto>> getPostsByCategory(@PathVariable String category,
-  @RequestParam(defaultValue = "0") int page,
-  @RequestParam(defaultValue = "20") int size,
-  @RequestParam(defaultValue = "desc") String sortDirection){
-// Validate the page size using the constant
-    if (size > Constants.MAX_PAGE_SIZE) {
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-    }
-    Category categoryDb = categoryService.findByCategory(category.toLowerCase());
+    @GetMapping("api/v1/user/posts")
+    public ResponseEntity<List<PostDto>>  getUserSavedPosts(
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "20") int size,
+                                       @RequestParam(defaultValue = "lastModifiedDate") 
+                                                    @ValidPostSortBy String sortBy,
+                                       @RequestParam(defaultValue = "desc") String sortDirection,
+                                       Principal principal ){
+       Long userId= utilService.getUserFromPrincipal(principal).getId();
+       Page<Post>  postsPage= postService2.findUserSavedPosts(userId,page,size,sortBy,sortDirection);
 
-    if(categoryDb !=null){
-
-        // Define the sorting direction and property
-          Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), "lastModifiedDate");
-
-          // Create a Pageable object with sorting and paging parameters
-          Pageable pageable = PageRequest.of(page, size, sort);
-          
-          // Retrieve paginated and sorted posts
-          Page<Post> postsPage = postService.findByCategory(category.toLowerCase(), pageable);
-
-          // Get the content (posts) from the Page object
-          List<PostDto> postDtos = postsPage.getContent().stream()
-          .map(PostDto::new)
-          .collect(Collectors.toList());
-
-          return new ResponseEntity<>(postDtos, HttpStatus.OK);
-
-
-    }
-    return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-  }
-
-  @GetMapping("api/v1/public/posts/tag/{tag}")
-    public ResponseEntity<List<PostDto>> getPostsByTag(@PathVariable String tag,
-    @RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "20") int size,
-    @RequestParam(defaultValue = "desc") String sortDirection ){
-
-      if (size > Constants.MAX_PAGE_SIZE) {
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-    }
-
-      Optional<Tag> tagDb = tagService.findByTag(tag);
-
-      if(tagDb.isPresent()){
-         // Define the sorting direction and property
-         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), "lastModifiedDate");
-
-         // Create a Pageable object with sorting and paging parameters
-         Pageable pageable = PageRequest.of(page, size, sort);
-         
-         // Retrieve paginated and sorted posts
-         Page<Post> postsPage = postService.findByTag(tag.toLowerCase(), pageable);
-         System.out.println(postsPage.getNumberOfElements());
-
+       if (postsPage.isEmpty()) {
+             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+       }
          // Get the content (posts) from the Page object
-         List<PostDto> postDtos = postsPage.getContent().stream()
-         .map(PostDto::new)
-         .collect(Collectors.toList());
+       List<PostDto> postDtos = postsPage.getContent().stream()
+                .map(PostDto::new)
+                .collect(Collectors.toList());
 
-         return new ResponseEntity<>(postDtos, HttpStatus.OK);
-      }
-      
-      return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping("api/v1/public/user/{userid}/posts")
-    public ResponseEntity<List<PostDto>> getPostsByUser(@PathVariable Long userid,
-    @RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "20") int size,
-    @RequestParam(defaultValue = "desc") String sortDirection ){
-      if (size > Constants.MAX_PAGE_SIZE) {
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-    }
-    Optional<User> user = userService.findById(userid);
-    if(user.isPresent()){
-        // Define the sorting direction and property
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), "lastModifiedDate");
-
-        // Create a Pageable object with sorting and paging parameters
-        Pageable pageable = PageRequest.of(page, size, sort);
-        
-        // Retrieve paginated and sorted posts
-        Page<Post> postsPage = postService.findByUserId(userid, pageable);
-
-        // Get the content (posts) from the Page object
-        List<PostDto> postDtos = postsPage.getContent().stream()
-        .map(PostDto::new)
-        .collect(Collectors.toList());
-
-        return new ResponseEntity<>(postDtos, HttpStatus.OK);
-      }
-      
-      return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-    }
+       return new ResponseEntity<>(postDtos, HttpStatus.OK);
+     }
 
     @GetMapping("api/v1/public/post/saved/{postid}")
     public Set<User> getPostSavedBy(@PathVariable Long postid){
@@ -265,7 +185,6 @@ public class PostController {
         Optional<Post> postObj = postService.findById(postId);
         if(postObj.isPresent()){
             Post post = postObj.get();
-            User user= utilService.getUserFromPrincipal(principal);
             post.setAnonymous(postRequest.isAnonymous());
             post.setTitle(postRequest.getTitle());
             post.setContent(postRequest.getContent());
@@ -292,8 +211,6 @@ public class PostController {
     @DeleteMapping(path = "api/v1/post/{postId}/delete")
     public ResponseEntity<String> removePost(@PathVariable Long postId,
                                              Principal principal) throws Exception{
-       // User user= utilService.getUserFromPrincipal(principal);
-
       Optional<Post> post = postService.findById(postId);
       if(post.isPresent()){
         postService2.deletePost(post.get());
@@ -305,7 +222,7 @@ public class PostController {
 
     @PostMapping(path = "api/v1/post/{postId}/save")
     public ResponseEntity<String> savePost(@PathVariable Long postId,Principal principal) throws Exception{
-        User user= utilService.getUserFromPrincipal(principal);
+      User user= utilService.getUserFromPrincipal(principal);
       Optional<Post> post = postService.findById(postId);
       if(post.isPresent()){
 
@@ -330,31 +247,7 @@ public class PostController {
     }
 
   
-    @PostMapping(path = "api/v1/post/{postid}/like")
-    public ResponseEntity<String> likePost(@PathVariable Long postid,Principal principal) throws Exception{
-      User user= userService.findByEmail(principal.getName()).get();
-      Optional<Post> post = postService.findById(postid);
-      if(post.isPresent()){
 
-        postService.likePost( user,post.get());
-
-      return ResponseEntity.ok("Post liked succesfully");
-      }
-      return ResponseEntity.badRequest().body("Post was not liked succesfully");     
-    }
-
-    @PostMapping(path = "api/v1/post/{postid}/unlike")
-    public ResponseEntity<String> unlikePost(@PathVariable Long postid,Principal principal) throws Exception{
-      User user= userService.findByEmail(principal.getName()).get();
-      Optional<Post> post = postService.findById(postid);
-      if(post.isPresent()){
-
-        postService.unlikePost(user, post.get());
-
-      return ResponseEntity.ok("Post unliked succesfully");
-      }
-      return ResponseEntity.badRequest().body("Post was not unliked succesfully");     
-    }
 
 
 

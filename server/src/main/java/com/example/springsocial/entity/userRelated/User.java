@@ -142,18 +142,33 @@ public boolean addPost(Post post){
   return false;
 }
   public void updateSavedCounter(){
-    this.savedPostsCount=this.getSavedPosts().size();
+    int count=0;
+    for(Post p:this.getSavedPosts()){
+      if(!p.isDeleted()){
+        count ++;
+      }
+      this.savedPostsCount=count;
+    }
   }
+
   public void updateLikedCounter(){
-    this.likedPostsCount=this.getLikedPosts().size();
+    int count=0;
+    for(Post p:this.getLikedPosts()){
+      if(!p.isDeleted()){
+        count ++;
+      }
+    }
+    this.likedPostsCount=count;
   }
 
   public void updateCommentsCounter(){
-    this.commentPostsCount = this.userComments.size();
+    int count=0;
+    for(Comment c:this.getUserComments()){
+      if(!c.isDeleted()){
+        count ++;
+      }
+    }
+    this.commentPostsCount = count;
   }
-  public void updateRepliesCounter(){
-    this.commentPostsCount = this.userReplies.size();
-  }
-  //// likes
 
 }

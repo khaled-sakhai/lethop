@@ -122,14 +122,14 @@ tags3.add(tag);
 
 
 Post post1 = new Post();Post post2 = new Post();Post post3 = new Post();Post post4 = new Post();
-post1.setAnonymous(true);
+//post1.setAnonymous(true);
 post1.setCategory(good);
 post1.setTitle("how did i lose 10kg");
-post1.setContent("This is my way to lose 10 kg in a year");
+post1.setContent("This is my way to lose 10 kg");
 post1.setListTags(tags3);
 post1.setUser(user2);
 
-post4.setAnonymous(true);
+//post4.setAnonymous(true);
 post4.setCategory(good);
 post4.setTitle("how did i lose 100kg");
 post4.setContent("This is my way to lose 100 kg in a year");

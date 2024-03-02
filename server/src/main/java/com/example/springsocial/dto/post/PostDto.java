@@ -57,9 +57,11 @@ public class PostDto {
         this.savedCounter=post.getSavesCount();
         this.Category = post.getCategory().getCategory();
         
-        if(!isAnonymous){
-        this.postUserInfo=new PostUserInfo();   
-        this.postUserInfo.setUserImageUrl(post.getUser().getUserProfile().getProfilePicture().getUrl()) ;
+        if(!isAnonymous && post.getUser().getUserProfile()!=null){
+        this.postUserInfo=new PostUserInfo();
+        if(post.getUser().getUserProfile().getProfilePicture()!=null){
+            this.postUserInfo.setUserImageUrl(post.getUser().getUserProfile().getProfilePicture().getUrl()) ;
+        }
         // for security -- front end must subtract 54321 from user id
         this.postUserInfo.setUserId(post.getUser().getId() + 54321) ;
         this.postUserInfo.setUserName(post.getUser().getUserProfile().getFullName());

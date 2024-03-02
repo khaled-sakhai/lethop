@@ -64,7 +64,7 @@ public class CommentReplayService {
         Comment comment = commentRepo.findById(commentId).orElseThrow(() -> new EntityNotFoundException("Comment not found"));
         reply.setComment(comment);
         user.getUserReplies().add(reply);
-        user.updateRepliesCounter();
+        //user.updateRepliesCounter();
         comment.addReplayToComment(reply);
         comment.updateNumberOfReplies();
         return replyRepo.save(reply);

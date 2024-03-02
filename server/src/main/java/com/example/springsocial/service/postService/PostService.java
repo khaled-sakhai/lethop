@@ -42,30 +42,8 @@ public class PostService {
 
     @Autowired
     private UserService userService;
-    @PersistenceContext
-    private EntityManager entityManager;
+  
 
-    @SuppressWarnings("unchecked")
-    public List<Post> searchPosts(String searchText) {
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
-                .buildQueryBuilder()
-                .forEntity(Post.class)
-                .get();
-
-        org.apache.lucene.search.Query luceneQuery = queryBuilder
-                .keyword()
-                .onField("title").boostedTo(2)  // Boost title matches for better relevance
-                .andField("content").boostedTo(1.5F)  // Boost content matches slightly
-                .andField("listTags.tagName")
-                .andField("category.category")  // Assuming searchable fields in Category
-                .matching(searchText)
-                .createQuery();
-
-        Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Post.class);
-
-        return jpaQuery.getResultList();
-    }
 
     
     public List<Post> getbyLikes(){
@@ -108,12 +86,6 @@ public class PostService {
         return postRepo.findByListTagsTagNameOrCategoryCategory(tag,category,pageable);
     }
 
-    public boolean isPostedByUser(User user,Post post){
-        if(post.getUser()==user && user.getPosts().contains(post)){
-            return true;
-        }
-        return false;
-    }
 
 
     public void removePostById(Long id){
