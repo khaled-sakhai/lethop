@@ -9,28 +9,33 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
+@Table(name = "tokens")
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE tokens SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Token extends BaseEntity<Long> {
 
   private String refreshToken;
 
   private String accessToken;
 
+  private boolean isLoggedOut;
+
   private String userAgent;
 
-  @OneToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
 }

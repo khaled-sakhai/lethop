@@ -62,7 +62,7 @@ public class Post extends BaseEntity<Long> {
   private Category category;
 
 
-  @ManyToOne(fetch = FetchType.LAZY,cascade =CascadeType.DETACH.MERGE.PERSIST.REFRESH)
+  @ManyToOne(fetch = FetchType.LAZY,cascade = { CascadeType.MERGE, CascadeType.PERSIST })
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @JsonIgnore
   private User user;

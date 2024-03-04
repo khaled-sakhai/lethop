@@ -6,6 +6,7 @@ import com.example.springsocial.exception.BadRequestException;
 import com.example.springsocial.security.Token.JwtService;
 import com.example.springsocial.security.Token.Token;
 import com.example.springsocial.security.Token.TokenService;
+import com.example.springsocial.service.AuthService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.util.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthService authService;
 
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
@@ -51,9 +54,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        System.out.println("Here first success");
         String targetUrl = determineTargetUrl(request, response, authentication);
-
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
@@ -73,25 +74,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
          String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        // Token token = userService.findByEmail(authentication.getName()).get().getToken();
-        // String accessToken = token.getAccessToken();
-        // String refreshToken = token.getRefreshToken();
-
         User user = userService.findByEmail(authentication.getName()).get();
         String userAgent = request.getHeader("User-Agent");
-        String accessToken = jwtService.generateToken(user.getEmail());
-        String refreshToken = jwtService.generateRefreshToken(user.getEmail());
-
-        Token token = new Token();
-
-        token.setAccessToken(accessToken);
-        token.setRefreshToken(refreshToken);
-        token.setUser(user);
-        
-        tokenService.addToken(token,userAgent);
-        user.setToken(token);
-
-        userService.updateUser(user);
+        Token token = authService.updateTokenInDB(user,null,userAgent);
+        String accessToken = token.getAccessToken();
+        String refreshToken =token.getRefreshToken();
         
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("access", accessToken).queryParam("refresh", refreshToken)

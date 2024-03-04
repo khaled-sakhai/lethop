@@ -8,7 +8,10 @@ import com.example.springsocial.security.Token.TokenService;
 import com.google.cloud.storage.Option;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,14 +38,18 @@ public class AuthService {
 
 
   public TokenResponse authenticateAndGetToken(String email, String password,String userAgent) {
-    
+
+
+
     Authentication authentication = authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(email, password)
     );
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
     if (authentication.isAuthenticated()) {
-      Token token = updateTokenInDB(email,null,userAgent);
+      SecurityContextHolder.getContext().getAuthentication().getDetails();
+      User user = userService.findByEmail(email).orElseThrow();
+      Token token = updateTokenInDB(user,null,userAgent);
 
       return new TokenResponse(token.getAccessToken(), token.getRefreshToken());
     } else {
@@ -60,37 +67,51 @@ public class AuthService {
       return null;
     }
     refreshToken = authHeader.substring(7);
-    boolean isRefreshTokenExist = tokenService
-      .findByRefreshToken(refreshToken)
-      .isPresent();
+
+   Token tokenDB = tokenService
+      .findByRefreshToken(refreshToken).orElseThrow();
+   User dbUser=tokenDB.getUser();
     userEmail = jwtService.extractUsername(refreshToken);
+
     TokenResponse tokenResponse = new TokenResponse();
-    if (userEmail != null && isRefreshTokenExist) {
-      if (jwtService.isTokenValid(refreshToken, userEmail)) {
-        Token token = updateTokenInDB(userEmail, refreshToken,userAgent);
+
+    if (userEmail != null && !tokenDB.isLoggedOut()) {
+      if (jwtService.isTokenValid(refreshToken, dbUser.getEmail())) {
+        Token token = updateTokenInDB(dbUser, refreshToken,userAgent);
         tokenResponse.setAccessToken(token.getAccessToken());
         tokenResponse.setRefreshToken(refreshToken);
       } else {
-        throw new IOException("WRONG REFRESH TOKEN");
+        throw new IOException("INVALID REFRESH TOKEN");
       }
     }
 
     return tokenResponse;
   }
 
-  private Token updateTokenInDB(
-    String email,
+  public Token updateTokenInDB(
+    User user,
     String refreshToken,String userAgent
   ) {
-    User user = userService.findByEmail(email).orElseThrow();
-     tokenService.deletTokenByUserId(user.getId());
-     
+    revokeAllTokensByEmail(user.getEmail());
     Token token = new Token();
+    token.setLoggedOut(false);
     token.setRefreshToken(jwtService.generateRefreshToken(user.getEmail()));
     token.setAccessToken(jwtService.generateToken(user.getEmail()));
-    token.setUser(user);
     tokenService.addToken(token,userAgent);
+    token.setUser(user);
+    user.addToken(token);
+    userService.updateUser(user);
     return token;
+  }
+
+  public void revokeAllTokensByEmail(String email){
+    List<Token> userTokens=tokenService.findByEmailAndIsLoggedIn(email,false);
+    if(userTokens!=null && !userTokens.isEmpty()){
+      userTokens.forEach(t->{
+        t.setLoggedOut(true);
+        tokenService.updateToken(t);
+      });
+    }
   }
 
 

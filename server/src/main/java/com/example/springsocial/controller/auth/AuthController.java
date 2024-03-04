@@ -89,7 +89,7 @@ public class AuthController {
         .body( "User registered successfully@ please login using the login information , pleaase verify your email, an email was send to: "+ user.getEmail());
     }
 
-    @PostMapping("/checkemail")
+    @PostMapping("/check-email")
     public ResponseEntity<?> isEmailTaken(@RequestBody RegisterDto registerDto){
         boolean result = userService.isEmailTaken(registerDto.getEmail());
         if (result) {
@@ -97,11 +97,8 @@ public class AuthController {
         .body( "Valid email, Please continue the registration");
         }
         return ResponseEntity.badRequest()
-        .body( "You can't use this email, it's already registred for another user");
+        .body( "You can't use this email, it's already registered for another user");
     }
-
-
-
 
     @GetMapping(path = "/confirm-account")
     public ResponseEntity<String> userEmailVerification(@RequestParam("verify") String verificationCode) throws Exception{

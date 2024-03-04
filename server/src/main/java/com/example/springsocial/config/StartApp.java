@@ -62,15 +62,18 @@ public class StartApp implements CommandLineRunner {
   public void run(String... args) throws Exception {
     Role admin = new Role(APPRole.ROLE_ADMIN);
     Role user = new Role(APPRole.ROLE_USER);
-    //Role moderator = new Role(APPRole.ROLE_MOEDERATOR);
- 
 
-    User user1 = new User();
-    user1.setEmail("as@as.com");
-    user1.setPassword(passwordEncoder.encode("as"));
-    user1.setActive(true);
-    user1.addRoles(admin);
+        Role roleAdmin=roleRepo.save(admin);
+        Role roleUser = roleRepo.save(user);
+
+        User user1 = new User();
+        user1.setEmail("as@as.com");
+        user1.setPassword(passwordEncoder.encode("as"));
+        user1.setActive(true);
     user1.setProvider(AuthProvider.local);
+    userRepo.save(user1);
+    user1.addRoles(roleAdmin);
+
     Profile profile1 = new Profile();
     profile1.setBirthDate(LocalDate.of(1995, 12, 21));
     profile1.setCity("annaba");
@@ -80,36 +83,37 @@ public class StartApp implements CommandLineRunner {
       "Welcome, Hi to my profile page, hope this works one day"
     );
     profile1.setProfileCountry("Algeria");
+    profileRepo.save(profile1);
     profile1.setUser(user1);
     user1.setUserProfile(profile1);
-    
-  userRepo.save(user1);
+
+
 
 
   User user2 = new User();
   user2.setEmail("as@as.net");
   user2.setPassword(passwordEncoder.encode("as"));
   user2.setActive(true);
-  user2.addRoles(user);
   user2.setProvider(AuthProvider.local);
+  userRepo.save(user2);
+  user2.addRoles(user);
   Profile profile2 = new Profile();
-  profile1.setUser(user2);
-  user2.setUserProfile(profile2);
-  
-userRepo.save(user2);
 
+  user2.setUserProfile(profile2);
+  profileRepo.save(profile2);
+  profile1.setUser(user2);
 //////////
 
-Category good = new Category("good");
-Category question = new Category("question");
-Category learn = new Category("learn");
+Category good = categoryRepo.save(new Category("good"));
+Category question = categoryRepo.save(new Category("question"));
+Category learn = categoryRepo.save(new Category("learn"));
 
 
-Tag tag = new Tag("motivation");
-Tag tag2 = new Tag("addiction");
-Tag tag3 = new Tag("success");
 
-tagRepo.save(tag);tagRepo.save(tag2);tagRepo.save(tag3);
+Tag tag = tagRepo.save(new Tag("motivation"));
+Tag tag2 = tagRepo.save(new Tag("addiction"));
+Tag tag3 = tagRepo.save(new Tag("success"));
+
 
 Set<Tag> tags1 = new HashSet<>();
 tags1.add(tag);tags1.add(tag2);
@@ -122,33 +126,42 @@ tags3.add(tag);
 
 
 Post post1 = new Post();Post post2 = new Post();Post post3 = new Post();Post post4 = new Post();
-//post1.setAnonymous(true);
-post1.setCategory(good);
+
+post1.setAnonymous(true);
 post1.setTitle("how did i lose 10kg");
 post1.setContent("This is my way to lose 10 kg");
-post1.setListTags(tags3);
-post1.setUser(user2);
 
-//post4.setAnonymous(true);
-post4.setCategory(good);
+postRepo.save(post1);
+post1.setUser(user2);
+    post1.setCategory(good);
+    post1.setListTags(tags3);
+
+
 post4.setTitle("how did i lose 100kg");
 post4.setContent("This is my way to lose 100 kg in a year");
-post4.setListTags(tags2);
-post4.setUser(user2);
 
-post2.setCategory(learn);
+    postRepo.save(post4);
+    post4.setUser(user2);
+    post4.setCategory(good);
+    post4.setListTags(tags2);
+
 post2.setTitle("learn from my mistake");
 post2.setContent("This is my way to lose 1 kg in a year");
-post2.setListTags(tags2);
-post2.setUser(user2);
 
-post3.setCategory(question);
+    postRepo.save(post2);
+    post2.setUser(user2);
+    post2.setCategory(learn);
+    post2.setListTags(tags2);
+
+
 post3.setTitle("how to lose weight in a week?");
 post3.setContent("This is my way to lose 1000 kg in a year");
-post3.setListTags(tags1);
-post3.setUser(user2);
 
 
+    postRepo.save(post3);
+      post3.setCategory(question);
+      post3.setUser(user2);
+      post3.setListTags(tags1);
 
 
 good.addPostToCategory(post1);
@@ -157,12 +170,11 @@ question.addPostToCategory(post3);
 good.addPostToCategory(post4);
 
 
-postRepo.save(post1);
-postRepo.save(post2);
-postRepo.save(post3);
-postRepo.save(post4);
 
-categoryRepo.save(good);categoryRepo.save(question);categoryRepo.save(learn);
+
+
+
+
 
 
 

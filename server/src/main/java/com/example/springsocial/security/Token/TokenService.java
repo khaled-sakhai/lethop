@@ -38,6 +38,14 @@ public class TokenService {
     tokenRepo.save(token);
   }
 
+  public List<Token> findByEmailAndIsLoggedIn(String email,boolean isLoggedIn){
+    return tokenRepo.findAllByIsLoggedOutAndUserEmail(isLoggedIn,email);
+  }
+
+  public void updateToken(Token token){
+    tokenRepo.save(token);
+  }
+
   public void deletToken(Token token) {
     tokenRepo.delete(token);
   }

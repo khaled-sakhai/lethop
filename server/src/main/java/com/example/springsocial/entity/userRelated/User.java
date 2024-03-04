@@ -66,7 +66,7 @@ public class User extends BaseEntity<Long> {
   private boolean needProfileUpdate = true;
 
   // user relationships
-  @ManyToMany(fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+  @ManyToMany(fetch = FetchType.LAZY,cascade={ CascadeType.MERGE, CascadeType.PERSIST })
   @JoinTable(
     name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
@@ -75,13 +75,13 @@ public class User extends BaseEntity<Long> {
   private Set<Role> roles = new HashSet<>();
   
 
-  @OneToOne(cascade = CascadeType.ALL) //optional = false)
+  @OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST },fetch = FetchType.LAZY) //optional = false)
   @JoinColumn(name = "profile_id", referencedColumnName = "id")
   private Profile userProfile;
 
   @JsonIgnore
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval=true)
-  private Token token;
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval=true)
+  private List<Token> tokens;
 
 
   //posts and saved posts
@@ -91,7 +91,6 @@ public class User extends BaseEntity<Long> {
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "post_id")
   )
-
   private List<Post> posts = new ArrayList<>();
 
   @Column(name = "isSavedPostPrivate", columnDefinition = "boolean default true")
@@ -132,6 +131,10 @@ public void addRoles(Role ...role) {
 
   public void removeAllRoles(){
     this.roles=new HashSet<>();
+  }
+
+  public void addToken(Token token){
+  tokens.add(token);
   }
 public boolean addPost(Post post){
   if(!this.posts.contains(post)){

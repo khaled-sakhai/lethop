@@ -80,7 +80,7 @@ public class Profile extends BaseEntity<Long>{
   @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL )
   private User user;
 
-  @OneToOne(cascade=CascadeType.ALL)
+  @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
   @JoinColumn(name = "profile_image_id", referencedColumnName = "id")
   private Image profilePicture;
 
