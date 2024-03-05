@@ -70,9 +70,13 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search-orm</artifactId>
 			<version>5.11.12.Final</version>
-
 		</dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+		
 		<!--Swagger dependency - (automatic api documentation)-->
 	     <dependency>
           <groupId>org.springdoc</groupId>

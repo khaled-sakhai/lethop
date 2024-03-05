@@ -124,7 +124,7 @@ public class PostController {
     }
 
 
-    @GetMapping("api/v1/user/posts")
+    @GetMapping("api/v1/user/saved")
     public ResponseEntity<List<PostDto>>  getUserSavedPosts(
                                        @RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "20") int size,
@@ -146,6 +146,33 @@ public class PostController {
        return new ResponseEntity<>(postDtos, HttpStatus.OK);
      }
 
+
+     
+
+    @GetMapping("api/v1/user/liked")
+    public ResponseEntity<List<PostDto>>  getUserLikedPosts(
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "20") int size,
+                                       @RequestParam(defaultValue = "lastModifiedDate") 
+                                                    @ValidPostSortBy String sortBy,
+                                       @RequestParam(defaultValue = "desc") String sortDirection,
+                                       Principal principal ){
+       Long userId= utilService.getUserFromPrincipal(principal).getId();
+       Page<Post>  postsPage= postService2.findUserLikedPosts(userId,page,size,sortBy,sortDirection);
+
+       if (postsPage.isEmpty()) {
+             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+       }
+         // Get the content (posts) from the Page object
+       List<PostDto> postDtos = postsPage.getContent().stream()
+                .map(PostDto::new)
+                .collect(Collectors.toList());
+
+       return new ResponseEntity<>(postDtos, HttpStatus.OK);
+     }
+
+     /////////////////////////////
+
     @GetMapping("api/v1/public/post/saved/{postid}")
     public Set<User> getPostSavedBy(@PathVariable Long postid){
       Optional<Post> post = postService.findById(postid);
@@ -156,6 +183,7 @@ public class PostController {
     }
 
 
+    
 /// post settings // only for authenticated users
 
     @PostMapping(path = "api/v1/post/create")
@@ -247,6 +275,32 @@ public class PostController {
     }
 
   
+    
+    @PostMapping(path = "api/v1/post/{postid}/like")
+    public ResponseEntity<String> likePost(@PathVariable Long postid,Principal principal) throws Exception{
+      User user= userService.findByEmail(principal.getName()).get();
+      Optional<Post> post = postService2.getPostById(postid);
+      if(post.isPresent()){
+        postService2.likePost( user,post.get());
+      return ResponseEntity.ok("Post liked succesfully");
+      }
+      return ResponseEntity.badRequest().body("Post was not liked succesfully");     
+    }
+
+    @PostMapping(path = "api/v1/post/{postid}/unlike")
+    public ResponseEntity<String> unlikePost(@PathVariable Long postid,Principal principal) throws Exception{
+      User user= userService.findByEmail(principal.getName()).get();
+      Optional<Post> post = postService2.getPostById(postid);
+      if(post.isPresent()){
+
+        postService2.unlikePost(user, post.get());
+
+      return ResponseEntity.ok("Post unliked succesfully");
+      }
+      return ResponseEntity.badRequest().body("Post was not unliked succesfully");     
+    }
+
+
 
 
 

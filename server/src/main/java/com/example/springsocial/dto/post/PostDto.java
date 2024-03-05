@@ -55,6 +55,8 @@ public class PostDto {
         
         this.commentCounter=post.getCommentsCount();
         this.savedCounter=post.getSavesCount();
+        System.out.println("xcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        System.out.println(post.getCategory().getCategory());
         this.Category = post.getCategory().getCategory();
         
         if(!isAnonymous && post.getUser().getUserProfile()!=null){

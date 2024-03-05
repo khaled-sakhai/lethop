@@ -23,6 +23,9 @@ import com.nimbusds.openid.connect.sdk.assurance.claims.CountryCode;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,7 +60,7 @@ public class StartApp implements CommandLineRunner {
   private TagRepo tagRepo;
  
 
-
+@Transactional
   @Override
   public void run(String... args) throws Exception {
     Role admin = new Role(APPRole.ROLE_ADMIN);
@@ -131,24 +134,28 @@ post1.setAnonymous(true);
 post1.setTitle("how did i lose 10kg");
 post1.setContent("This is my way to lose 10 kg");
 
-postRepo.save(post1);
+postRepo.save(post1);;
+good.addPostToCategory(post1);
 post1.setUser(user2);
-    post1.setCategory(good);
-    post1.setListTags(tags3);
+post1.setCategory(good);
+post1.setListTags(tags3);
 
 
 post4.setTitle("how did i lose 100kg");
-post4.setContent("This is my way to lose 100 kg in a year");
+     post4.setContent("This is my way to lose 100 kg in a year");
 
     postRepo.save(post4);
+    good.addPostToCategory(post4);
     post4.setUser(user2);
     post4.setCategory(good);
     post4.setListTags(tags2);
+
 
 post2.setTitle("learn from my mistake");
 post2.setContent("This is my way to lose 1 kg in a year");
 
     postRepo.save(post2);
+    learn.addPostToCategory(post2);
     post2.setUser(user2);
     post2.setCategory(learn);
     post2.setListTags(tags2);
@@ -159,15 +166,13 @@ post3.setContent("This is my way to lose 1000 kg in a year");
 
 
     postRepo.save(post3);
+    question.addPostToCategory(post3);
+
       post3.setCategory(question);
       post3.setUser(user2);
       post3.setListTags(tags1);
 
 
-good.addPostToCategory(post1);
-learn.addPostToCategory(post2);
-question.addPostToCategory(post3);
-good.addPostToCategory(post4);
 
 
 

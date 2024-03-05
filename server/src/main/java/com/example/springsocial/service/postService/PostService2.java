@@ -89,7 +89,14 @@ public class PostService2 {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, sort);
          return postRepo.findAll(spec,paging);
+    }
 
+
+    public Page<Post> findUserLikedPosts(Long userId,int pageNo,int pageSize,String sortBy,String sortDirection){
+        Specification<Post> spec = Specification.where(PostSpecification.likedByUser(userId));
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable paging = PageRequest.of(pageNo, pageSize, sort);
+         return postRepo.findAll(spec,paging);
     }
     
     public void savePost(Post post,User user) throws Exception{

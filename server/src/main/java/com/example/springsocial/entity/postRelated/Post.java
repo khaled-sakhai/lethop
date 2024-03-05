@@ -45,7 +45,7 @@ public class Post extends BaseEntity<Long> {
   @Field
   private String title;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.LAZY,cascade={ CascadeType.MERGE, CascadeType.PERSIST })
   @JoinTable(
     name = "post_tag",
     joinColumns = @JoinColumn(name = "post_id"),
@@ -54,10 +54,8 @@ public class Post extends BaseEntity<Long> {
   @IndexedEmbedded
     private Set<Tag> listTags= new HashSet<>();
 
-  @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, 
-                       CascadeType.DETACH,  CascadeType.REFRESH},fetch = FetchType.LAZY)
+  @ManyToOne(cascade={ CascadeType.MERGE, CascadeType.PERSIST },fetch = FetchType.LAZY)
   @JoinColumn(name="category_id", referencedColumnName = "id")
-   @JsonIgnore
   @IndexedEmbedded
   private Category category;
 

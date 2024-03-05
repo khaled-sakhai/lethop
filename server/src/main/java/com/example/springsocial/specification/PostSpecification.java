@@ -28,6 +28,17 @@ public class PostSpecification {
         };
     }
 
+    public static Specification<Post> likedByUser(Long userId){
+        return(
+            Root<Post> root,
+            CriteriaQuery<?> criteriaQuery,
+            CriteriaBuilder builder) ->{
+                Join<Post, User> likedByUsersJoin = root.join("likedByUsers");
+                return builder.equal(likedByUsersJoin.get("id"), userId);
+        };
+    }
+
+
     // to be used only for admin// users should see deleted posts.
     public static Specification<Post> isDeleted(boolean isDeleted){
         return(
