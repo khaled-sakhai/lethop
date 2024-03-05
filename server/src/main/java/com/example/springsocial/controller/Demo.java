@@ -4,6 +4,8 @@ import com.example.springsocial.dto.comments.CommentRequest;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.userRelated.User;
+import com.example.springsocial.security.Token.Token;
+import com.example.springsocial.security.Token.TokenRepo;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CommentReplayService;
 import com.example.springsocial.service.postService.PostService;
@@ -31,6 +33,9 @@ private PostService postService;
     private UserService userService;
     @Autowired
     private CommentReplayService commentReplayService;
+
+    @Autowired
+    private TokenRepo tokenRepo;
     
     @GetMapping("/xx")
     public String getsmth(){
@@ -76,6 +81,11 @@ private PostService postService;
         return commentReplayService.getCommentById(commentid);
     }
 
-
+    
+    @GetMapping("/api/v1/public/token")
+    public List<Token> getTokens(){
+        //return tokenRepo.findAll();
+        return tokenRepo.findByUserEmail("kh.sakhai@gmail.com");
+    }
 
 }

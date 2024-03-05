@@ -13,8 +13,7 @@ public interface TokenRepo extends JpaRepository<Token, Long> {
 
   void deleteTokenByUserId(Long userId);
 
-  List<Token> findAllByIsLoggedOutAndUserEmail(boolean isLoggedOut, String userEmail);
-
+  List<Token> findByUserEmail(String email);
 
 
 

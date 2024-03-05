@@ -13,6 +13,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,9 +50,7 @@ public class AuthService {
 
     if (authentication.isAuthenticated()) {
       SecurityContextHolder.getContext().getAuthentication().getDetails();
-      User user = userService.findByEmail(email).orElseThrow();
-      Token token = updateTokenInDB(user,null,userAgent);
-
+      Token token = updateTokenInDB(email,null,userAgent);
       return new TokenResponse(token.getAccessToken(), token.getRefreshToken());
     } else {
       throw new UsernameNotFoundException("invalid user request !");
@@ -77,7 +77,7 @@ public class AuthService {
 
     if (userEmail != null && !tokenDB.isLoggedOut()) {
       if (jwtService.isTokenValid(refreshToken, dbUser.getEmail())) {
-        Token token = updateTokenInDB(dbUser, refreshToken,userAgent);
+        Token token = updateTokenInDB(dbUser.getEmail(), refreshToken,userAgent);
         tokenResponse.setAccessToken(token.getAccessToken());
         tokenResponse.setRefreshToken(refreshToken);
       } else {
@@ -87,30 +87,31 @@ public class AuthService {
 
     return tokenResponse;
   }
+  @Transactional
 
   public Token updateTokenInDB(
-    User user,
+    String email,
     String refreshToken,String userAgent
   ) {
+    User user = userService.findByEmail(email).orElseThrow();
     revokeAllTokensByEmail(user.getEmail());
     Token token = new Token();
+    token.setUserAgent(userAgent);
     token.setLoggedOut(false);
     token.setRefreshToken(jwtService.generateRefreshToken(user.getEmail()));
     token.setAccessToken(jwtService.generateToken(user.getEmail()));
-    tokenService.addToken(token,userAgent);
+    tokenService.addToken(token);
     token.setUser(user);
     user.addToken(token);
-    userService.updateUser(user);
     return token;
   }
 
+  @Transactional
   public void revokeAllTokensByEmail(String email){
-    List<Token> userTokens=tokenService.findByEmailAndIsLoggedIn(email,false);
+    List<Token> userTokens=tokenService.findByEmail(email);
     if(userTokens!=null && !userTokens.isEmpty()){
-      userTokens.forEach(t->{
-        t.setLoggedOut(true);
-        tokenService.updateToken(t);
-      });
+      userTokens.forEach(t->t.setLoggedOut(true));
+    tokenService.updateAllTokens(userTokens);
     }
   }
 

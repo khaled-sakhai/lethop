@@ -33,17 +33,21 @@ public class TokenService {
     tokenRepo.deleteById(id);
   }
 
-  public void addToken(Token token,String userAgent) {
-    token.setUserAgent(userAgent);
-    tokenRepo.save(token);
+  public Token addToken(Token token) {
+    return tokenRepo.save(token);
   }
 
-  public List<Token> findByEmailAndIsLoggedIn(String email,boolean isLoggedIn){
-    return tokenRepo.findAllByIsLoggedOutAndUserEmail(isLoggedIn,email);
+  public List<Token> findByEmail(String email){
+    System.out.println("Trying with emailxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    return tokenRepo.findByUserEmail(email);
+    
   }
 
   public void updateToken(Token token){
     tokenRepo.save(token);
+  }
+  public void updateAllTokens(List<Token> tokens){
+    tokenRepo.saveAll(tokens);
   }
 
   public void deletToken(Token token) {

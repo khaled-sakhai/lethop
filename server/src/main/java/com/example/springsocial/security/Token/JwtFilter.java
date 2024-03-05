@@ -49,9 +49,9 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
         }
 
         String email = jwtService.extractUsername(jwt);
-        Optional<Token> tokenFromDB = tokenService.findByToken(jwt);
+       Token tokenFromDB = tokenService.findByToken(jwt).orElseThrow();
 
-        if (jwt!=null && jwtService.isTokenValid(jwt,email) && tokenFromDB.get().getAccessToken().equals(jwt)) {
+        if (jwt!=null && jwtService.isTokenValid(jwt,email) && !tokenFromDB.isLoggedOut()) {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

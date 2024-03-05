@@ -77,11 +77,12 @@ public class User extends BaseEntity<Long> {
 
   @OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST },fetch = FetchType.LAZY) //optional = false)
   @JoinColumn(name = "profile_id", referencedColumnName = "id")
+  @JsonIgnore
   private Profile userProfile;
 
   @JsonIgnore
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval=true)
-  private List<Token> tokens;
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",cascade = CascadeType.REMOVE,orphanRemoval = true)
+  private List<Token> tokens= new ArrayList<>();
 
 
   //posts and saved posts
@@ -112,6 +113,9 @@ public class User extends BaseEntity<Long> {
   @Column(name = "saved_posts_count")
   private int savedPostsCount;
 
+  public void addToken(Token token){
+    this.tokens.add(token);
+  }
 
   @Column(name = "liked_posts_count")
   private int likedPostsCount;
@@ -133,9 +137,7 @@ public void addRoles(Role ...role) {
     this.roles=new HashSet<>();
   }
 
-  public void addToken(Token token){
-  tokens.add(token);
-  }
+
 public boolean addPost(Post post){
   if(!this.posts.contains(post)){
     this.posts.add(post);

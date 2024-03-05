@@ -2,6 +2,7 @@ package com.example.springsocial.security.Token;
 
 import com.example.springsocial.base.BaseEntity;
 import com.example.springsocial.entity.userRelated.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,8 @@ public class Token extends BaseEntity<Long> {
 
   private String userAgent;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
+  @JsonIgnore
   private User user;
 }
