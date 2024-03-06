@@ -1,4 +1,7 @@
 package com.example.springsocial.dto.post;
+import com.example.springsocial.dto.UserInfo;
+import com.example.springsocial.dto.comments.CommentResponse;
+import com.example.springsocial.util.ProjectUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -28,10 +31,11 @@ public class PostDto {
     private String lastModifiedDate;
     // user id + full name + profile image + last modify date
     private boolean isAnonymous=false;
-    private PostUserInfo postUserInfo;
+    private UserInfo postUserInfo;
     private int savedCounter=0;
     private int likedCounter=0;
     private int commentCounter=0;
+    private List<CommentResponse> comments = new ArrayList<>();
 
     public PostDto(Post post){
         // for security -- front end must subtract 12345 from user id
@@ -42,33 +46,24 @@ public class PostDto {
         for(Tag tag:post.getListTags()){
             this.tags.add(tag.getTagName());
         }
-        // Format the lastModifiedDate to show year, month, day, and hours
-        // Convert Date to LocalDateTime
-        LocalDateTime localDateTime = post.getLastModifiedDate()
-                .toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-        // Format the LocalDateTime to show year, month, day, and hours
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        this.lastModifiedDate = localDateTime.format(formatter);
+        this.lastModifiedDate = ProjectUtil.convertDateToString(post.getLastModifiedDate());
         this.likedCounter=post.getLikesCount();
         
         this.commentCounter=post.getCommentsCount();
         this.savedCounter=post.getSavesCount();
-        System.out.println("xcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-        System.out.println(post.getCategory().getCategory());
         this.Category = post.getCategory().getCategory();
-        
+
         if(!isAnonymous && post.getUser().getUserProfile()!=null){
-        this.postUserInfo=new PostUserInfo();
-        if(post.getUser().getUserProfile().getProfilePicture()!=null){
-            this.postUserInfo.setUserImageUrl(post.getUser().getUserProfile().getProfilePicture().getUrl()) ;
-        }
+
+          this.postUserInfo=new UserInfo();
+          if(post.getUser().getUserProfile().getProfilePicture()!=null){
+              this.postUserInfo.setUserImageUrl(post.getUser().getUserProfile().getProfilePicture().getUrl()) ;
+           }
         // for security -- front end must subtract 54321 from user id
-        this.postUserInfo.setUserId(post.getUser().getId() + 54321) ;
-        this.postUserInfo.setUserName(post.getUser().getUserProfile().getFullName());
+          this.postUserInfo.setUserId(post.getUser().getId() + 54321) ;
+          this.postUserInfo.setUserName(post.getUser().getUserProfile().getFullName());
         }
-    
+
 
     }
     

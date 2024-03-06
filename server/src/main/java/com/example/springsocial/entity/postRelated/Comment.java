@@ -57,7 +57,7 @@ public class Comment extends BaseEntity<Long> {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Reply> replies;
 
     private int numberOfReplies=0;

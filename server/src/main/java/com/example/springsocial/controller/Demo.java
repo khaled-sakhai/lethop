@@ -55,22 +55,6 @@ private PostService postService;
     }
 
 
-
-    @PostMapping(path = "api/v1/post/{postid}/comment")
-    public String addCommentToPost(
-        @PathVariable Long postid,
-        @RequestBody CommentRequest commentRequest,
-        Principal principal){
-     User user= userService.findByEmail(principal.getName()).get();
-
-    Comment comment = new Comment();
-    comment.setContent(commentRequest.getContent());
-    comment.setUser(user);
-    commentReplayService.addCommentForPost(postid, comment, user);
-    
-    return "Comment has been added succefuly";
-        
-    }
     @GetMapping("/api/v1/public/comment/{postid}")
     public  Set<Comment>  findCommentsByPostId(@PathVariable Long postid) {
         return commentReplayService.getPostComments(postid);

@@ -93,7 +93,7 @@ public class Post extends BaseEntity<Long> {
   
   /// comments
   @JsonIgnore
-  @OneToMany(mappedBy = "post")
+  @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE, orphanRemoval = true)
   private Set<Comment> postComments =new HashSet<>();
   // ... getters and setters
 

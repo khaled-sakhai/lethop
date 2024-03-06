@@ -99,7 +99,16 @@ public class Profile extends BaseEntity<Long>{
     }
 
     public String getFullName(){
-      return this.getFirstName() + " " + this.getLastName();
+    if(this.getFirstName()==null && this.getLastName()==null){
+      return this.user.getEmail();
+    }
+    if(this.getFirstName()==null){
+      return this.getLastName();
+    }
+    if(this.getLastName()==null){
+      return this.getFirstName();
+    }
+      return this.getFirstName() + "-" + this.getLastName();
     }
 
 

@@ -75,7 +75,7 @@ public class User extends BaseEntity<Long> {
   private Set<Role> roles = new HashSet<>();
   
 
-  @OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST },fetch = FetchType.LAZY) //optional = false)
+  @OneToOne(cascade =CascadeType.ALL,fetch = FetchType.LAZY) //optional = false)
   @JoinColumn(name = "profile_id", referencedColumnName = "id")
   @JsonIgnore
   private Profile userProfile;
@@ -97,7 +97,7 @@ public class User extends BaseEntity<Long> {
   @Column(name = "isSavedPostPrivate", columnDefinition = "boolean default true")
   private boolean isSavedPostPrivate=true;
 
-  @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
+  @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE )
   @JoinTable(name = "saved_posts",
              joinColumns = @JoinColumn(name = "user_id"),
              inverseJoinColumns = @JoinColumn(name = "post_id"))
