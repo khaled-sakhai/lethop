@@ -1,9 +1,13 @@
 package com.example.springsocial.service.postService;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
+
+import com.example.springsocial.validator.permessions.CommentOwner;
+import com.example.springsocial.validator.permessions.ReplyOwner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,6 +55,21 @@ public class CommentReplayService {
         return commentRepo.findByPost(post,paging);
     }
 
+    public Page<Comment> findCommentsByUserId(String email,
+                                              int pageNo,
+                                              int pageSize,
+                                              String sortBy,
+                                              String sortDirection){
+        User user = userService.findByEmail(email).orElseThrow(() -> new NoSuchElementException("user email is invalid"));
+        if(user.getCommentPostsCount()==0){
+            return null;
+        }
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable paging = PageRequest.of(pageNo, pageSize, sort);
+        return commentRepo.findByUser(user,paging);
+    }
+
+
     public Comment addCommentForPost(Long postId, Comment comment,String email) {
         // Fetch the post by ID and set it for the comment
         Post post = postRepo.findPostById(postId)
@@ -66,8 +85,61 @@ public class CommentReplayService {
         return commentRepo.save(comment);
     }
 
+    public Optional<Comment> findCommentById(Long commentId){
+        return commentRepo.findById(commentId);
+    }
+    @CommentOwner
+    public void editComment(Comment comment){
+        commentRepo.save(comment);
+    }
 
+    @CommentOwner
+    public void removeComment(Comment comment){
+        commentRepo.delete(comment);
+    }
+    //////////////////////////////////////////////
+    // reply///////////////////////////////////
+    public Page<Reply> findRepliesByComment(Long commentId,
+                                              int pageNo,
+                                              int pageSize,
+                                              String sortBy,
+                                              String sortDirection){
+        Comment comment = commentRepo.findById(commentId)
+                .orElseThrow(() -> new NoSuchElementException("comment id is invalid"));
 
+        if(comment.getNumberOfReplies()>0){
+            Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+            Pageable paging = PageRequest.of(pageNo, pageSize, sort);
+            return replyRepo.findByComment(comment,paging);
+        }
+         return null;
+    }
+    public Reply addRelpy(String email,Long postId,Long commentId,Reply reply){
+        Comment comment = commentRepo.findById(commentId).
+                orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+        User user =userService.findByEmail(email).orElseThrow();
+
+        user.getUserReplies().add(reply);
+        comment.addReplayToComment(reply);
+        reply.setComment(comment);
+        reply.setUser(user);
+        comment.updateNumberOfReplies();
+       return replyRepo.save(reply);
+    }
+
+    @ReplyOwner
+    public void editReplay(Reply reply){
+        replyRepo.save(reply);
+    }
+    @ReplyOwner
+    public void removeReplay(Reply reply){
+        replyRepo.delete(reply);
+    }
+    public Optional<Reply> findReplyById(Long replyId){
+        return replyRepo.findById(replyId);
+    }
+
+    //////////////////////////////////// others /////////////////
     public Set<Comment> getPostComments(Long postId){
         Post post = postRepo.findById(postId)
         .orElseThrow(() -> new EntityNotFoundException("Post not found")); 
@@ -75,9 +147,8 @@ public class CommentReplayService {
     }
 
     public Comment getCommentById(Long commentId){
-        Comment comment = commentRepo.findById(commentId)
-        .orElseThrow(() -> new EntityNotFoundException("comment not found")); 
-        return comment;
+        return commentRepo.findById(commentId)
+        .orElseThrow(() -> new EntityNotFoundException("comment not found"));
     }
 
 

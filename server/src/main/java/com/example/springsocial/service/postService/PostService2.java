@@ -63,6 +63,9 @@ public class PostService2 {
         }
     }
 
+    public Optional<Post> findPostById(Long postId){
+         return postRepo.findById(postId);
+    }
 
     @PostOwner
     //soft delete

@@ -45,7 +45,6 @@ public class Comment extends BaseEntity<Long> {
 
     private String content;
 
-    private boolean hasReplies;
 
     @JsonIgnore
     @ManyToOne

@@ -7,7 +7,10 @@ import java.util.stream.Collectors;
 
 import com.example.springsocial.dto.comments.CommentRequest;
 import com.example.springsocial.dto.comments.CommentResponse;
+import com.example.springsocial.dto.comments.ReplyResponse;
 import com.example.springsocial.entity.postRelated.Comment;
+import com.example.springsocial.entity.postRelated.Reply;
+import com.example.springsocial.validator.validators.ValidCommentReplySortBy;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,11 +45,6 @@ public class CommentReplayController {
         try {
             Comment comment = new Comment();
             comment.setContent(commentRequest.getContent());
-            System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-            System.out.println(commentRequest.getContent());
-            System.out.println(comment.getContent());
-            System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-
             commentReplayService.addCommentForPost(postId, comment, principal.getName());
             return ResponseEntity.ok().body("Comment added successfully");
         } catch (Exception e) {
@@ -56,9 +54,9 @@ public class CommentReplayController {
     }
 
     @GetMapping(path = "api/v1/public/post/{postId}/comments")
-    public ResponseEntity<List<CommentResponse>> getPostComments(@PathVariable Long postId,
+    public ResponseEntity<Page<CommentResponse>> getPostComments(@PathVariable Long postId,
                                                                  @RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "lastModifiedDate") @ValidPostSortBy String sortBy,
+                                                                 @RequestParam(defaultValue = "lastModifiedDate") @ValidCommentReplySortBy String sortBy,
                                                                  @RequestParam(defaultValue = "20") int size,
                                                                  @RequestParam(defaultValue = "desc") String sortDirection){
         try {
@@ -67,12 +65,95 @@ public class CommentReplayController {
             if (commentPage.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            // Get the content (comments) from the Page object
-            List<CommentResponse> commentsList = commentPage.getContent().stream()
-                    .map(CommentResponse::new)
-                    .collect(Collectors.toList());
+            Page<CommentResponse> commentsPage = commentPage.map(CommentResponse::new);
 
-            return new ResponseEntity<>(commentsList, HttpStatus.OK);
+            return new ResponseEntity<>(commentsPage, HttpStatus.OK);
+
+        } catch (Exception e) {
+            // Handle the exception and return ResponseEntity with bad request status
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(path = "api/v1/user/comments")
+    public ResponseEntity<Page<CommentResponse>> getUserComments(Principal principal,
+                                                                 @RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "lastModifiedDate") @ValidCommentReplySortBy String sortBy,
+                                                                 @RequestParam(defaultValue = "20") int size,
+                                                                 @RequestParam(defaultValue = "desc") String sortDirection){
+        try {
+            Page<Comment> commentPage=commentReplayService.findCommentsByUserId(principal.getName(),page,size,sortBy,sortDirection);
+            if (commentPage.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            Page<CommentResponse> commentsPage = commentPage.map(CommentResponse::new);
+
+            return new ResponseEntity<>(commentsPage, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping(path = "api/v1/comment/{commentId}")
+    public ResponseEntity<String> updateComment(@PathVariable Long commentId,
+                                                @RequestBody @Valid CommentRequest commentRequest,
+                                                Principal principal){
+        try {
+            Comment comment = commentReplayService.findCommentById(commentId).orElseThrow();
+            comment.setContent(commentRequest.getContent());
+            commentReplayService.editComment(comment);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Comment has been updated successfully");
+        }
+        catch (Exception e) {
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid request, please try again");
+        }
+    }
+    @DeleteMapping(path = "api/v1/comment/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long commentId,
+                                                Principal principal){
+        try {
+            Comment comment = commentReplayService.findCommentById(commentId).orElseThrow();
+            commentReplayService.removeComment(comment);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Comment has been removed successfully");
+        }
+        catch (Exception e) {
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid request, please try again");
+        }
+    }
+
+
+    @PostMapping(path = "api/v1/post/{postId}/comment/{commentId}/reply")
+    public ResponseEntity<String> addReply(@PathVariable Long postId,
+                                             @PathVariable Long commentId,
+                                             @RequestBody @Valid CommentRequest commentRequest,
+                                             Principal principal){
+        try {
+            Reply reply = new Reply();
+            reply.setContent(commentRequest.getContent());
+            commentReplayService.addRelpy(principal.getName(),postId, commentId,reply);
+            return ResponseEntity.ok().body("reply has been added successfully");
+        } catch (Exception e) {
+            // Handle the exception and return ResponseEntity with bad request status
+            return ResponseEntity.badRequest().body("Failed to add reply: " + e.getMessage());
+        }
+    }
+
+    @GetMapping(path = "api/v1/public/post/{postId}/comment/{commentId}/replies")
+    public ResponseEntity<Page<ReplyResponse>> getCommentReplies(@PathVariable Long postId,
+                                                                 @PathVariable Long commentId,
+                                                                 @RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "lastModifiedDate") @ValidCommentReplySortBy String sortBy,
+                                                                 @RequestParam(defaultValue = "20") int size,
+                                                                 @RequestParam(defaultValue = "desc") String sortDirection){
+        try {
+            Page<Reply> replyPage=commentReplayService.findRepliesByComment(commentId,
+                    page,size,sortBy,sortDirection);
+
+            if (replyPage.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            Page<ReplyResponse> repliesPage = replyPage.map(ReplyResponse::new);
+            return new ResponseEntity<>(repliesPage, HttpStatus.OK);
 
         } catch (Exception e) {
             // Handle the exception and return ResponseEntity with bad request status
@@ -81,5 +162,32 @@ public class CommentReplayController {
     }
 
 
+    @PutMapping(path = "api/v1/comment/{replyId}")
+    public ResponseEntity<String> updateReply( @PathVariable Long replyId,
+                                                @RequestBody @Valid CommentRequest commentRequest,
+                                                Principal principal){
+        try {
+            Reply reply = commentReplayService.findReplyById(replyId).orElseThrow();
+            reply.setContent(commentRequest.getContent());
+            commentReplayService.editReplay(reply);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("reply has been updated successfully");
+        }
+        catch (Exception e) {
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid request, please try again");
+        }
+    }
+    @DeleteMapping(path = "api/v1/replay/{replyId}")
+    public ResponseEntity<String> deleteReply(
+                                                @PathVariable Long replyId,
+                                                Principal principal){
+        try {
+            Reply reply = commentReplayService.findReplyById(replyId).orElseThrow();
+            commentReplayService.removeReplay(reply);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("reply has been removed successfully");
+        }
+        catch (Exception e) {
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid request, please try again");
+        }
+    }
     
 }

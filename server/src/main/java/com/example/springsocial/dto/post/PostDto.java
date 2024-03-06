@@ -35,7 +35,6 @@ public class PostDto {
     private int savedCounter=0;
     private int likedCounter=0;
     private int commentCounter=0;
-    private List<CommentResponse> comments = new ArrayList<>();
 
     public PostDto(Post post){
         // for security -- front end must subtract 12345 from user id

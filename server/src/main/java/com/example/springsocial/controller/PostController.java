@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.example.springsocial.dto.comments.ReplyResponse;
 import com.example.springsocial.service.ImageService;
 import com.example.springsocial.service.UtilService;
 import com.example.springsocial.service.postService.PostService2;
@@ -74,7 +75,7 @@ public class PostController {
 
 
   @GetMapping("api/v1/public/feed")
-  public  ResponseEntity<List<PostDto>> getFeed(
+  public  ResponseEntity<Page<PostDto>> getFeed(
   @RequestParam(required = false) String category,
   @RequestParam(required = false) String tag,
   @RequestParam(defaultValue = "0") int page,
@@ -87,9 +88,11 @@ public class PostController {
           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
       // Get the content (posts) from the Page object
-      List<PostDto> postDtos = postsPage.getContent().stream()
-              .map(PostDto::new)
-              .collect(Collectors.toList());
+//      List<PostDto> postDtos = postsPage.getContent().stream()
+//              .map(PostDto::new)
+//              .collect(Collectors.toList());
+
+      Page<PostDto> postDtos = postsPage.map(PostDto::new);
 
       return new ResponseEntity<>(postDtos, HttpStatus.OK);
 
@@ -104,7 +107,7 @@ public class PostController {
   }
 
     @GetMapping("api/v1/public/user/posts/me")
-    public ResponseEntity<List<PostDto>> findPostsByUser(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Page<PostDto>> findPostsByUser(@RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "20") int size,
                                                          @RequestParam(defaultValue = "lastModifiedDate") @ValidPostSortBy String sortBy,
                                                          @RequestParam(defaultValue = "desc") String sortDirection,Principal principal ){
@@ -116,16 +119,15 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
      }
      // Get the content (posts) from the Page object
-     List<PostDto> postDtos = postsPage.getContent().stream()
-                    .map(PostDto::new)
-                    .collect(Collectors.toList());
+        Page<PostDto> postDtos = postsPage.map(PostDto::new);
 
-     return new ResponseEntity<>(postDtos, HttpStatus.OK);
+
+        return new ResponseEntity<>(postDtos, HttpStatus.OK);
     }
 
 
     @GetMapping("api/v1/user/saved")
-    public ResponseEntity<List<PostDto>>  getUserSavedPosts(
+    public ResponseEntity<Page<PostDto>>  getUserSavedPosts(
                                        @RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "20") int size,
                                        @RequestParam(defaultValue = "lastModifiedDate") 
@@ -139,18 +141,17 @@ public class PostController {
              return new ResponseEntity<>(HttpStatus.NOT_FOUND);
        }
          // Get the content (posts) from the Page object
-       List<PostDto> postDtos = postsPage.getContent().stream()
-                .map(PostDto::new)
-                .collect(Collectors.toList());
+        Page<PostDto> postDtos = postsPage.map(PostDto::new);
 
-       return new ResponseEntity<>(postDtos, HttpStatus.OK);
+
+        return new ResponseEntity<>(postDtos, HttpStatus.OK);
      }
 
 
      
 
     @GetMapping("api/v1/user/liked")
-    public ResponseEntity<List<PostDto>>  getUserLikedPosts(
+    public ResponseEntity<Page<PostDto>>  getUserLikedPosts(
                                        @RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "20") int size,
                                        @RequestParam(defaultValue = "lastModifiedDate") 
@@ -164,11 +165,10 @@ public class PostController {
              return new ResponseEntity<>(HttpStatus.NOT_FOUND);
        }
          // Get the content (posts) from the Page object
-       List<PostDto> postDtos = postsPage.getContent().stream()
-                .map(PostDto::new)
-                .collect(Collectors.toList());
+        Page<PostDto> postDtos = postsPage.map(PostDto::new);
 
-       return new ResponseEntity<>(postDtos, HttpStatus.OK);
+
+        return new ResponseEntity<>(postDtos, HttpStatus.OK);
      }
 
      /////////////////////////////

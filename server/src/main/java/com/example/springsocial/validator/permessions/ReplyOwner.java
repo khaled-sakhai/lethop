@@ -1,8 +1,17 @@
 package com.example.springsocial.validator.permessions;
 
 import com.example.springsocial.entity.postRelated.Reply;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-@EntityOwner(Reply.class)
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@PreAuthorize("hasAuthority('ROLE_ADMIN') or (hasAuthority('ROLE_USER') && #reply.user.email == authentication.name )")
+
 public @interface ReplyOwner {
 
 }
