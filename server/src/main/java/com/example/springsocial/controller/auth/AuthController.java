@@ -1,9 +1,10 @@
 package com.example.springsocial.controller.auth;
 
-import com.example.springsocial.dto.LoginDto;
-import com.example.springsocial.dto.RegisterDto;
 import com.example.springsocial.enums.AuthProvider;
+import com.example.springsocial.enums.VerficicationType;
 import com.example.springsocial.exception.BadRequestException;
+import com.example.springsocial.dto.user.LoginDto;
+import com.example.springsocial.dto.user.RegisterDto;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.entity.userRelated.UserVerificationCode;
@@ -15,6 +16,8 @@ import com.example.springsocial.service.UserVerificationCodeService;
 import com.example.springsocial.service.emailService.EmailSenderService;
 import com.example.springsocial.util.ProjectUtil;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -54,7 +57,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDto loginDto,HttpServletRequest request) {
+    public ResponseEntity<?> authenticateUser(@RequestBody @Valid  LoginDto loginDto,HttpServletRequest request) {
       String userAgent = request.getHeader("User-Agent");
 
         TokenResponse tokenResponse= authService.authenticateAndGetToken(
@@ -66,7 +69,7 @@ public class AuthController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterDto registerDto) {
+    public ResponseEntity<?> registerUser( @RequestBody @Valid RegisterDto registerDto) {
         if(userService.isEmailTaken(registerDto.getEmail())) {
             throw new BadRequestException("Email address already in use.");
         }
@@ -84,13 +87,13 @@ public class AuthController {
         profileService.createNewProfile(profile);
         userService.addUser(user);
         // set confirmation code
-        confirmationCodeSend(user);
+        userService.confirmationCodeSend(user,VerficicationType.SIGNUP);
         return ResponseEntity.ok()
-        .body( "User registered successfully@ please login using the login information , pleaase verify your email, an email was send to: "+ user.getEmail());
+        .body( "User registered successfully! please login using the login information , pleaase verify your email, an email was send to: "+ user.getEmail());
     }
 
     @PostMapping("/check-email")
-    public ResponseEntity<?> isEmailTaken(@RequestBody RegisterDto registerDto){
+    public ResponseEntity<?> isEmailTaken(@RequestBody @Valid  RegisterDto registerDto){
         boolean result = userService.isEmailTaken(registerDto.getEmail());
         if (result) {
             return ResponseEntity.ok()
@@ -100,23 +103,13 @@ public class AuthController {
         .body( "You can't use this email, it's already registered for another user");
     }
 
+
     @GetMapping(path = "/confirm-account")
     public ResponseEntity<String> userEmailVerification(@RequestParam("verify") String verificationCode) throws Exception{
-      UserVerificationCode userVerificationCode = userVerificationCodeService.findByConfirmationCode(verificationCode);
-      if (userVerificationCode !=null) {
-        Optional<User> userOptional = userService.findByEmail(userVerificationCode.getUser().getEmail());
-        if(!userOptional.isPresent()){
-          throw new Exception("User doesn't exist, please verify your verification code and try again!");
-        }
-        User user = userOptional.get();
-        user.setActive(true);
-        userService.updateUser(user);
-
-        //we remove the verification code once the user used it,just to clear space
-        userVerificationCodeService.removeAfterVerify(userVerificationCode);
+      if(userService.userEmailVerification(verificationCode)){
         return ResponseEntity.ok().body("Congratulations! your account is fully activated");
       }
-      return ResponseEntity.badRequest().body("verification code is not valid");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("verification code is not valid, please try again or contact us");
     }
 
 
@@ -133,19 +126,6 @@ public class AuthController {
     );
   }
 
-  //helper
-  private void confirmationCodeSend(User user){
-     UserVerificationCode userVerificationCode = new UserVerificationCode(user);
-     userVerificationCodeService.save(userVerificationCode);
-
-     SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setFrom("mohdz2024@hotmail.com");
-        mailMessage.setText("To confirm your account, please click here : "
-            +"http://localhost:8080/confirm-account?verify="+userVerificationCode.getConfirmationCode());
 
 
-        emailSenderService.sendEmail(mailMessage);
-  }
 }

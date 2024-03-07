@@ -94,7 +94,7 @@ public class Profile extends BaseEntity<Long>{
       this.country = Country.valueOf(country.replaceAll("\\s+", "_").toUpperCase());
      }
     else{
-      this.country=Country.UNITED_STATES_OF_AMERICA;
+      this.country=Country.EGYPT;
      }
     }
 

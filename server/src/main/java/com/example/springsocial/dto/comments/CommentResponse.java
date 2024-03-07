@@ -1,6 +1,6 @@
 package com.example.springsocial.dto.comments;
 
-import com.example.springsocial.dto.UserInfo;
+import com.example.springsocial.dto.user.UserInfo;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.util.ProjectUtil;

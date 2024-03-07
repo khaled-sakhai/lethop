@@ -1,4 +1,4 @@
-package com.example.springsocial.dto;
+package com.example.springsocial.dto.user;
 
 import lombok.*;
 

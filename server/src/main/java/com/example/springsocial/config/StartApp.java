@@ -1,6 +1,6 @@
 package com.example.springsocial.config;
 
-import com.example.springsocial.dto.LoginDto;
+import com.example.springsocial.dto.user.LoginDto;
 import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.postRelated.Category;
 import com.example.springsocial.entity.postRelated.Post;

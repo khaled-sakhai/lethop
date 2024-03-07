@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 import com.example.springsocial.base.BaseEntity;
+import com.example.springsocial.enums.VerficicationType;
 import com.example.springsocial.util.ProjectUtil;
 
 import lombok.AllArgsConstructor;
@@ -30,11 +31,14 @@ public class UserVerificationCode extends BaseEntity<Long> {
     @Column(name="confirmation_code")
     private String confirmationCode;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private VerficicationType type;
+
+    private boolean isConfirmed=Boolean.FALSE;
+
+    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade={ CascadeType.MERGE, CascadeType.PERSIST })
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
-
-
 
     public UserVerificationCode(User user) {
         this.user = user;

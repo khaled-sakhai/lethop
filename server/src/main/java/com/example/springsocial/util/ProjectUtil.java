@@ -7,7 +7,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.mail.SimpleMailMessage;
+
 public class ProjectUtil {
+
+
+
 
     // Format the LocalDateTime to show year, month, day, and hours,minutes
     public static String convertDateToString(Date date){

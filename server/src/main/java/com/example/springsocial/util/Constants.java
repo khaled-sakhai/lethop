@@ -2,6 +2,8 @@ package com.example.springsocial.util;
 
 public class Constants {
     public static final int MAX_PAGE_SIZE = 20;
+    public static final String NETWORK_NAME= "LETHOP";
+    public static final String NETWORK_EMAIL= "mohdz2024@hotmail.com";
 
     public static final String[] AllowedTags = {"motivation","addiction","success",
                                              "education","finance","sport",

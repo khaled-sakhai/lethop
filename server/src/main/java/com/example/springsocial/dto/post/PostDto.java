@@ -1,6 +1,6 @@
 package com.example.springsocial.dto.post;
-import com.example.springsocial.dto.UserInfo;
 import com.example.springsocial.dto.comments.CommentResponse;
+import com.example.springsocial.dto.user.UserInfo;
 import com.example.springsocial.util.ProjectUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;

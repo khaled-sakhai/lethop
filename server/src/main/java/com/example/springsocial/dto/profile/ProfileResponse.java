@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import com.example.springsocial.dto.user.UserInfo;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -20,20 +21,17 @@ import lombok.NoArgsConstructor;
 public class ProfileResponse {
     
   private Long id;
-  private Long userId;
   private String profileCreationDate;
-  private String fullName;
   private String birthDate;
   private String country;
   private String city;
   private String summary;
-  private String profilePictureUrl;
+  private UserInfo userInfo;
 
 
   public ProfileResponse(User user){
     this.id=user.getUserProfile().getId();
     this.city=user.getUserProfile().getCity();
-    this.fullName=user.getUserProfile().getFullName();
     if(user.getUserProfile().getBirthDate() !=null){
         this.birthDate=user.getUserProfile().getBirthDate().toString();
     }
@@ -41,9 +39,12 @@ public class ProfileResponse {
         this.country=user.getUserProfile().getCountry().toString();
 
     }
+
     this.summary=user.getUserProfile().getSummary();
-    this.profilePictureUrl=user.getUserProfile().getProfilePicture().getUrl();
-    this.userId=user.getId();
+    /// user info
+    this.userInfo.setUserName(user.getUserProfile().getFullName());
+    this.userInfo.setUserImageUrl(user.getUserProfile().getProfilePicture().getUrl());
+    this.userInfo.setUserId(user.getId());
 
 
      // Format the lastModifiedDate to show year, month, day, and hours

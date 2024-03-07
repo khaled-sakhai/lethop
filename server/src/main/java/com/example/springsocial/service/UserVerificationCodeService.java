@@ -1,5 +1,7 @@
 package com.example.springsocial.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,14 @@ public class UserVerificationCodeService {
         return userVerificationCodeRepo.save(userVerificationCode);
     }
 
-    public UserVerificationCode findByConfirmationCode(String verificationCode){
-        return userVerificationCodeRepo.getByConfirmationCode(verificationCode);
+
+    public Optional<UserVerificationCode> findByConfirmationCode(String verificationCode){
+        return userVerificationCodeRepo.findByConfirmationCode(verificationCode);
     }
 
     public void removeAfterVerify(UserVerificationCode userVerificationCode){
          userVerificationCodeRepo.delete(userVerificationCode);
     }
+
+    
 }

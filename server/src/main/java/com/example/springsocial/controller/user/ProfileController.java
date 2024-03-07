@@ -3,6 +3,8 @@ package com.example.springsocial.controller.user;
 import java.security.Principal;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -47,18 +50,16 @@ public class ProfileController {
   private ImageService imageService;
     
 
-  @PostMapping("/api/v1/auth/register/profile")
-  public ResponseEntity<String> createProfile(@RequestBody ProfileDto profileDto,Principal principal
+  @PutMapping("/api/v1/auth/register/profile")
+  public ResponseEntity<String> updateProfile(@RequestBody @Valid ProfileDto profileDto,Principal principal
   ) throws UsernameNotFoundException {
 
-    //users get a profile once they creat a new user, we're just updating the existed profile here
     Profile profile =  getUserFromPrincipal(principal).getUserProfile();
 
      profile.setBirthDate(profileDto.getBirthDate());
      profile.setCity(profileDto.getCity());
      if(profileDto.getCountry()!=null){
           profile.setProfileCountry(profileDto.getCountry());
-
      }
      profile.setFirstName(profileDto.getFirstName());
      profile.setLastName(profileDto.getLastName());
@@ -67,7 +68,6 @@ public class ProfileController {
      userService.markeProfileUpdated(profile.getUser());
     return ResponseEntity.ok().body("profile updated successefully") ;
   }
-
 
   @DeleteMapping("/api/v1/profile/picture")
   public boolean removeProfilePicture(Principal principal)
