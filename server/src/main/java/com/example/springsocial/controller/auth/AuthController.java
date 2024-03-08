@@ -89,7 +89,7 @@ public class AuthController {
         // set confirmation code
         userService.confirmationCodeSend(user,VerficicationType.SIGNUP);
         return ResponseEntity.ok()
-        .body( "User registered successfully! please login using the login information , pleaase verify your email, an email was send to: "+ user.getEmail());
+        .body( "User registered successfully!, pleaase verify your email, an email was send to: "+ user.getEmail());
     }
 
     @PostMapping("/check-email")

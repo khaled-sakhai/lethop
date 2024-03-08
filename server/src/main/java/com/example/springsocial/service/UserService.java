@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -111,55 +114,36 @@ public class UserService {
     return userRepo.findByIsActiveFalseAndProvider(provider);
   }
 
+    public boolean userEmailVerification(String verificationCode) throws Exception{
+      UserVerificationCode userVerificationCode = validateVerificationCode(verificationCode);
 
-    public boolean userEmailVerification(String verificationCode){
-      UserVerificationCode userVerificationCode = validateVerificationCode(verificationCode);;
-      System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-      if (userVerificationCode.getType().equals(VerficicationType.SIGNUP)) {
+      if (userVerificationCode.getType().equals(VerficicationType.SIGNUP) && userVerificationCode.isConfirmed()) {
         User user = userVerificationCode.getUser();
         user.setActive(true);
-        System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-
         this.updateUser(user);
-        userVerificationCode.setConfirmed(true);
-        userVerificationCodeRepo.save(userVerificationCode);
-        //we remove the verification code once the user used it,just to clear space
-        System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-
+        userVerificationCodeRepo.deleteById(userVerificationCode.getId());
         return true;
       }
       return false;
     }
 
-    public boolean userPasswordResetVerification(String verificationCode,String newPassword){
-      UserVerificationCode userVerificationCode = validateVerificationCode(verificationCode);
-      if (userVerificationCode.getType().equals(VerficicationType.PASSWORD)) {
-        User user = this.findByEmail(userVerificationCode.getUser().getEmail()).orElseThrow();
-        //this.changePassword(newPassword, user);
-        //this.updateUser(user);
-        //we remove the verification code once the user used it,just to clear space
-        //userVerificationCodeService.removeAfterVerify(userVerificationCode);
-        return true;
-      }
-      return false;
-    }
-
-
-    public void resetUserPassword(String newPassword,String verificationCode){
-      UserVerificationCode userVerificationCode = validateVerificationCode(verificationCode);
-      if (userVerificationCode.getType().equals(VerficicationType.PASSWORD) && userVerificationCode.isConfirmed()){
-        User user = this.findByEmail(userVerificationCode.getUser().getEmail()).orElseThrow();
+   
+    public boolean userPasswordResetVerification(String verificationCode,String newPassword) throws Exception{
+      UserVerificationCode userVerificationCode = userVerificationCodeRepo.findByConfirmationCode(verificationCode).orElseThrow();
+      if (userVerificationCode.getType().equals(VerficicationType.SIGNUP) && userVerificationCode.isConfirmed()) {
+        User user = userVerificationCode.getUser();
         this.changePassword(newPassword, user);
-        this.updateUser(user);
-        //we remove the verification code once the user used it,just to clear space
-        userVerificationCodeService.removeAfterVerify(userVerificationCode);
+        userVerificationCodeRepo.delete(userVerificationCode);
+        return true;
+      }
+      else{
+       throw new Exception("Confirmation code is invalid!");
       }
     }
 
 
   public void confirmationCodeSend(User user,VerficicationType type){
-     UserVerificationCode userVerificationCode = new UserVerificationCode(user);
-     userVerificationCode.setType(type);
+     UserVerificationCode userVerificationCode = new UserVerificationCode(user,type);
      userVerificationCodeRepo.save(userVerificationCode);
      SimpleMailMessage mailMessage = new SimpleMailMessage();
      if(type==VerficicationType.PASSWORD){
@@ -170,11 +154,14 @@ public class UserService {
      }
       emailSenderService.sendEmail(mailMessage);
   }
-
-
-  private UserVerificationCode validateVerificationCode(String verificationCode){
+  
+  public UserVerificationCode validateVerificationCode(String verificationCode) throws Exception{
     UserVerificationCode userVerificationCode = userVerificationCodeRepo.findByConfirmationCode(verificationCode).orElseThrow();
-   return userVerificationCode;
+    if(userVerificationCode.isConfirmed()){
+      throw new Exception("Verification code invalid!");
+    }
+    userVerificationCode.setConfirmed(true);;
+    return userVerificationCodeRepo.save(userVerificationCode);
   }
 
 

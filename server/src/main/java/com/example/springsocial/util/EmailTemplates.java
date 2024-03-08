@@ -25,12 +25,9 @@ public class EmailTemplates {
      mailMessage.setTo(email);
         mailMessage.setSubject("Password Reset!");
         mailMessage.setFrom(Constants.NETWORK_EMAIL);
-        mailMessage.setText("You've requested a password reset for your account. To reset your password, please click the link below:"
-            +"http://localhost:8080/confirm-account?verify="+userVerificationCode);
-
             mailMessage.setText("Dear "+userName+",\n\n" +
             "You've requested a password reset for your account. To reset your password, please click the link below:\n\n" +
-            "http://localhost:8080/confirm-account?verify="+ userVerificationCode +"\n\n"+
+            "http://localhost:8080/api/v1/public/password/verify?code="+ userVerificationCode +"\n\n"+
             "If you did not initiate this request, please disregard this email.\n\n" +
             "Best regards,\n" +
             Constants.NETWORK_NAME);

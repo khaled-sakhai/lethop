@@ -95,6 +95,7 @@ public class UserController {
         return ResponseEntity.badRequest().body("user email update failed");
     }
 
+    // send request / generate code,email user
     @GetMapping("api/v1/public/password/reset")
     public ResponseEntity<String> resetPassword(@RequestParam @Email String email){
         Optional<User> user = userService.findByEmail(email);
@@ -105,17 +106,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user email! please try again");
     }
 
-    @GetMapping("api/v1/public/password/reset")
-    public ResponseEntity<String> resetPassword(@RequestParam String verificationCode){
-        Optional<User> user = userService.findByEmail(email);
-        if(user.isPresent()){
-            userService.confirmationCodeSend(user.get(), VerficicationType.PASSWORD);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("We've sent you an email to update your password");
+    /// user click on the link { activate the verify code}
+    @GetMapping("api/v1/public/password/verify")
+    public ResponseEntity<String> resetPasswordVerification(@RequestParam("code") String verificationCode){
+        try {
+           userService.validateVerificationCode(verificationCode);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("You're able to change your password now..");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Verification code, please try again");
+
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user email! please try again");
     }
 
-
+    // allow the user to update password + delete the code
     @PostMapping(path = "api/v1/public/password/reset")
     public ResponseEntity<String> userPasswordResetVerification(@RequestBody PasswordRequest passwordRequest){
       try{
