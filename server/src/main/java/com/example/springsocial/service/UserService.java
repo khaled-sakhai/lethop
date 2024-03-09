@@ -89,6 +89,7 @@ public class UserService {
     updateUser(user);
   }
 
+  
   public void deleteUser(User user){
     userRepo.delete(user);
   }
@@ -130,7 +131,7 @@ public class UserService {
    
     public boolean userPasswordResetVerification(String verificationCode,String newPassword) throws Exception{
       UserVerificationCode userVerificationCode = userVerificationCodeRepo.findByConfirmationCode(verificationCode).orElseThrow();
-      if (userVerificationCode.getType().equals(VerficicationType.SIGNUP) && userVerificationCode.isConfirmed()) {
+      if (userVerificationCode.getType().equals(VerficicationType.PASSWORD) && userVerificationCode.isConfirmed()) {
         User user = userVerificationCode.getUser();
         this.changePassword(newPassword, user);
         userVerificationCodeRepo.delete(userVerificationCode);
@@ -154,7 +155,9 @@ public class UserService {
      }
       emailSenderService.sendEmail(mailMessage);
   }
-  
+ 
+
+
   public UserVerificationCode validateVerificationCode(String verificationCode) throws Exception{
     UserVerificationCode userVerificationCode = userVerificationCodeRepo.findByConfirmationCode(verificationCode).orElseThrow();
     if(userVerificationCode.isConfirmed()){

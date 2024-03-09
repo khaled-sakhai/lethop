@@ -41,8 +41,6 @@ public class AuthService {
 
   public TokenResponse authenticateAndGetToken(String email, String password,String userAgent) {
 
-
-
     Authentication authentication = authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(email, password)
     );
@@ -88,13 +86,12 @@ public class AuthService {
     return tokenResponse;
   }
   @Transactional
-
   public Token updateTokenInDB(
     String email,
     String refreshToken,String userAgent
   ) {
     User user = userService.findByEmail(email).orElseThrow();
-    revokeAllTokensByEmail(user.getEmail());
+    revokeAllTokensByEmail(user);
     Token token = new Token();
     token.setUserAgent(userAgent);
     token.setLoggedOut(false);
@@ -103,15 +100,14 @@ public class AuthService {
     tokenService.addToken(token);
     token.setUser(user);
     user.addToken(token);
+    userService.updateUser(user);
     return token;
   }
 
-  @Transactional
-  public void revokeAllTokensByEmail(String email){
-    List<Token> userTokens=tokenService.findByEmail(email);
-    if(userTokens!=null && !userTokens.isEmpty()){
-      userTokens.forEach(t->t.setLoggedOut(true));
-    tokenService.updateAllTokens(userTokens);
+  public void revokeAllTokensByEmail(User user){
+    List<Token> userTokens=user.getTokens();
+    for(Token token:userTokens){
+      token.setLoggedOut(true);
     }
   }
 

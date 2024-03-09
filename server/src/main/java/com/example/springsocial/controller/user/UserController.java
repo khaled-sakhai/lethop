@@ -13,8 +13,10 @@ import com.example.springsocial.security.UserPrincipal;
 import com.example.springsocial.security.Token.TokenRepo;
 import com.example.springsocial.service.ProfileService;
 import com.example.springsocial.service.UserService;
+import com.example.springsocial.validator.permessions.ValidUser;
 
 import java.security.Principal;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.constraints.Email;
@@ -85,25 +87,23 @@ public class UserController {
     }
 
     @PostMapping("/user/email/update")
-    public ResponseEntity<String> updateUserEmail(Principal principal,String email){
-        Optional<User> user = userService.findByEmail(principal.getName());
-        if (user.isPresent()) {
-           if(userService.updateEmail(user.get(), email)){
-                return ResponseEntity.ok().body("email has been updated");
-           }
-        }
-        return ResponseEntity.badRequest().body("user email update failed");
+    public ResponseEntity<String> updateUserEmail(Principal principal,@RequestBody Map<String, String> requestBody){
+        String email = requestBody.get("email");
+        User user = userService.findByEmail(email).orElseThrow();
+        userService.updateEmail(user, email);
+        return ResponseEntity.ok().body("email has been updated");
     }
 
     // send request / generate code,email user
     @GetMapping("api/v1/public/password/reset")
+    @ValidUser()
     public ResponseEntity<String> resetPassword(@RequestParam @Email String email){
-        Optional<User> user = userService.findByEmail(email);
-        if(user.isPresent()){
-            userService.confirmationCodeSend(user.get(), VerficicationType.PASSWORD);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("We've sent you an email to update your password");
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user email! please try again");
+        User user = userService.findByEmail(email).orElseThrow();
+
+        userService.confirmationCodeSend(user, VerficicationType.PASSWORD);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("We've sent you an email to update your password");
+      
     }
 
     /// user click on the link { activate the verify code}
@@ -111,15 +111,14 @@ public class UserController {
     public ResponseEntity<String> resetPasswordVerification(@RequestParam("code") String verificationCode){
         try {
            userService.validateVerificationCode(verificationCode);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("You're able to change your password now..");
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Verification code, please try again");
+           return ResponseEntity.status(HttpStatus.ACCEPTED).body("You're able to change your password now..");
+        } 
+        catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Verification code, please try again");
 
         }
     }
 
-    // allow the user to update password + delete the code
     @PostMapping(path = "api/v1/public/password/reset")
     public ResponseEntity<String> userPasswordResetVerification(@RequestBody PasswordRequest passwordRequest){
       try{
@@ -129,7 +128,6 @@ public class UserController {
       catch(Exception e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("verification code is not valid, please try again or contact us");
       } 
-      
     }
 
 
