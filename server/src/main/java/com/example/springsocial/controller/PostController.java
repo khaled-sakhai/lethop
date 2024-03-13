@@ -2,15 +2,18 @@ package com.example.springsocial.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.example.springsocial.dto.comments.ReplyResponse;
-import com.example.springsocial.service.ImageService;
-import com.example.springsocial.service.UtilService;
+import com.example.springsocial.dto.user.UserInfo;
+import com.example.springsocial.enums.NotificationType;
+import com.example.springsocial.service.*;
 import com.example.springsocial.service.postService.PostService2;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +38,12 @@ import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.ImageRepo;
-import com.example.springsocial.service.GoogleCloudService;
-import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CategoryService;
 import com.example.springsocial.service.postService.PostService;
 import com.example.springsocial.service.postService.TagService;
 import com.example.springsocial.util.Constants;
 
+@AllArgsConstructor
 
 @RestController
 public class PostController {
@@ -71,6 +73,8 @@ public class PostController {
 
   @Autowired
   private UtilService utilService;
+
+  private final NotificationService notificationService;
 
 
 
@@ -110,7 +114,8 @@ public class PostController {
     public ResponseEntity<Page<PostDto>> findPostsByUser(@RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "20") int size,
                                                          @RequestParam(defaultValue = "lastModifiedDate") @ValidPostSortBy String sortBy,
-                                                         @RequestParam(defaultValue = "desc") String sortDirection,Principal principal ){
+                                                         @RequestParam(defaultValue = "desc") String sortDirection,
+                                                         Principal principal ){
       Long userId= utilService.getUserFromPrincipal(principal).getId();
 
      Page<Post>  postsPage= postService2.findPostsByUserId(userId,page,size,sortBy,sortDirection);
@@ -173,18 +178,15 @@ public class PostController {
 
      /////////////////////////////
 
-    @GetMapping("api/v1/public/post/saved/{postid}")
-    public Set<User> getPostSavedBy(@PathVariable Long postid){
-      Optional<Post> post = postService.findById(postid);
-      if(post.isPresent()){
-        return post.get().getSavedByUsers();
-      }
-      return null;
+    @GetMapping("api/v1/public/post/saved/{postId}")
+    public ResponseEntity<List<UserInfo>> getPostSavedBy(@PathVariable Long postId){
+        return postService.findById(postId)
+                .map(post -> ResponseEntity.ok(post.getSavedByUsers().stream()
+                            .map(UserInfo::new)
+                        .collect(Collectors.toList())))
+                .orElse(ResponseEntity.notFound().build());
     }
 
-
-    
-/// post settings // only for authenticated users
 
     @PostMapping(path = "api/v1/post/create")
     public ResponseEntity<String> createPost(@RequestPart(value = "post",required = true) PostRequest postRequest,
@@ -278,26 +280,30 @@ public class PostController {
     
     @PostMapping(path = "api/v1/post/{postid}/like")
     public ResponseEntity<String> likePost(@PathVariable Long postid,Principal principal) throws Exception{
-      User user= userService.findByEmail(principal.getName()).get();
+      User user= userService.findByEmail(principal.getName()).orElseThrow();
       Optional<Post> post = postService2.getPostById(postid);
       if(post.isPresent()){
         postService2.likePost( user,post.get());
-      return ResponseEntity.ok("Post liked succesfully");
+        /// notify only if user is not the owner
+          if(!Objects.equals(post.get().getUser().getEmail(), principal.getName())){
+              notificationService.createNotification(post.get(),null,user,null, NotificationType.POST_LIKE);
+          }
+      return ResponseEntity.ok("Post liked successfully");
       }
-      return ResponseEntity.badRequest().body("Post was not liked succesfully");     
+      return ResponseEntity.badRequest().body("Post was not liked successfully");
     }
 
-    @PostMapping(path = "api/v1/post/{postid}/unlike")
-    public ResponseEntity<String> unlikePost(@PathVariable Long postid,Principal principal) throws Exception{
+    @PostMapping(path = "api/v1/post/{postId}/unlike")
+    public ResponseEntity<String> unlikePost(@PathVariable Long postId,Principal principal) throws Exception{
       User user= userService.findByEmail(principal.getName()).get();
-      Optional<Post> post = postService2.getPostById(postid);
+      Optional<Post> post = postService2.getPostById(postId);
       if(post.isPresent()){
 
         postService2.unlikePost(user, post.get());
 
-      return ResponseEntity.ok("Post unliked succesfully");
+      return ResponseEntity.ok("Post unliked successfully");
       }
-      return ResponseEntity.badRequest().body("Post was not unliked succesfully");     
+      return ResponseEntity.badRequest().body("Post was not unliked successfully");
     }
 
 

@@ -2,6 +2,7 @@ package com.example.springsocial.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -10,8 +11,11 @@ import com.example.springsocial.dto.comments.CommentResponse;
 import com.example.springsocial.dto.comments.ReplyResponse;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Reply;
+import com.example.springsocial.enums.NotificationType;
+import com.example.springsocial.service.NotificationService;
 import com.example.springsocial.validator.validators.ValidCommentReplySortBy;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,7 @@ import com.example.springsocial.service.postService.PostService2;
 
 
 import javax.validation.Valid;
+@AllArgsConstructor
 
 @RestController
 public class CommentReplayController {
@@ -37,6 +42,7 @@ public class CommentReplayController {
 
     @Autowired
     private PostService2 postService;
+    private final NotificationService notificationService;
 
     @PostMapping(path = "api/v1/post/{postId}/comment")
     public ResponseEntity<String> addComment(@PathVariable Long postId,
@@ -45,7 +51,13 @@ public class CommentReplayController {
         try {
             Comment comment = new Comment();
             comment.setContent(commentRequest.getContent());
+            User user = userService.findByEmail(principal.getName()).orElseThrow();
             commentReplayService.addCommentForPost(postId, comment, principal.getName());
+            /// notify only if user is not the owner
+            if(!Objects.equals(comment.getPost().getUser().getEmail(), principal.getName())){
+                notificationService.createNotification(comment.getPost(),comment,user,null, NotificationType.COMMENT);
+            }
+
             return ResponseEntity.ok().body("Comment added successfully");
         } catch (Exception e) {
             // Handle the exception and return ResponseEntity with bad request status

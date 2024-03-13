@@ -3,12 +3,13 @@ package com.example.springsocial.service.emailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailSenderService {
     
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     @Autowired
     public EmailSenderService(JavaMailSender javaMailSender) {
@@ -16,9 +17,12 @@ public class EmailSenderService {
     }
 
 
+    @Async
     public void sendEmail(SimpleMailMessage email) {
         javaMailSender.send(email);
     }
 
+
+//comment created => post owner notification (app + email)=>
 }
 

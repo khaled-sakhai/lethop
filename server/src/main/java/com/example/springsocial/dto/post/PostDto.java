@@ -23,6 +23,7 @@ import com.example.springsocial.entity.postRelated.Tag;
 @NoArgsConstructor
 @Data
 public class PostDto {
+
     private Long postId;
     private String title;
     private String content;

@@ -32,8 +32,26 @@ public class EmailTemplates {
             "Best regards,\n" +
             Constants.NETWORK_NAME);
             return mailMessage;
-
   }
+
+    public static SimpleMailMessage postLikedOrCommentedEmail(String email,String userName,String postLink,String postTitle){
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email);
+        mailMessage.setSubject("إشعار جديد على منشورك!");
+        mailMessage.setFrom(Constants.NETWORK_EMAIL);
+        mailMessage.setText("مرحبا " + userName + ",\n\n" +
+                "لقد تمت إضافة تعليق أو إعجاب جديد على منشورك.\n" +
+                "عنوان المنشور: " + postTitle + "\n" +
+                "رابط المنشور: " + postLink + "\n\n" +
+                "إذا كنت ترغب في الاطلاع على التعليق أو الإعجاب، يرجى زيارة الرابط أدناه:\n\n" +
+                "http://localhost:8080/api/v1/public/post/" + postLink + "\n\n" +
+                "إذا لم تكن أنت من قام بهذا الإجراء، يرجى تجاهل هذا البريد الإلكتروني.\n\n" +
+                "أطيب التحيات،\n" +
+                Constants.NETWORK_NAME);
+        return mailMessage;
+
+    }
+
 
 
 }
