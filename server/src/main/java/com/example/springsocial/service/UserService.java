@@ -1,5 +1,6 @@
 package com.example.springsocial.service;
 
+import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
@@ -8,6 +9,7 @@ import com.example.springsocial.enums.APPRole;
 import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.enums.VerficicationType;
 import com.example.springsocial.repository.RoleRepo;
+import com.example.springsocial.repository.TagRepo;
 import com.example.springsocial.repository.UserRepo;
 import com.example.springsocial.repository.UserVerificationCodeRepo;
 import com.example.springsocial.service.emailService.EmailSenderService;
@@ -22,6 +24,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
   @Autowired
@@ -54,6 +58,16 @@ public class UserService {
   private UserVerificationCodeService userVerificationCodeService;
   @Autowired
   private EmailSenderService emailSenderService;
+
+  private final TagRepo tagRepo;
+
+  public void changePreferences(User user,List<String> tags){
+    user.getUserInterests().clear();
+    for (String tagString:tags){
+      Optional<Tag> tag= tagRepo.findByTagName(tagString);
+        tag.ifPresent(value -> user.getUserInterests().add(value));
+    }
+  }
 
   public Optional<User> findByEmail(String email) {
     return userRepo.findByEmail(email);

@@ -1,10 +1,13 @@
 package com.example.springsocial.controller.user;
 
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.example.springsocial.dto.profile.PreferencesDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -112,6 +115,14 @@ public class ProfileController {
     else{
           return ResponseEntity.badRequest().body("failed to upload the picture");
     }
+    }
+
+    @PostMapping(path = "api/v1/user/preferences")
+    public ResponseEntity<String> changePreferences(@RequestBody PreferencesDto preferencesDto,Principal principal){
+      User user= userService.findByEmail(principal.getName()).orElseThrow();
+      List<String> tagList = Arrays.asList(preferencesDto.getTags().split(","));
+      userService.changePreferences(user,tagList);
+      return ResponseEntity.status(HttpStatus.OK).body("User preferences has been sat!");
     }
 
     @GetMapping("api/v1/public/user/{userid}")

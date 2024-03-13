@@ -28,7 +28,7 @@ public class NotificationController {
     private final UserService userService;
     private final PostService2 postService2;
 
-    @GetMapping(path = "api/v1/user/notification")
+    @GetMapping(path = "api/v1/user/notifications")
     public ResponseEntity<List<NotificationDto>> getAllNotification(Principal principal){
         User user = userService.findByEmail(principal.getName()).orElseThrow();
         List<Notification> notifs = notificationService.findAllNotificationByUserId(user.getId());

@@ -2,6 +2,7 @@ package com.example.springsocial.entity.userRelated;
 
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Reply;
+import com.example.springsocial.entity.postRelated.Tag;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -66,14 +67,13 @@ public class User extends BaseEntity<Long> {
   private boolean needProfileUpdate = true;
 
   // user relationships
-  @ManyToMany(fetch = FetchType.LAZY,cascade={ CascadeType.MERGE, CascadeType.PERSIST })
+  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
   @JoinTable(
     name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id")
   )
   private Set<Role> roles = new HashSet<>();
-  
 
   @OneToOne(cascade =CascadeType.ALL,fetch = FetchType.LAZY) //optional = false)
   @JoinColumn(name = "profile_id", referencedColumnName = "id")
@@ -93,6 +93,9 @@ public class User extends BaseEntity<Long> {
     inverseJoinColumns = @JoinColumn(name = "post_id")
   )
   private List<Post> posts = new ArrayList<>();
+
+  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+  private List<Tag> userInterests=new ArrayList<>();
 
   @Column(name = "isSavedPostPrivate", columnDefinition = "boolean default true")
   private boolean isSavedPostPrivate=true;
