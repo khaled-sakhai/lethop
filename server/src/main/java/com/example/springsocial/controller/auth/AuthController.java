@@ -7,24 +7,19 @@ import com.example.springsocial.dto.user.LoginDto;
 import com.example.springsocial.dto.user.RegisterDto;
 import com.example.springsocial.entity.userRelated.Profile;
 import com.example.springsocial.entity.userRelated.User;
-import com.example.springsocial.entity.userRelated.UserVerificationCode;
 import com.example.springsocial.security.Token.TokenResponse;
 import com.example.springsocial.service.AuthService;
 import com.example.springsocial.service.ProfileService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.UserVerificationCodeService;
 import com.example.springsocial.service.emailService.EmailSenderService;
-import com.example.springsocial.util.ProjectUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 

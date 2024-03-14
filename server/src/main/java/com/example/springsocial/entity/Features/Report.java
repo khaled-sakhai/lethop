@@ -13,12 +13,24 @@ import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.postRelated.Reply;
 import com.example.springsocial.entity.userRelated.User;
-import com.example.springsocial.enums.RepportType;
+import com.example.springsocial.enums.ReportType;
 import com.example.springsocial.enums.ResourceType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "rapports")
-public class Repport extends BaseEntity<Long> {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "Reports")
+@SQLDelete(sql = "UPDATE Reports SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
+public class Report extends BaseEntity<Long> {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "related_post_id")
@@ -27,22 +39,24 @@ public class Repport extends BaseEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     private User relatedUser;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User reporter;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "related_comment_id")
     private Comment relatedComment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "related_reply_id")
-    
     private Reply relatedReply;
 
-    private String comment;
+    private String feedback;
 
     @Enumerated(EnumType.STRING)
     private ResourceType resourceType;
 
     @Enumerated(EnumType.STRING)
-    private RepportType type;
+    private ReportType type;
+
 
 }

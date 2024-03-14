@@ -1,11 +1,8 @@
 package com.example.springsocial.service;
 
 import com.example.springsocial.entity.postRelated.Tag;
-import com.example.springsocial.entity.userRelated.Profile;
-import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
-import com.example.springsocial.entity.userRelated.UserVerificationCode;
-import com.example.springsocial.enums.APPRole;
+import com.example.springsocial.entity.Features.UserVerificationCode;
 import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.enums.VerficicationType;
 import com.example.springsocial.repository.RoleRepo;
@@ -14,26 +11,15 @@ import com.example.springsocial.repository.UserRepo;
 import com.example.springsocial.repository.UserVerificationCodeRepo;
 import com.example.springsocial.service.emailService.EmailSenderService;
 import com.example.springsocial.util.EmailTemplates;
-import com.example.springsocial.util.ProjectUtil;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @AllArgsConstructor

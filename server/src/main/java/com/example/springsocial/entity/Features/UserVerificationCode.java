@@ -1,10 +1,11 @@
-package com.example.springsocial.entity.userRelated;
+package com.example.springsocial.entity.Features;
 
 import java.util.Date;
 
 import javax.persistence.*;
 
 import com.example.springsocial.base.BaseEntity;
+import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.enums.VerficicationType;
 import com.example.springsocial.util.ProjectUtil;
 
