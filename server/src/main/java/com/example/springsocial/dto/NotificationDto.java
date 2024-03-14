@@ -1,7 +1,7 @@
 package com.example.springsocial.dto;
 
 import com.example.springsocial.dto.user.UserInfo;
-import com.example.springsocial.entity.Notification.Notification;
+import com.example.springsocial.entity.Features.Notification;
 import com.example.springsocial.enums.NotificationType;
 import com.example.springsocial.util.ProjectUtil;
 import lombok.AllArgsConstructor;

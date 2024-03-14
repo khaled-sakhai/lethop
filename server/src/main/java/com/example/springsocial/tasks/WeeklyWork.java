@@ -1,6 +1,6 @@
 package com.example.springsocial.tasks;
 
-import com.example.springsocial.entity.Notification.Notification;
+import com.example.springsocial.entity.Features.Notification;
 import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.NotificationRepo;

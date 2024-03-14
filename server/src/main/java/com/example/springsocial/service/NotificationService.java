@@ -1,6 +1,6 @@
 package com.example.springsocial.service;
 
-import com.example.springsocial.entity.Notification.Notification;
+import com.example.springsocial.entity.Features.Notification;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.postRelated.Reply;

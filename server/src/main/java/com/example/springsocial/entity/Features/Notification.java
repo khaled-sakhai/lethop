@@ -1,4 +1,4 @@
-package com.example.springsocial.entity.Notification;
+package com.example.springsocial.entity.Features;
 
 import com.example.springsocial.base.BaseEntity;
 import com.example.springsocial.entity.postRelated.Comment;
@@ -12,17 +12,23 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "notifications")
+@SQLDelete(sql = "UPDATE notifications SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Notification extends BaseEntity<Long> {
     @Enumerated(EnumType.STRING)
     private NotificationType type;
-    @ManyToOne(fetch = FetchType.LAZY)
 
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User fromUser;
     private boolean isRead=false;
@@ -32,6 +38,7 @@ public class Notification extends BaseEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "related_comment_id")
     private Comment relatedComment;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "related_post_id")
     private Post relatedPost;

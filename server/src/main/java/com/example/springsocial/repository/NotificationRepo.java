@@ -1,7 +1,8 @@
 package com.example.springsocial.repository;
 
 import com.example.springsocial.base.BaseRepository;
-import com.example.springsocial.entity.Notification.Notification;
+import com.example.springsocial.entity.Features.Notification;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

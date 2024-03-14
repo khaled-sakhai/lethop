@@ -2,7 +2,7 @@ package com.example.springsocial.controller.user;
 
 import com.example.springsocial.dto.NotificationDto;
 import com.example.springsocial.dto.post.PostDto;
-import com.example.springsocial.entity.Notification.Notification;
+import com.example.springsocial.entity.Features.Notification;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.service.NotificationService;
 import com.example.springsocial.service.UserService;
