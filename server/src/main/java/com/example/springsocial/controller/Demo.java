@@ -9,7 +9,7 @@ import com.example.springsocial.security.Token.TokenRepo;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CommentReplayService;
 import com.example.springsocial.service.postService.PostService;
-
+import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,11 +65,12 @@ private PostService postService;
         return commentReplayService.getCommentById(commentid);
     }
 
-    
-    @GetMapping("/api/v1/public/token")
-    public List<Token> getTokens(){
+
+    @WithRateLimitProtection
+    @GetMapping("/api/v1/public")
+    public String getTokens(){
         //return tokenRepo.findAll();
-        return tokenRepo.findByUserEmail("kh.sakhai@gmail.com");
+        return "Hello world";
     }
 
 }

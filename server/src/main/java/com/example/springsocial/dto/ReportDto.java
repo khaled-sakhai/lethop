@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.jboss.logging.processor.apt.report.ReportType;
 
 @Data
 @AllArgsConstructor
