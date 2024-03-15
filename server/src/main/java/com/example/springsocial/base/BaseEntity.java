@@ -1,6 +1,7 @@
 package com.example.springsocial.base;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.EntityListeners;
@@ -25,7 +26,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 @MappedSuperclass
 @EntityListeners({ AuditingEntityListener.class })
-public abstract class BaseEntity<ID> {
+public abstract class BaseEntity<ID>{
 
   // @Id
   // @GeneratedValue(strategy = GenerationType.IDENTITY)

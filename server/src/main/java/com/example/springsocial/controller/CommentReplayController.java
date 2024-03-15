@@ -13,6 +13,7 @@ import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Reply;
 import com.example.springsocial.enums.NotificationType;
 import com.example.springsocial.service.NotificationService;
+import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import com.example.springsocial.validator.validators.ValidCommentReplySortBy;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ import com.example.springsocial.service.postService.PostService2;
 
 import javax.validation.Valid;
 @AllArgsConstructor
+@WithRateLimitProtection
 
 @RestController
 public class CommentReplayController {

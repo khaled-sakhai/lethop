@@ -11,6 +11,7 @@ import com.example.springsocial.validator.permessions.PostOwner;
 import com.example.springsocial.util.Constants;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,7 @@ public class PostService2 {
     @PersistenceContext
     private EntityManager entityManager;
 
+//    @Cacheable(value = "feed")
      public Page<Post> getFeedPosts(String category,String TagName,
                                        int pageNo,int pageSize,String sortBy,String sortDirection){
         Specification<Post> spec = userSpec(category, TagName);

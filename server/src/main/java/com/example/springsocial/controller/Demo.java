@@ -1,29 +1,26 @@
 package com.example.springsocial.controller;
 
-import com.example.springsocial.dto.comments.CommentRequest;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Post;
-import com.example.springsocial.entity.userRelated.User;
-import com.example.springsocial.security.Token.Token;
 import com.example.springsocial.security.Token.TokenRepo;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CommentReplayService;
 import com.example.springsocial.service.postService.PostService;
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 
+import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
 @RestController
+@WithRateLimitProtection
+@AllArgsConstructor
+
 public class Demo {
     
 @Autowired
@@ -66,7 +63,6 @@ private PostService postService;
     }
 
 
-    @WithRateLimitProtection
     @GetMapping("/api/v1/public")
     public String getTokens(){
         //return tokenRepo.findAll();
