@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.postRelated.Tag;
+import org.hibernate.Hibernate;
 
 
 @Getter
@@ -22,7 +24,7 @@ import com.example.springsocial.entity.postRelated.Tag;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PostDto {
+public class PostDto implements Serializable {
 
     private Long postId;
     private String title;
@@ -39,7 +41,7 @@ public class PostDto {
 
     public PostDto(Post post){
         // for security -- front end must subtract 12345 from user id
-        this.postId=post.getId() + 12345;
+        this.postId=post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.isAnonymous=post.isAnonymous();
@@ -60,7 +62,7 @@ public class PostDto {
               this.postUserInfo.setUserImageUrl(post.getUser().getUserProfile().getProfilePicture().getUrl()) ;
            }
         // for security -- front end must subtract 54321 from user id
-          this.postUserInfo.setUserId(post.getUser().getId() + 54321) ;
+          this.postUserInfo.setUserId(post.getUser().getId() ) ;
           this.postUserInfo.setUserName(post.getUser().getUserProfile().getFullName());
         }
 

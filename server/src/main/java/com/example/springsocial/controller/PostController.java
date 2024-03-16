@@ -87,17 +87,10 @@ public class PostController {
   @RequestParam(defaultValue = "20") int size,
   @RequestParam(defaultValue = "desc") String sortDirection
   ){
-      Page<Post>  postsPage= postService2.getFeedPosts(category, tag, page, size, sortBy, sortDirection);
-      if (postsPage.isEmpty()) {
+      Page<PostDto> postDtos = postService2.getFeedPosts(category, tag, page, size, sortBy, sortDirection);
+      if (postDtos.isEmpty()) {
           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
-      // Get the content (posts) from the Page object
-//      List<PostDto> postDtos = postsPage.getContent().stream()
-//              .map(PostDto::new)
-//              .collect(Collectors.toList());
-
-      Page<PostDto> postDtos = postsPage.map(PostDto::new);
-
       return new ResponseEntity<>(postDtos, HttpStatus.OK);
 
   }

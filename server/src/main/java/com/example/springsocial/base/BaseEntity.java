@@ -1,6 +1,7 @@
 package com.example.springsocial.base;
 
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -26,13 +27,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 @MappedSuperclass
 @EntityListeners({ AuditingEntityListener.class })
-public abstract class BaseEntity<ID>{
+public abstract class BaseEntity<ID> implements Serializable{
 
   // @Id
   // @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entity_sequence")
-  @SequenceGenerator(name = "entity_sequence", sequenceName = "entity_sequence", initialValue = 1000, allocationSize = 20)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
 
   private Long id;
 

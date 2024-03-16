@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.example.springsocial.dto.post.PostDto;
 import com.example.springsocial.entity.postRelated.Category;
 import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.User;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.springsocial.entity.postRelated.Post;
@@ -40,13 +43,16 @@ public class PostService2 {
     @PersistenceContext
     private EntityManager entityManager;
 
-//    @Cacheable(value = "feed")
-     public Page<Post> getFeedPosts(String category,String TagName,
+   @Cacheable(value = "feed")
+     public Page<PostDto>getFeedPosts(String category,String TagName,
                                        int pageNo,int pageSize,String sortBy,String sortDirection){
         Specification<Post> spec = userSpec(category, TagName);
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, sort);
-        return postRepo.findAll(spec,paging);
+
+       Page<Post>  postsPage= postRepo.findAll(spec,paging);
+
+       return postsPage.map(PostDto::new);
     }
 
     public Optional<Post> getPostById(Long postId){
