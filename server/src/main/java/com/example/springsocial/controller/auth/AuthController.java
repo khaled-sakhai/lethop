@@ -13,7 +13,6 @@ import com.example.springsocial.service.ProfileService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.UserVerificationCodeService;
 import com.example.springsocial.service.emailService.EmailSenderService;
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
-@WithRateLimitProtection
 @AllArgsConstructor
 public class AuthController {
 

@@ -12,7 +12,6 @@ import com.example.springsocial.dto.user.UserInfo;
 import com.example.springsocial.enums.NotificationType;
 import com.example.springsocial.service.*;
 import com.example.springsocial.service.postService.PostService2;
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,7 +44,6 @@ import com.example.springsocial.service.postService.TagService;
 import com.example.springsocial.util.Constants;
 
 @AllArgsConstructor
-@WithRateLimitProtection
 
 @RestController
 public class PostController {

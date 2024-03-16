@@ -3,7 +3,6 @@ package com.example.springsocial.controller;
 
 import java.util.List;
 
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +19,6 @@ import com.google.cloud.storage.Blob;
 
 //This class is just for testing google storage --- 
 @RestController
-@WithRateLimitProtection
 @AllArgsConstructor
 
 public class GoogleStorageController {

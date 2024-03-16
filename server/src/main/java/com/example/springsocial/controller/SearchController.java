@@ -3,7 +3,6 @@ package com.example.springsocial.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +18,7 @@ import com.example.springsocial.service.postService.SearchService;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 
 @RestController
-@WithRateLimitProtection
+
 @AllArgsConstructor
 public class SearchController {
  

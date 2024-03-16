@@ -2,7 +2,6 @@ package com.example.springsocial.controller;
 
 import java.util.List;
 
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import com.example.springsocial.service.postService.CategoryService;
 
 @RestController
 @AllArgsConstructor
-@WithRateLimitProtection
 
 public class CategoryController {
     

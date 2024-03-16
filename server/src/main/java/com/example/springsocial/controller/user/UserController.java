@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import javax.validation.constraints.Email;
 
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import lombok.AllArgsConstructor;
 import org.springdoc.core.GenericResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@WithRateLimitProtection
 @AllArgsConstructor
 public class UserController {
 

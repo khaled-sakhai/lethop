@@ -13,7 +13,6 @@ import com.example.springsocial.service.ReportService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CommentReplayService;
 import com.example.springsocial.service.postService.PostService2;
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,6 @@ import java.security.Principal;
 
 @RestController
 @AllArgsConstructor
-@WithRateLimitProtection
 
 public class ReportController {
 

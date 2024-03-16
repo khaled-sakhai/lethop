@@ -8,7 +8,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.example.springsocial.dto.profile.PreferencesDto;
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,6 @@ import com.example.springsocial.util.ProjectUtil;
 import com.google.cloud.storage.Blob;
 
 @RestController
-@WithRateLimitProtection
 
 public class ProfileController {
     

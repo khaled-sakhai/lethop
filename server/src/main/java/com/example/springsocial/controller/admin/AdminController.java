@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +31,6 @@ import com.example.springsocial.service.postService.TagService;
 import java.util.Arrays;
 
 @RestController
-@WithRateLimitProtection
 @AllArgsConstructor
 public class AdminController {
     

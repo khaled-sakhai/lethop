@@ -7,7 +7,6 @@ import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.service.NotificationService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.PostService2;
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@WithRateLimitProtection
+
 
 public class NotificationController {
 

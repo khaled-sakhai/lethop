@@ -7,7 +7,7 @@ import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CommentReplayService;
 import com.example.springsocial.service.postService.PostService;
 
-import com.example.springsocial.validator.rateLimiter.WithRateLimitProtection;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@WithRateLimitProtection
 @AllArgsConstructor
 
 public class Demo {
@@ -62,11 +61,19 @@ private PostService postService;
         return commentReplayService.getCommentById(commentid);
     }
 
+    @GetMapping("/api/v1/public/1")
+    public String getToken(){
+        //return tokenRepo.findAll();
+        return "Hello world 2";
+    }
 
-    @GetMapping("/api/v1/public")
+    @GetMapping("/api/v1/public/2")
     public String getTokens(){
         //return tokenRepo.findAll();
         return "Hello world";
     }
+
+
+ 
 
 }
