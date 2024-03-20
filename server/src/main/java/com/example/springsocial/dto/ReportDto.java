@@ -8,10 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ReportDto {
+public class ReportDto implements Serializable {
 
     private String feedback;
 
@@ -36,9 +38,13 @@ public class ReportDto {
     private Long replyId;
 
     public ReportDto(Report report){
-        this.reported= new UserInfo(report.getRelatedUser().getId(),report.getRelatedUser().getUserProfile().getFullName(),report.getRelatedUser().getUserProfile().getProfilePicture().getUrl());
+        String profilePictureUrlReported = report.getRelatedUser().getUserProfile().getProfilePicture() != null ? report.getRelatedUser().getUserProfile().getProfilePicture().getUrl() : null;
+        String profilePictureUrl = report.getRelatedUser().getUserProfile().getProfilePicture() != null ? report.getRelatedUser().getUserProfile().getProfilePicture().getUrl() : null;
 
-        this.reporter= new UserInfo(report.getReporter().getId(),report.getReporter().getUserProfile().getFullName(),report.getReporter().getUserProfile().getProfilePicture().getUrl());
+        this.reported= new UserInfo(report.getRelatedUser().getId(),report.getRelatedUser().getUserProfile().getFullName(),profilePictureUrlReported);
+        String profilePictureUrlReporter = report.getReporter().getUserProfile().getProfilePicture() != null ? report.getReporter().getUserProfile().getProfilePicture().getUrl() : null;
+
+        this.reporter= new UserInfo(report.getReporter().getId(),report.getReporter().getUserProfile().getFullName(),profilePictureUrlReporter);
 
         this.resourceType=report.getResourceType().name();
         this.feedback=report.getFeedback();

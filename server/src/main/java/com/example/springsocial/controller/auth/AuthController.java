@@ -1,7 +1,7 @@
 package com.example.springsocial.controller.auth;
 
 import com.example.springsocial.enums.AuthProvider;
-import com.example.springsocial.enums.VerficicationType;
+import com.example.springsocial.enums.VerificationType;
 import com.example.springsocial.exception.BadRequestException;
 import com.example.springsocial.dto.user.LoginDto;
 import com.example.springsocial.dto.user.RegisterDto;
@@ -84,7 +84,7 @@ public class AuthController {
         profileService.createNewProfile(profile);
         userService.addUser(user);
         // set confirmation code
-        userService.confirmationCodeSend(user,VerficicationType.SIGNUP);
+        userService.confirmationCodeSend(user, VerificationType.SIGNUP);
         return ResponseEntity.ok()
         .body( "User registered successfully!, pleaase verify your email, an email was send to: "+ user.getEmail());
     }

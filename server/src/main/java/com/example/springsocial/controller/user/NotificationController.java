@@ -7,14 +7,12 @@ import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.service.NotificationService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.PostService2;
+import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -28,15 +26,19 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final UserService userService;
-    private final PostService2 postService2;
 
     @GetMapping(path = "api/v1/user/notifications")
-    public ResponseEntity<List<NotificationDto>> getAllNotification(Principal principal){
+    public ResponseEntity<Page<NotificationDto>> getAllNotification(Principal principal,
+                                                                    @RequestParam(defaultValue = "0") int page,
+                                                                    @RequestParam(defaultValue = "lastModifiedDate") String sortBy,
+                                                                    @RequestParam(defaultValue = "8") int size,
+                                                                    @RequestParam(defaultValue = "desc") String sortDirection){
         User user = userService.findByEmail(principal.getName()).orElseThrow();
-        List<Notification> notifs = notificationService.findAllNotificationByUserId(user.getId());
-
-        List<NotificationDto> notifsDtos = notifs.stream().map(NotificationDto::new).collect(Collectors.toList());
-        return new ResponseEntity<>(notifsDtos, HttpStatus.OK);
+        Page<NotificationDto> notifs = notificationService.findAllNotificationByUserId(user.getId(),page,size,sortBy,sortDirection);
+        if (notifs.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(notifs, HttpStatus.OK);
     }
 
     @PutMapping(path = "api/v1/notification/{notificationId}")

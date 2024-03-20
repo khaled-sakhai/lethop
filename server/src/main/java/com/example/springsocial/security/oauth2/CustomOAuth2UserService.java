@@ -110,14 +110,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         profile.setProfilePicture(image);
         profile.setFirstName(oAuth2UserInfo.getName());
 
-      //  String fullNameString = oAuth2UserInfo.getName();
-       // String[] fullName = fullNameString.split("\\s+");
-//        if(!fullNameString.isEmpty() && fullName.length>=0){
-//            profile.setFirstName(fullName[0]);
-//            if (fullName.length==2) {
-//                profile.setLastName(fullName[1]);
-//            }
-//        }
 
         profile.setUser(user);
         user.setUserProfile(profile);

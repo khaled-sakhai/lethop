@@ -1,5 +1,5 @@
 package com.example.springsocial.enums;
 
-public enum VerficicationType {
+public enum VerificationType {
     SIGNUP,PASSWORD
 }

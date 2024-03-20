@@ -4,7 +4,7 @@ import com.example.springsocial.exception.ResourceNotFoundException;
 import com.example.springsocial.repository.RoleRepo;
 import com.example.springsocial.dto.user.PasswordRequest;
 import com.example.springsocial.entity.userRelated.User;
-import com.example.springsocial.enums.VerficicationType;
+import com.example.springsocial.enums.VerificationType;
 import com.example.springsocial.security.CurrentUser;
 import com.example.springsocial.security.UserPrincipal;
 import com.example.springsocial.security.Token.TokenRepo;
@@ -19,14 +19,12 @@ import java.util.Optional;
 import javax.validation.constraints.Email;
 
 import lombok.AllArgsConstructor;
-import org.springdoc.core.GenericResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -98,7 +96,7 @@ public class UserController {
     public ResponseEntity<String> resetPassword(@RequestParam @Email String email){
         User user = userService.findByEmail(email).orElseThrow();
 
-        userService.confirmationCodeSend(user, VerficicationType.PASSWORD);
+        userService.confirmationCodeSend(user, VerificationType.PASSWORD);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("We've sent you an email to update your password");
     }

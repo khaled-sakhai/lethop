@@ -92,14 +92,14 @@ public class PostService2 {
         Specification<Post> spec = Specification.where(PostSpecification.postByUserId(userId));
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, sort);
-         return postRepo.findAll(spec,paging);
+        return postRepo.findAll(spec,paging);
     }
     
     public Page<Post> findUserSavedPosts(Long userId,int pageNo,int pageSize,String sortBy,String sortDirection){
         Specification<Post> spec = Specification.where(PostSpecification.savedByUser(userId));
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, sort);
-         return postRepo.findAll(spec,paging);
+        return postRepo.findAll(spec,paging);
     }
 
 
@@ -107,7 +107,7 @@ public class PostService2 {
         Specification<Post> spec = Specification.where(PostSpecification.likedByUser(userId));
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, sort);
-         return postRepo.findAll(spec,paging);
+        return postRepo.findAll(spec,paging);
     }
     
     public void savePost(Post post,User user) throws Exception{

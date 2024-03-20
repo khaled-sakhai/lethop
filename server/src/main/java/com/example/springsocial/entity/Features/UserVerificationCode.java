@@ -1,15 +1,11 @@
 package com.example.springsocial.entity.Features;
 
-import java.util.Date;
-
 import javax.persistence.*;
 
 import com.example.springsocial.base.BaseEntity;
 import com.example.springsocial.entity.userRelated.User;
-import com.example.springsocial.enums.VerficicationType;
+import com.example.springsocial.enums.VerificationType;
 import com.example.springsocial.util.ProjectUtil;
-
-import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,7 +38,7 @@ public class UserVerificationCode extends BaseEntity<Long> {
     private String confirmationCode;
 
     @Enumerated(EnumType.STRING)
-    private VerficicationType type;
+    private VerificationType type;
 
     private boolean isConfirmed=false;
 
@@ -50,7 +46,7 @@ public class UserVerificationCode extends BaseEntity<Long> {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    public UserVerificationCode(User user,VerficicationType type) {
+    public UserVerificationCode(User user, VerificationType type) {
         this.user = user;
         this.type=type;
         this.confirmationCode = ProjectUtil.generateRandomId();

@@ -1,5 +1,7 @@
 package com.example.springsocial.service;
 
+import com.example.springsocial.dto.NotificationDto;
+import com.example.springsocial.dto.post.PostDto;
 import com.example.springsocial.entity.Features.Notification;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Post;
@@ -11,6 +13,10 @@ import com.example.springsocial.service.emailService.EmailSenderService;
 import com.example.springsocial.util.EmailTemplates;
 import com.example.springsocial.validator.permessions.NotificationOwner;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +62,12 @@ public class NotificationService {
         this.sendNotificationEmail(notification);
     }
 
-    public List<Notification> findAllNotificationByUserId(Long userId){
-        return notificationRepo.findByUserIdAndIsDeliveredAndIsRead(userId,false,false);
+    public Page<NotificationDto> findAllNotificationByUserId(Long userId,int pageNo,int pageSize,String sortBy,String sortDirection){
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable paging = PageRequest.of(pageNo, pageSize, sort);
+        Page<Notification> postsPage= notificationRepo.findByUserIdAndIsDeliveredAndIsRead(userId,false,false,paging);
+
+        return postsPage.map(NotificationDto::new);
     }
 
     @NotificationOwner

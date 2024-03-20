@@ -8,10 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class NotificationDto {
+public class NotificationDto implements Serializable {
 
     private String type;
     private UserInfo fromUser;

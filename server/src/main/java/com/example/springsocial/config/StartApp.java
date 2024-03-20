@@ -71,7 +71,7 @@ public class StartApp implements CommandLineRunner {
 
         User user1 = new User();
         user1.setEmail("as@as.com");
-        user1.setPassword(passwordEncoder.encode("as"));
+        user1.setPassword(passwordEncoder.encode("123456789"));
         user1.setActive(true);
     user1.setProvider(AuthProvider.local);
     userRepo.save(user1);

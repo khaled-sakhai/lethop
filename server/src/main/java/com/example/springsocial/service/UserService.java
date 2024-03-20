@@ -4,7 +4,7 @@ import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.entity.Features.UserVerificationCode;
 import com.example.springsocial.enums.AuthProvider;
-import com.example.springsocial.enums.VerficicationType;
+import com.example.springsocial.enums.VerificationType;
 import com.example.springsocial.repository.RoleRepo;
 import com.example.springsocial.repository.TagRepo;
 import com.example.springsocial.repository.UserRepo;
@@ -119,7 +119,7 @@ public class UserService {
     public boolean userEmailVerification(String verificationCode) throws Exception{
       UserVerificationCode userVerificationCode = validateVerificationCode(verificationCode);
 
-      if (userVerificationCode.getType().equals(VerficicationType.SIGNUP) && userVerificationCode.isConfirmed()) {
+      if (userVerificationCode.getType().equals(VerificationType.SIGNUP) && userVerificationCode.isConfirmed()) {
         User user = userVerificationCode.getUser();
         user.setActive(true);
         this.updateUser(user);
@@ -132,7 +132,7 @@ public class UserService {
    
     public boolean userPasswordResetVerification(String verificationCode,String newPassword) throws Exception{
       UserVerificationCode userVerificationCode = userVerificationCodeRepo.findByConfirmationCode(verificationCode).orElseThrow();
-      if (userVerificationCode.getType().equals(VerficicationType.PASSWORD) && userVerificationCode.isConfirmed()) {
+      if (userVerificationCode.getType().equals(VerificationType.PASSWORD) && userVerificationCode.isConfirmed()) {
         User user = userVerificationCode.getUser();
         this.changePassword(newPassword, user);
         userVerificationCodeRepo.delete(userVerificationCode);
@@ -145,14 +145,14 @@ public class UserService {
 
 
 
-  public void confirmationCodeSend(User user,VerficicationType type){
+  public void confirmationCodeSend(User user, VerificationType type){
      UserVerificationCode userVerificationCode = new UserVerificationCode(user,type);
      userVerificationCodeRepo.save(userVerificationCode);
      SimpleMailMessage mailMessage = new SimpleMailMessage();
-     if(type==VerficicationType.PASSWORD){
+     if(type== VerificationType.PASSWORD){
       mailMessage=EmailTemplates.passwordRessetEmail(user.getUserProfile().getFullName(), user.getEmail(), userVerificationCode.getConfirmationCode());
      }
-     if(type==VerficicationType.SIGNUP){
+     if(type== VerificationType.SIGNUP){
       mailMessage=EmailTemplates.newUserEmail(user.getUserProfile().getFullName(), user.getEmail(), userVerificationCode.getConfirmationCode());
      }
       emailSenderService.sendEmail(mailMessage);

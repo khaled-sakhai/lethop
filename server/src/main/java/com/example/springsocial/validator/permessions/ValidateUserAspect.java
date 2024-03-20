@@ -1,8 +1,6 @@
 package com.example.springsocial.validator.permessions;
 
-import java.lang.reflect.Field;
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.Optional;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -11,13 +9,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.example.springsocial.entity.userRelated.User;
-import com.example.springsocial.enums.VerficicationType;
+import com.example.springsocial.enums.VerificationType;
 import com.example.springsocial.security.UserPrincipal;
 import com.example.springsocial.service.UserService;
 
@@ -41,7 +36,7 @@ public class ValidateUserAspect {
             .body("User with the email " + email + "is not registred, please try again with a new email.");
         }
         if (!user.get().isActive()) {
-            userService.confirmationCodeSend(user.get(), VerficicationType.SIGNUP);
+            userService.confirmationCodeSend(user.get(), VerificationType.SIGNUP);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("User account not fully activated. We have sent the activation link to " + email + ". Please verify your email for the activation link and try again.");
         }
