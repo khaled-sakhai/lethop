@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -44,6 +45,21 @@ public class ReportController {
         }
         return new ResponseEntity<>(reportDtos, HttpStatus.OK);
     }
+
+    @GetMapping(path = "api/admin/report/{reportId}")
+    public ResponseEntity<ReportDto> getRepportById(Principal principal,
+                                                    @PathVariable Long reportId){
+        Report report= reportService.findById(reportId).orElseThrow();
+        return new ResponseEntity<>(new ReportDto(report), HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "api/admin/report/{reportId}")
+    public ResponseEntity<String> removeReportById(Principal principal,
+                                                    @PathVariable Long reportId){
+       reportService.deleteReport(reportId);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Report has been removed");
+    }
+
 
     @PostMapping(path = "api/v1/report")
     public ResponseEntity<String> addReport(@RequestBody ReportRequest reportRequest, Principal principal){

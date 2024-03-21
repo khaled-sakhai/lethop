@@ -9,7 +9,11 @@ import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.PostService;
 import com.example.springsocial.service.postService.PostService2;
 import com.example.springsocial.service.postService.TagService;
+import com.example.springsocial.specification.AppSpecefication;
+
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +47,9 @@ public class WeeklyWork {
 
     @Scheduled(cron = "0 0 0 */10 * *")
     public void removeOldNotification(){
-        List<Notification> notfs= notificationRepo.findAll();
+        Specification<Notification> spec = AppSpecefication.notificationsOlderThan(10);
+        List<Notification> notfs= notificationRepo.findAll(spec);
+        notificationRepo.deleteAllNotifications(notfs);
         // find only when notification is 10 days old.
         // remove the notification.
     }

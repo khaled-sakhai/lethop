@@ -30,19 +30,21 @@ public class ReportService {
     public Report createReport(Report report){
         return reportRepo.save(report);
     }
+
     public Page<ReportDto> getAllReports(int pageNo, int pageSize, String sortBy, String sortDirection){
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, sort);
         Page<Report> reportsPage= reportRepo.findAll(paging);
         return reportsPage.map(ReportDto::new);
     }
+
     public Optional<Report> findById(Long id){
         return reportRepo.findById(id);
     }
+
     public void deleteReport(Long id){
         reportRepo.deleteById(id);
     }
-
 
 }
 

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.*;
 
 public class PostSpecification {
+    
     public static Specification<Post> isAnonymous(boolean isAnonymous){
     return(
         Root<Post> root,
