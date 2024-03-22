@@ -20,8 +20,6 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @Entity
 @Table(name = "notifications")
-@SQLDelete(sql = "UPDATE notifications SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 public class Notification extends BaseEntity<Long> {
     @Enumerated(EnumType.STRING)
     private NotificationType type;
@@ -32,7 +30,6 @@ public class Notification extends BaseEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     private User fromUser;
     private boolean isRead=false;
-    private boolean isDelivered=false;
 
     // Association with the related resource
     @ManyToOne(fetch = FetchType.LAZY)

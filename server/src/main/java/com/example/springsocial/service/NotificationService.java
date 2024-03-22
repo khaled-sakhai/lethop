@@ -10,6 +10,7 @@ import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.enums.NotificationType;
 import com.example.springsocial.repository.NotificationRepo;
 import com.example.springsocial.service.emailService.EmailSenderService;
+import com.example.springsocial.specification.AppSpecefication;
 import com.example.springsocial.util.EmailTemplates;
 import com.example.springsocial.validator.permessions.NotificationOwner;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,8 @@ import java.util.Optional;
 public class NotificationService {
     private final NotificationRepo notificationRepo;
     private final EmailSenderService emailSenderService;
+
+
 
     public void createNotification(Post post, Comment comment, User user, Reply reply,NotificationType type){
         Notification notification = new Notification();
@@ -59,27 +63,37 @@ public class NotificationService {
         }
 
         notificationRepo.save(notification);
-        this.sendNotificationEmail(notification);
+        // send email only if user allow email notification
+        if(notification.getUser().getUserProfile().isNotificationEmailed()){
+            this.sendNotificationEmail(notification);
+        }
     }
 
-    public Page<NotificationDto> findAllNotificationByUserId(Long userId,int pageNo,int pageSize,String sortBy,String sortDirection){
+    public Page<NotificationDto> deliverNotificationByUserId(Long userId,int pageNo,int pageSize,String sortBy,String sortDirection){
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, sort);
-        Page<Notification> postsPage= notificationRepo.findByUserIdAndIsDeliveredAndIsRead(userId,false,false,paging);
+        Page<Notification> notificationsPage= notificationRepo.findByUserIdAndIsRead(userId,false,paging);
+        //to be returned;
+        return notificationsPage.map(NotificationDto::new);
+    }
 
-        return postsPage.map(NotificationDto::new);
+    public void readAllNotifs(Long userId){
+        Pageable pageable = Pageable.unpaged();
+        Page<Notification> notis=notificationRepo.findByUserIdAndIsRead(userId,false,pageable);
+        notis.getContent().forEach(n->n.setRead(true));
+        notificationRepo.saveAll(notis.getContent());
     }
 
     @NotificationOwner
-    public void readNotification(Notification notification){
+    public Notification readNotification(Notification notification){
         notification.setRead(true);
-        notification.setDelivered(true);
-        notificationRepo.save(notification);
+        return notificationRepo.save(notification);
     }
 
     public Optional<Notification> findById(Long id){
         return notificationRepo.findById(id);
     }
+
     public void sendNotificationEmail(Notification notification){
         SimpleMailMessage mailMessage;
         if(notification.getType()==NotificationType.COMMENT ||notification.getType()==NotificationType.POST_LIKE  ) {

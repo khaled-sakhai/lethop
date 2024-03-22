@@ -19,7 +19,6 @@ public class NotificationDto implements Serializable {
     private UserInfo fromUser;
     private String date;
     private boolean isRead;
-    private boolean isDelivered;
     private Long postId;
     private Long commentId;
     private Long replyId;
@@ -34,7 +33,6 @@ public class NotificationDto implements Serializable {
 
         this.isRead=notification.isRead();
 
-        this.isDelivered=notification.isDelivered();
 
         if (notification.getType().equals(NotificationType.POST_LIKE)){
             this.postId=notification.getRelatedPost().getId();

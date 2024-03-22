@@ -34,18 +34,25 @@ public class NotificationController {
                                                                     @RequestParam(defaultValue = "8") int size,
                                                                     @RequestParam(defaultValue = "desc") String sortDirection){
         User user = userService.findByEmail(principal.getName()).orElseThrow();
-        Page<NotificationDto> notifs = notificationService.findAllNotificationByUserId(user.getId(),page,size,sortBy,sortDirection);
+        Page<NotificationDto> notifs = notificationService.deliverNotificationByUserId(user.getId(),page,size,sortBy,sortDirection);
         if (notifs.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(notifs, HttpStatus.OK);
     }
 
+    @PutMapping("api/v1/user/notifications/")
+    public ResponseEntity<String> readAll(Principal principal){
+        User user = userService.findByEmail(principal.getName()).orElseThrow();
+        notificationService.readAllNotifs(user.getId());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("All notification has been marked read!");
+    }
+
     @PutMapping(path = "api/v1/notification/{notificationId}")
-    public ResponseEntity<String> readNotification(@PathVariable Long notificationId,Principal principal){
+    public ResponseEntity<NotificationDto> readNotification(@PathVariable Long notificationId,Principal principal){
         Notification notification = notificationService.findById(notificationId).orElseThrow();
         notificationService.readNotification(notification);
-        return ResponseEntity.ok().body("Notification has been marked - read!");
+        return ResponseEntity.ok().body(new NotificationDto(notification));
     }
 
 }

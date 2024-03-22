@@ -87,6 +87,9 @@ public class Profile extends BaseEntity<Long>{
   @Enumerated(EnumType.STRING)
   private Country country;
 
+  private boolean isNotificationEmailed=true;
+  private boolean isPostEmailed=true;
+
 
   public void setProfileCountry(String country){
     //if you send united states of america--- it'll become UNITED_STATES_OF_AMERICA

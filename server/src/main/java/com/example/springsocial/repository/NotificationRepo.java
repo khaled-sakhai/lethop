@@ -18,12 +18,12 @@ import javax.transaction.Transactional;
 @Repository
 public interface NotificationRepo extends BaseRepository<Notification,Long>, JpaSpecificationExecutor<Notification>  {
 
-    Page<Notification> findByUserIdAndIsDeliveredAndIsRead(Long userId, boolean isDelivered, boolean isRead, Pageable pageable);
+    Page<Notification> findByUserIdAndIsRead(Long userId, boolean isRead, Pageable pageable);
 
     @Transactional
     @Modifying
     @Query("DELETE FROM Notification p WHERE p IN :notifs")
-    void deleteAll(List<Notification> notifs);
+    void deleteAllNotifications(List<Notification> notifs);
 
     
 }

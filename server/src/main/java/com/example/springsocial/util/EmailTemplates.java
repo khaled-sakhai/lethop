@@ -9,16 +9,20 @@ public class EmailTemplates {
 
      mailMessage.setTo(email);
         mailMessage.setSubject("Complete Registration!");
+        mailMessage.setSubject("تفعيل حسابك على موقعنا");
         mailMessage.setFrom(Constants.NETWORK_EMAIL);
-        mailMessage.setText("Dear "+userName+",\n\n" +
-            "To confirm your account, please click here : "
-            +"http://localhost:8080/confirm-account?verify="+userVerificationCode +
-            "\n\n" +
-            "Best regards,\n" +
+        mailMessage.setText("مرحباً " + userName + ",\n\n" +
+
+             "شكراً لتسجيلك في موقعنا!\n" +
+            "لتفعيل حسابك، يرجى النقر على الرابط التالي:\n\n" +
+            "http://localhost:8080/confirm-account?verify="+userVerificationCode +
+             "\n\n" +
+            "إذا كنت لم تقم بتسجيل في موقعنا، يرجى تجاهل هذا البريد الإلكتروني.\n\n" +
+            "شكراً لك،\n" +
             Constants.NETWORK_NAME);
             return mailMessage;
   }
-
+  
 
   public static SimpleMailMessage passwordRessetEmail(String userName,String email,String userVerificationCode){
     SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -51,6 +55,25 @@ public class EmailTemplates {
         return mailMessage;
 
     }
+
+
+    public static SimpleMailMessage accountActivationReminderEmail(String email, String userName, String userVerificationCode) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email);
+        mailMessage.setSubject("تذكير بتفعيل حسابك");
+        mailMessage.setFrom(Constants.NETWORK_EMAIL);
+        mailMessage.setText("مرحباً " + userName + ",\n\n" +
+                "هذا تذكير بأن حسابك على موقعنا لم يتم تفعيله بعد.\n" +
+           
+                "لتفعيل حسابك، يرجى النقر على الرابط التالي:\n\n" +
+                "http://localhost:8080/confirm-account?verify="+userVerificationCode +
+
+                "إذا قمت بتفعيل حسابك بالفعل، يرجى تجاهل هذا البريد الإلكتروني.\n\n" +
+                "شكراً لك،\n" +
+                Constants.NETWORK_NAME);
+        return mailMessage;
+    }
+    
 
 
 

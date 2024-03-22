@@ -3,6 +3,7 @@ package com.example.springsocial.controller;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.security.Token.TokenRepo;
+import com.example.springsocial.service.NotificationService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CommentReplayService;
 import com.example.springsocial.service.postService.PostService;
@@ -29,6 +30,7 @@ private PostService postService;
     private UserService userService;
     @Autowired
     private CommentReplayService commentReplayService;
+    private final NotificationService notificationService;
 
     @Autowired
     private TokenRepo tokenRepo;
@@ -68,9 +70,8 @@ private PostService postService;
     }
 
     @GetMapping("/api/v1/public/2")
-    public String getTokens(){
-        //return tokenRepo.findAll();
-        return "Hello world";
+    public void getTokens(){
+        
     }
 
 

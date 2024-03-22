@@ -16,5 +16,12 @@ public class AppSpecefication {
         };
     }
 
+    public static Specification<Notification> notificationsRead(boolean isRead ){
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.equal(root.get("isRead"), isRead);
+        };
+    }
+
+
 
 }

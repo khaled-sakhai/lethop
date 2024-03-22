@@ -15,6 +15,8 @@ public interface TokenRepo extends JpaRepository<Token, Long> {
 
   List<Token> findByUserEmail(String email);
 
+  List<Token> findAllByIsLoggedOut(boolean isLoggedOut);
+
 
 
 }
