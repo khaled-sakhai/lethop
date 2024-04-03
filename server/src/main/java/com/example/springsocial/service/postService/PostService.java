@@ -20,7 +20,6 @@ import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.ImageRepo;
 import com.example.springsocial.repository.PostRepo;
-import com.example.springsocial.service.GoogleCloudService;
 import com.example.springsocial.service.UserService;
 
 import javax.persistence.EntityManager;
@@ -34,8 +33,7 @@ public class PostService {
     @Autowired
     private PostRepo postRepo;
 
-    @Autowired
-    private GoogleCloudService googleCloudService;
+
 
     @Autowired
     private ImageRepo imageRepo;

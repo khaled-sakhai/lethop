@@ -1,6 +1,9 @@
 package com.example.springsocial.util;
 
+import com.example.springsocial.entity.postRelated.Post;
 import org.springframework.mail.SimpleMailMessage;
+
+import java.util.List;
 
 public class EmailTemplates {
     
@@ -73,8 +76,34 @@ public class EmailTemplates {
                 Constants.NETWORK_NAME);
         return mailMessage;
     }
-    
 
 
+    public static SimpleMailMessage weeklyPostsEmail(String userName, String email, List<Post> posts) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+        mailMessage.setTo(email);
+        mailMessage.setSubject("أفضل 10 مقالات هذا الأسبوع!");
+        mailMessage.setFrom(Constants.NETWORK_EMAIL);
+
+        StringBuilder text = new StringBuilder();
+        text.append("مرحباً ").append(userName).append(",\n\n");
+        text.append("إليك أفضل 10 مقالات لهذا الأسبوع:\n\n");
+
+        for (int i = 0; i < posts.size(); i++) {
+            Post post = posts.get(i);
+            text.append("المقال ").append(i + 1).append(":\n");
+            text.append("العنوان: ").append(post.getTitle()).append("\n");
+            int maxLength = Math.min(post.getContent().length(), 240);
+            text.append("الوصف: ").append(post.getContent().substring(maxLength)).append("\n");
+            text.append("الرابط: ").append(Constants.NETWORK_URL).append(post.getId()).append("\n\n");
+        }
+
+        text.append("شكراً لك،\n");
+        text.append(Constants.NETWORK_NAME);
+
+        mailMessage.setText(text.toString());
+
+        return mailMessage;
+    }
 
 }

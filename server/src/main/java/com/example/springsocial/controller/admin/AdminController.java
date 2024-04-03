@@ -22,7 +22,7 @@ import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.enums.APPRole;
 import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.repository.ImageRepo;
-import com.example.springsocial.service.GoogleCloudService;
+
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CategoryService;
 import com.example.springsocial.service.postService.PostService;
@@ -43,9 +43,6 @@ public class AdminController {
     private ImageRepo imageRepo;
  @Autowired
   private CategoryService categoryService;
-
-  @Autowired
-  private GoogleCloudService googleCloudService;
 
   @Autowired
   private TagService tagService;

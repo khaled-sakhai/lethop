@@ -1,5 +1,7 @@
 package com.example.springsocial.util;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +14,10 @@ import org.springframework.mail.SimpleMailMessage;
 public class ProjectUtil {
 
 
+    public static String getMediaUrl(String fileName){
+        String encodedFilePath = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+        return String.format(Constants.DOWNLOAD_URL, encodedFilePath);
+    }
 
 
     // Format the LocalDateTime to show year, month, day, and hours,minutes

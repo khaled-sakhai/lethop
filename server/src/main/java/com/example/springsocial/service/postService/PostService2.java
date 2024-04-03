@@ -12,6 +12,7 @@ import com.example.springsocial.validator.permessions.PostOwner;
 import com.example.springsocial.util.Constants;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -60,6 +61,7 @@ public class PostService2 {
         return post;
     }
 
+    @CacheEvict(cacheNames="feed", allEntries=true)
     public void addPost(Post post, User user, Set<Tag> tags, Category category){
         post.setUser(user);
         category.getPosts().add(post);
@@ -76,7 +78,7 @@ public class PostService2 {
     }
 
     @PostOwner
-    //soft delete
+    @CacheEvict(cacheNames="feed", allEntries=true)
     public void deletePost(Post post){
         postRepo.delete(post);
     }

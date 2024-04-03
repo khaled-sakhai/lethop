@@ -20,7 +20,7 @@ public interface UserRepo extends BaseRepository<User, Long> {
   Optional<User> findByEmail(String email);
 
   boolean existsByEmail(String email);
-
+  List<User> findByIsActiveTrue();
   List<User> findByIsActiveTrueAndProvider(AuthProvider provider);
 
   List<User> findByIsActiveFalseAndProvider(AuthProvider provider);

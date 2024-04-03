@@ -1,14 +1,13 @@
 package com.example.springsocial.controller;
 
+import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.example.springsocial.dto.comments.ReplyResponse;
 import com.example.springsocial.dto.user.UserInfo;
+import com.example.springsocial.entity.Image;
 import com.example.springsocial.enums.NotificationType;
 import com.example.springsocial.service.*;
 import com.example.springsocial.service.postService.PostService2;
@@ -62,8 +61,7 @@ public class PostController {
  @Autowired
   private CategoryService categoryService;
 
-  @Autowired
-  private GoogleCloudService googleCloudService;
+ private final FireBaseService fireBaseService;
 
   @Autowired
   private TagService tagService;
@@ -192,11 +190,11 @@ public class PostController {
         newPost.setAnonymous(postRequest.isAnonymous());
         if (postImages!=null && !postImages.isEmpty()){
             newPost.setPostImages(imageService.saveListImagePost(postImages));
-
         }
         /// set user for the post
         User user= utilService.getUserFromPrincipal(principal);
         //save post
+        System.out.println(newPost.getPostImages().size());
         postService2.addPost(newPost,user,tagService.setTagsToPost(postRequest.getTags()),categoryService.SetPostCategory(postRequest.getCategory()));
        return ResponseEntity.ok("Post added successfully");
     }
@@ -204,7 +202,7 @@ public class PostController {
     @PostMapping(path = "api/v1/post/edit/{postId}")
     public ResponseEntity<String> editPost(@PathVariable() Long postId, @RequestPart("post") PostRequest postRequest,
                                            @RequestParam(required = false) MultipartFile postImage,
-                                           Principal principal){
+                                           Principal principal) throws IOException {
         Optional<Post> postObj = postService.findById(postId);
         if(postObj.isPresent()){
             Post post = postObj.get();
@@ -222,6 +220,7 @@ public class PostController {
             post.setCategory(category);
             }
             if (postRequest.isImagesModifies()){
+                imageService.removeImagesFromStorage(post);
                 imageService.removeImagesFromPost(post);
             }
             postService2.updatePost(post);
@@ -236,6 +235,11 @@ public class PostController {
                                              Principal principal) throws Exception{
       Optional<Post> post = postService.findById(postId);
       if(post.isPresent()){
+          if(!post.get().getPostImages().isEmpty()){
+              imageService.removeImagesFromStorage(post.get());
+              imageService.removeImagesFromPost(post.get());
+          }
+
         postService2.deletePost(post.get());
         return ResponseEntity.ok("Post removed successfully");
       }
@@ -262,7 +266,7 @@ public class PostController {
       Optional<Post> post = postService.findById(postId);
       if(post.isPresent()){
 
-        postService.unsavePost(user, post.get());
+        postService2.unsavePost(user, post.get());
 
       return ResponseEntity.ok("Post unsaved successfully");
       }

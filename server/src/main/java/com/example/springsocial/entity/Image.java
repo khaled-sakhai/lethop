@@ -18,12 +18,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE images SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 public class Image extends BaseEntity<Long> {
     private String url;
     private String fileName;
-
-
-
 }

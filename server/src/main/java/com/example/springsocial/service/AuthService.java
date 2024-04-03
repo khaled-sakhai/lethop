@@ -91,11 +91,16 @@ public class AuthService {
     String refreshToken,String userAgent
   ) {
     User user = userService.findByEmail(email).orElseThrow();
-    revokeAllTokensByEmail(user);
     Token token = new Token();
+    if(refreshToken!=null){
+      token.setRefreshToken(refreshToken);
+    }else {
+      revokeAllTokensByEmail(user);
+      token.setRefreshToken(jwtService.generateRefreshToken(user.getEmail()));
+    }
     token.setUserAgent(userAgent);
     token.setLoggedOut(false);
-    token.setRefreshToken(jwtService.generateRefreshToken(user.getEmail()));
+
     token.setAccessToken(jwtService.generateToken(user.getEmail()));
     tokenService.addToken(token);
     token.setUser(user);

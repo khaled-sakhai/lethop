@@ -58,7 +58,7 @@ public class Post extends BaseEntity<Long> {
   @JsonIgnore
   private User user;
 
-  @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
   @JsonIgnore
   private List<Image> postImages=new ArrayList<>();
 

@@ -84,6 +84,7 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 
+		<!--hibernate search engin -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search-orm</artifactId>
@@ -122,14 +123,15 @@
                 <version>0.11.5</version>
             </dependency>
 
-		<!--Google cloud storage dependencies-->
-	   	  <dependency>
-		  	<groupId>com.google.cloud</groupId>
-			<artifactId>spring-cloud-gcp-starter-storage</artifactId>
-		  </dependency>
-	
 
-       <!--Email dependency (to verify user email)-->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>9.1.1</version>
+		</dependency>
+
+
+		<!--Email dependency (to verify user email)-->
         <dependency>
                <groupId>org.springframework.boot</groupId>
                <artifactId>spring-boot-starter-mail</artifactId>
@@ -149,19 +151,6 @@
 		</dependency>
 	</dependencies>
 
-<dependencyManagement>
-   <dependencies>
-       <dependency>
-           <groupId>com.google.cloud</groupId>
-           <artifactId>spring-cloud-gcp-dependencies</artifactId>
-           <version>3.7.4</version>
-           <type>pom</type>
-           <scope>import</scope>
-       </dependency>
-
-
-   </dependencies>
-</dependencyManagement>
 
 
 	<build>

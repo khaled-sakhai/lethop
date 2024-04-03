@@ -3,6 +3,7 @@ package com.example.springsocial.controller;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.security.Token.TokenRepo;
+import com.example.springsocial.service.FireBaseService;
 import com.example.springsocial.service.NotificationService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CommentReplayService;
@@ -11,10 +12,10 @@ import com.example.springsocial.service.postService.PostService;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +35,20 @@ private PostService postService;
 
     @Autowired
     private TokenRepo tokenRepo;
-    
+
+
+    private final FireBaseService imageService;
+
+    @PostMapping("api/v1/public/2")
+    public String upload(@RequestParam("file") MultipartFile multipartFile) {
+        return imageService.upload(multipartFile,true);
+    }
+
+    @PostMapping("api/v1/public/3")
+    public void remove(@RequestParam("file") String name) throws IOException {
+        imageService.deleteFile(name);
+    }
+
     @GetMapping("/xx")
     public String getsmth(){
         System.out.println("hoklla");
@@ -69,10 +83,7 @@ private PostService postService;
         return "Hello world 2";
     }
 
-    @GetMapping("/api/v1/public/2")
-    public void getTokens(){
-        
-    }
+
 
 
  
