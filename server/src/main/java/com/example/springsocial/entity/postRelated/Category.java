@@ -53,6 +53,10 @@ public class Category extends BaseEntity<Long>{
     posts.removeIf(post -> post.getId() == postId);
 }
 
+public void removePostFromCategory(Post post){
+      posts.remove(post);
+}
+
    public Category(String category){
        if( ArrayUtils.contains(Constants.AllowedCategory, category.toLowerCase())){
         this.category=category.toLowerCase();

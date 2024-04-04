@@ -1,4 +1,5 @@
 package com.example.springsocial.dto.post;
+import com.example.springsocial.dto.ImageDto;
 import com.example.springsocial.dto.comments.CommentResponse;
 import com.example.springsocial.dto.user.UserInfo;
 import com.example.springsocial.util.ProjectUtil;
@@ -32,7 +33,7 @@ public class PostDto implements Serializable {
     private List<String> tags = new ArrayList<>();
     private String Category;
     private String lastModifiedDate;
-    private List<String> images=new ArrayList<>();
+    private List<ImageDto> images=new ArrayList<>();
     private boolean isAnonymous=false;
     // user id + full name + profile image + last modify date
 
@@ -51,7 +52,7 @@ public class PostDto implements Serializable {
             this.tags.add(tag.getTagName());
         }
         if (!post.getPostImages().isEmpty()){
-            post.getPostImages().forEach(img->this.images.add(img.getUrl()));
+            post.getPostImages().forEach(img->this.images.add(new ImageDto(img)));
         }
         this.lastModifiedDate = ProjectUtil.convertDateToString(post.getLastModifiedDate());
         this.likedCounter=post.getLikesCount();

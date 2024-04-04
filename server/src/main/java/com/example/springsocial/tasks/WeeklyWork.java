@@ -19,6 +19,7 @@ import com.example.springsocial.service.postService.PostService;
 import com.example.springsocial.service.postService.PostService2;
 import com.example.springsocial.service.postService.TagService;
 import com.example.springsocial.specification.AppSpecefication;
+import com.example.springsocial.specification.UserSpecification;
 import com.example.springsocial.util.EmailTemplates;
 
 import com.example.springsocial.util.ProjectUtil;
@@ -54,7 +55,8 @@ public class WeeklyWork {
 
     @Scheduled(cron = "0 0 0 * * MON")
     public void sendWeeklyPosts(){
-        List<User> users = userRepo.findByIsActiveTrue();
+        Specification<User> spec=Specification.where(UserSpecification.byActive(true));
+        List<User> users = userRepo.findAll(spec);
         Sort sort = Sort.by(Sort.Direction.fromString("desc"), "likesCount");
         Pageable paging = PageRequest.of(1, 10, sort);
         List<Post> postsPage= postRepo.findAll(paging).stream().toList();
@@ -97,7 +99,9 @@ public class WeeklyWork {
 
     @Scheduled(cron = "0 0 0 * * MON")
     public void remindNonVerifiedUser(){
-        List<User> users = userRepo.findByIsActiveFalseAndProvider(AuthProvider.local);
+        Specification<User> spec=Specification.where(UserSpecification.byActive(false).and(UserSpecification.byProvider("local")));
+        List<User> users = userRepo.findAll(spec);
+
         for(User user:users){
             Optional<UserVerificationCode> userVCode= userVerificationCodeRepo.findByUserAndType(user,VerificationType.SIGNUP);
             if(userVCode.isPresent()){

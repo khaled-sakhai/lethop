@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -112,19 +113,19 @@ public class PostAdminController {
     }
 
     @DeleteMapping(path = "api/admin/post/{postId}/delete")
+    @Transactional
     public ResponseEntity<String> removePost(@PathVariable Long postId,@RequestParam boolean finalDelete,
                                              Principal principal) throws Exception{
-        Optional<Post> post = postService2.findPostById(postId);
-        if(post.isPresent()){
-            if(!post.get().getPostImages().isEmpty()){
-                imageService.removeImagesFromStorage(post.get());
-                imageService.removeImagesFromPost(post.get());
+        Optional<Post> postOpt = postAdmin.findAnyPostById(postId);
+        if(postOpt.isPresent()){
+            Post post = postOpt.get();
+            if(!post.getPostImages().isEmpty()){
+                imageService.removeImagesFromStorage(post);
+                imageService.removeImagesFromPost(post);
             }
+            postService2.deletePost(post);
             if(finalDelete){
-                postAdmin.finalDeleteById(postId);
-            }
-            else {
-                postService2.deletePost(post.get());
+                postAdmin.finalDeleteById(post);
             }
             return ResponseEntity.ok("Post removed successfully");
         }

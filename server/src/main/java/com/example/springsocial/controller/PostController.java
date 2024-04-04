@@ -188,7 +188,7 @@ public class PostController {
         newPost.setTitle(postRequest.getTitle());
         newPost.setContent(postRequest.getContent());
         newPost.setAnonymous(postRequest.isAnonymous());
-        if (postImages!=null && !postImages.isEmpty()){
+        if (postImages!=null && !postImages.isEmpty() && postImages.get(0).getSize()>0){
             newPost.setPostImages(imageService.saveListImagePost(postImages));
         }
         /// set user for the post

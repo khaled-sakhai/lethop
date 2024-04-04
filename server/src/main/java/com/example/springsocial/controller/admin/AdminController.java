@@ -5,16 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.springsocial.dto.post.PostDto;
+import com.example.springsocial.dto.user.UserDto;
+import com.example.springsocial.service.admin.UserAdmin;
+import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.userRelated.Role;
@@ -33,54 +36,46 @@ import java.util.Arrays;
 @RestController
 @AllArgsConstructor
 public class AdminController {
-    
-    @Autowired
-    private UserService userService;
-        @Autowired
-    private PostService postService;
 
-    @Autowired
-    private ImageRepo imageRepo;
- @Autowired
-  private CategoryService categoryService;
-
-  @Autowired
-  private TagService tagService;
+    private final UserAdmin userAdmin;
+    private final UserService userService;
 
 
 
    @GetMapping(value = "/api/admin/users")    
-   public List<User> getAllUsers(Principal principal){
-        return userService.findAll();
+   public ResponseEntity<Page<User>>  getAllUsers(@RequestParam(required = false) Boolean isActive,
+                                 @RequestParam(required = false) String provider,
+                                 @RequestParam(required = false) Long userId,
+                                 @RequestParam(required = false) Boolean needProfileUpdate,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "lastModifiedDate") @ValidPostSortBy String sortBy,
+                                 @RequestParam(defaultValue = "20") int size,
+                                 @RequestParam(defaultValue = "desc") String sortDirection){
+       Page<User> usersPage = userAdmin.findAll(isActive,provider,needProfileUpdate,userId ,page, size, sortBy, sortDirection);
+       //Page<UserDto> postDtos= usersPage.map(UserDto::new);
+       if (usersPage.isEmpty()) {
+           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+       }
+       return new ResponseEntity<>(usersPage, HttpStatus.OK);
    }
 
-    @GetMapping(value = "/api/admin/users/active/{provider}")    
-    public List<User> getActiveByProvider(@PathVariable AuthProvider provider){
-        return userService.findAllActiveUsers(provider);
-    }
 
-    @GetMapping(value = "/api/admin/users/unactive/{provider}")    
-    public List<User> getNonActiveByProvider(@PathVariable AuthProvider provider){
-        return userService.findAllNonActiveUsers(provider);
-    }
-    //// posts
-    // fully remove a post
-    
-    // @DeleteMapping(path = "api/admin/post/{postid}/delete")
-    // public ResponseEntity<String> removePost(@PathVariable Long postid,Principal principal) throws Exception{
-    //   User user= userService.findByEmail(principal.getName()).get();
-    //   Optional<Post> post = postService.findById(postid);
-    //   if(post.isPresent() && post.get().getUser()==user){
+   @DeleteMapping(path = "api/admin/user/{userId}")
+   @Transactional
+   public String removeUser(@PathVariable long userId,@RequestParam boolean finalDelete){
+       Optional<User> user = userAdmin.findAnyUserById(userId);
+       if(user.isPresent()){
+           if(finalDelete){
+               userAdmin.finalDeleteById(user.get());
+           }
+           else{
+               userService.deleteUser(user.get());
+           }
+           return "Removed!";
+       }
+       else return "Not Removed";
+   }
 
-    //     // handle image remove ...--to be added later
-    //     Post postObj = post.get();
-    //     postObj.getCategory().removePostFromCategoryById(postObj.getId());
-    //     postService.removePost(postObj, user);
-    //     return ResponseEntity.ok("Post removed succesfully");
-    //   }
-    
-    //   return ResponseEntity.badRequest().body("Post was not removed succesfully");     
-    // }
 
 
 }

@@ -108,13 +108,7 @@ public class UserService {
     return userRepo.findAll();
   }
 
-  public List<User> findAllActiveUsers(AuthProvider provider){
-    return userRepo.findByIsActiveTrueAndProvider(provider);
-  }
 
-  public List<User> findAllNonActiveUsers(AuthProvider provider){
-    return userRepo.findByIsActiveFalseAndProvider(provider);
-  }
 
     public boolean userEmailVerification(String verificationCode) throws Exception{
       UserVerificationCode userVerificationCode = validateVerificationCode(verificationCode);

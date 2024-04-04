@@ -9,8 +9,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import java.util.List;
+
 import java.util.Optional;
 
 @Service
@@ -18,7 +17,7 @@ import java.util.Optional;
 public class PostAdmin {
     private final PostRepo postRepo;
 
-    private final EntityManager entityManager;
+
 
 
     public Page<Post> findAll(Boolean isAnonymous,Long userId,Long postId,String category,String tag, int pageNo,int pageSize,String sortBy,String sortDirection){
@@ -38,8 +37,14 @@ public class PostAdmin {
     public Optional<Post> findAnyPostById(long postId){
         return postRepo.findAnyPostById(postId);
     }
-    public void finalDeleteById(long id){
-        postRepo.deletePostById(id);
+    public void finalDeleteById(Post post){
+        post.getUser().getPosts().remove(post);
+        post.getLikedByUsers().clear();
+        post.getPostComments().clear();
+        post.getSavedByUsers().clear();
+        post.getListTags().clear();
+        post.getCategory().removePostFromCategory(post);
+        postRepo.deletePostById(post.getId());
     }
     private Specification<Post> userSpec(String category, String TagName){
         return Specification

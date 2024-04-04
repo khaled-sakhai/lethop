@@ -19,7 +19,6 @@ public class ProjectUtil {
         return String.format(Constants.DOWNLOAD_URL, encodedFilePath);
     }
 
-
     // Format the LocalDateTime to show year, month, day, and hours,minutes
     public static String convertDateToString(Date date){
         LocalDateTime localDateTime =date
