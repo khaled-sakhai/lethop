@@ -173,9 +173,7 @@ public class PostService2 {
     }
 
     private Specification<Post> adminSpec(boolean isDelete,boolean isAnonymous,Long userId){
-        return Specification.where(
-            PostSpecification.isDeleted(isDelete)
-        ).and(PostSpecification.isAnonymous(isDelete)).and(PostSpecification.postByUserId(userId))
+        return Specification.where(PostSpecification.isAnonymous(isDelete)).and(PostSpecification.postByUserId(userId))
         ;
     }
 

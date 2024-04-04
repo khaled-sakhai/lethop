@@ -7,6 +7,9 @@ import com.example.springsocial.entity.userRelated.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,8 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -63,7 +65,7 @@ public class Post extends BaseEntity<Long> {
   private List<Image> postImages=new ArrayList<>();
 
   @JsonIgnore
-  private boolean isAnonymous= false;
+  private boolean isAnonymous= Boolean.FALSE;
 
   @JsonIgnore
   @ManyToMany(mappedBy = "savedPosts",fetch = FetchType.LAZY , cascade = CascadeType.ALL)

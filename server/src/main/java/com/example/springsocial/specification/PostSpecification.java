@@ -9,12 +9,27 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.*;
 
 public class PostSpecification {
-    
-    public static Specification<Post> isAnonymous(boolean isAnonymous){
+
+    public static Specification<Post> postId(Long postId){
+        return(
+                Root<Post> root,
+                CriteriaQuery<?> criteriaQuery,
+                CriteriaBuilder builder) ->{
+            if (postId==null || postId <= 0){
+                return null;
+            }
+            return builder.equal(root.get("id"),postId);
+        };
+    }
+
+    public static Specification<Post> isAnonymous(Boolean isAnonymous){
     return(
         Root<Post> root,
         CriteriaQuery<?> criteriaQuery,
         CriteriaBuilder builder) ->{
+        if (isAnonymous==null){
+            return null;
+        }
         return builder.equal(root.get("isAnonymous"),isAnonymous);
           };
     }
@@ -39,17 +54,6 @@ public class PostSpecification {
         };
     }
 
-
-    // to be used only for admin// users should see deleted posts.
-    public static Specification<Post> isDeleted(boolean isDeleted){
-        return(
-                Root<Post> root,
-                CriteriaQuery<?> criteriaQuery,
-                CriteriaBuilder builder) ->{
-            return builder.equal(root.get("deleted"),isDeleted);
-        };
-    }
- 
     public static Specification<Post> postWithCategory(String category,String defaultCategory){
         return(
                 Root<Post> root,
@@ -100,7 +104,7 @@ public class PostSpecification {
                 Root<Post> root,
                 CriteriaQuery<?> criteriaQuery,
                 CriteriaBuilder builder) ->{
-            if(  userId<=0){
+            if (userId == null || userId <= 0) {
                 return null;
             }
             Join<Post, User> userJoin = root.join("user");

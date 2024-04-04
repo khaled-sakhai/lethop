@@ -194,7 +194,7 @@ public class PostController {
         /// set user for the post
         User user= utilService.getUserFromPrincipal(principal);
         //save post
-        System.out.println(newPost.getPostImages().size());
+        System.out.println(postImages.get(0).getSize());
         postService2.addPost(newPost,user,tagService.setTagsToPost(postRequest.getTags()),categoryService.SetPostCategory(postRequest.getCategory()));
        return ResponseEntity.ok("Post added successfully");
     }

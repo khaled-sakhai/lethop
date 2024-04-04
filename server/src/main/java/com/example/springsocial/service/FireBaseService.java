@@ -27,18 +27,21 @@ public class FireBaseService {
 
 
     public String upload(MultipartFile multipartFile,boolean isProfile) {
+        if (multipartFile == null || multipartFile.isEmpty() || multipartFile.getSize() <= 0) {
+            throw new IllegalArgumentException("No file uploaded or the file is empty");
+        }
+        String fileName = multipartFile.getOriginalFilename();
+        if (!this.isFileAnImage(fileName)) {
+            throw new IllegalArgumentException("File type is not supported! Please use one of the following formats: jpg, jpeg, png, gif");
+        }
         try {
-            String fileName = multipartFile.getOriginalFilename();                        // to get original
-            if (!this.isFileAnImage(fileName)){
-                throw  new RuntimeException("File type is not supported! please use one of the following: jpg, jpeg, png, gif");
-            }
             String type = isProfile ? "profile" : "post";
-           fileName = this.generateFileName(fileName,type);
-            this.uploadFile(multipartFile,fileName);
+            fileName = this.generateFileName(fileName, type);
+            this.uploadFile(multipartFile, fileName);
             return fileName;
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            return "Image couldn't upload, Something went wrong";
+            return "Image couldn't upload. Something went wrong with file operations.";
         }
     }
 
