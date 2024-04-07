@@ -53,6 +53,9 @@ public class ImageService {
             fireBaseService.deleteFile(img.getFileName());
         }
     }
+    public void finalDeleteImages(Image image) throws IOException {
+            fireBaseService.deleteFile(image.getFileName());
+    }
     public Image findByFileName(String fileName){
         return imageRepo.findByFileName(fileName);
     }

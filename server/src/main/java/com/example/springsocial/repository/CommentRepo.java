@@ -4,6 +4,7 @@ import com.example.springsocial.entity.postRelated.Post;
 import com.example.springsocial.entity.userRelated.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import com.example.springsocial.base.BaseRepository;
@@ -11,7 +12,7 @@ import com.example.springsocial.entity.Image;
 import com.example.springsocial.entity.postRelated.Comment;
 
 @Repository
-public interface CommentRepo extends BaseRepository<Comment, Long>{
+public interface CommentRepo extends BaseRepository<Comment, Long>, JpaSpecificationExecutor<Comment> {
 
     Page<Comment> findByPost(Post post, Pageable paging);
 

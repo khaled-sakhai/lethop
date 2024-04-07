@@ -27,7 +27,7 @@ public class NotificationDto implements Serializable {
 
         this.type=notification.getType().toString();
 
-        this.fromUser=new UserInfo(notification.getFromUser().getId(),notification.getFromUser().getUserProfile().getFullName(),notification.getFromUser().getUserProfile().getProfilePicture().getUrl());
+        this.fromUser=new UserInfo(notification.getFromUser());
 
         this.date= ProjectUtil.convertDateToString(notification.getCreatedDate());
 
@@ -38,24 +38,24 @@ public class NotificationDto implements Serializable {
             this.postId=notification.getRelatedPost().getId();
         }
 
-        if (notification.getType().equals(NotificationType.COMMENT)){
+        else if (notification.getType().equals(NotificationType.COMMENT)){
             this.postId=notification.getRelatedPost().getId();
             this.commentId=notification.getRelatedComment().getId();
         }
 
 
-        if (notification.getType().equals(NotificationType.COMMENT_LIKE)){
+        else if (notification.getType().equals(NotificationType.COMMENT_LIKE)){
             this.postId=notification.getRelatedPost().getId();
             this.commentId=notification.getRelatedComment().getId();
         }
 
-        if (notification.getType().equals(NotificationType.REPLY)){
+        else if (notification.getType().equals(NotificationType.REPLY)){
             this.postId=notification.getRelatedPost().getId();
             this.commentId=notification.getRelatedComment().getId();
             this.replyId=notification.getReply().getId();
         }
 
-        if (notification.getType().equals(NotificationType.REPLAY_LIKE)){
+        else if (notification.getType().equals(NotificationType.REPLAY_LIKE)){
             this.postId=notification.getRelatedPost().getId();
             this.commentId=notification.getRelatedComment().getId();
             this.replyId=notification.getReply().getId();

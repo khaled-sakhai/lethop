@@ -1,8 +1,10 @@
 package com.example.springsocial.service;
 
 import com.example.springsocial.entity.postRelated.Tag;
+import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.entity.Features.UserVerificationCode;
+import com.example.springsocial.enums.APPRole;
 import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.enums.VerificationType;
 import com.example.springsocial.repository.RoleRepo;
@@ -68,7 +70,8 @@ public class UserService {
   }
 
   public User addUser(User user)  {
-
+    Role role=roleRepo.findByName(APPRole.ROLE_USER);
+    user.addRoles(role);
     return userRepo.save(user);
   }
 

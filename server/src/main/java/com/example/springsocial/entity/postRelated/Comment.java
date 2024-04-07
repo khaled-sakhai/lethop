@@ -33,7 +33,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 
-@Entity
+@Entity(name = "comments")
 @Table(name = "comments")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -57,6 +57,7 @@ public class Comment extends BaseEntity<Long> {
     private User user;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
     private Set<Reply> replies;
 
     private int numberOfReplies=0;

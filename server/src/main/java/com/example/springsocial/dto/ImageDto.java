@@ -9,12 +9,16 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ImageDto {
+public class ImageDto implements Serializable  {
+    private Long id;
     private String url;
     private String fileName;
 
     public ImageDto(Image image){
-        this.url=image.getUrl();
-        this.fileName=image.getFileName();
+        if (image!=null){
+            this.id=image.getId();
+            this.url=image.getUrl();
+            this.fileName=image.getFileName();
+        }
     }
 }

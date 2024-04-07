@@ -1,5 +1,7 @@
 package com.example.springsocial.controller.auth;
 
+import com.example.springsocial.entity.userRelated.Role;
+import com.example.springsocial.enums.APPRole;
 import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.enums.VerificationType;
 import com.example.springsocial.exception.BadRequestException;
@@ -104,6 +106,7 @@ public class AuthController {
     @GetMapping(path = "/confirm-account")
     public ResponseEntity<String> userEmailVerification(@RequestParam("verify") String verificationCode) throws Exception{
       if(userService.userEmailVerification(verificationCode)){
+
         return ResponseEntity.ok().body("Congratulations! your account is fully activated");
       }
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("verification code is not valid, please try again or contact us");

@@ -32,7 +32,7 @@ import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-@Entity
+@Entity(name = "users")
 @Table(name = "users")
 @Setter
 @Getter
@@ -73,6 +73,7 @@ public class User extends BaseEntity<Long> {
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id")
   )
+  
   private Set<Role> roles = new HashSet<>();
 
   @OneToOne(cascade =CascadeType.ALL,fetch = FetchType.LAZY) //optional = false)
@@ -95,21 +96,22 @@ public class User extends BaseEntity<Long> {
   private List<Post> posts = new ArrayList<>();
 
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+  @JsonIgnore
   private List<Tag> userInterests=new ArrayList<>();
 
-  @Column(name = "isSavedPostPrivate", columnDefinition = "boolean default true")
-  private boolean isSavedPostPrivate=true;
 
   @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE )
   @JoinTable(name = "saved_posts",
              joinColumns = @JoinColumn(name = "user_id"),
              inverseJoinColumns = @JoinColumn(name = "post_id"))
+  @JsonIgnore
   private List<Post> savedPosts=new ArrayList<>();
 
   @ManyToMany(fetch = FetchType.LAZY ,cascade = CascadeType.REMOVE)
   @JoinTable(name = "liked_posts",
              joinColumns = @JoinColumn(name = "user_id"),
              inverseJoinColumns = @JoinColumn(name = "post_id"))
+  @JsonIgnore
   private List<Post> likedPosts=new ArrayList<>();
 
 
@@ -133,7 +135,7 @@ public class User extends BaseEntity<Long> {
 
 /////helpers
 public void addRoles(Role ...role) {
-  this.roles.addAll(Arrays.asList(role));
+  this.getRoles().addAll(Arrays.asList(role));
   }
 
   public void removeAllRoles(){

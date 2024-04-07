@@ -1,9 +1,15 @@
 package com.example.springsocial.specification;
 
 import com.example.springsocial.entity.Features.Notification;
+import com.example.springsocial.entity.postRelated.Post;
+import com.example.springsocial.entity.postRelated.Tag;
+import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
+import com.example.springsocial.enums.APPRole;
 import com.example.springsocial.enums.AuthProvider;
 import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.*;
 
 public class UserSpecification {
 
@@ -50,6 +56,20 @@ public class UserSpecification {
                 return null;
             }
             return criteriaBuilder.equal(root.get("id"), userId);
+        };
+    }
+
+    public static Specification<User> byRole(String role){
+        return(
+                Root<User> root,
+                CriteriaQuery<?> criteriaQuery,
+                CriteriaBuilder builder) ->{
+            if (role == null || role.isBlank()) {
+                return null;
+            }
+            APPRole roleEnum=APPRole.valueOf(role.toUpperCase());
+            Join<User, Role> userJoin = root.join("roles");
+            return builder.equal(userJoin.get("name"),roleEnum);
         };
     }
 

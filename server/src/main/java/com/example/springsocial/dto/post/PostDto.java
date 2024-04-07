@@ -48,29 +48,15 @@ public class PostDto implements Serializable {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.isAnonymous=post.isAnonymous();
-        for(Tag tag:post.getListTags()){
-            this.tags.add(tag.getTagName());
-        }
-        if (!post.getPostImages().isEmpty()){
-            post.getPostImages().forEach(img->this.images.add(new ImageDto(img)));
-        }
+        post.getListTags().forEach(tag->this.tags.add(tag.getTagName()));
+        post.getPostImages().forEach(img->this.images.add(new ImageDto(img)));
         this.lastModifiedDate = ProjectUtil.convertDateToString(post.getLastModifiedDate());
         this.likedCounter=post.getLikesCount();
-        
         this.commentCounter=post.getCommentsCount();
         this.savedCounter=post.getSavesCount();
         this.Category = post.getCategory().getCategory();
+        this.postUserInfo=new UserInfo(post.getUser());
 
-        if(!isAnonymous && post.getUser().getUserProfile()!=null){
-
-          this.postUserInfo=new UserInfo();
-          if(post.getUser().getUserProfile().getProfilePicture()!=null){
-              this.postUserInfo.setUserImageUrl(post.getUser().getUserProfile().getProfilePicture().getUrl()) ;
-           }
-        // for security -- front end must subtract 54321 from user id
-          this.postUserInfo.setUserId(post.getUser().getId() ) ;
-          this.postUserInfo.setUserName(post.getUser().getUserProfile().getFullName());
-        }
 
 
     }

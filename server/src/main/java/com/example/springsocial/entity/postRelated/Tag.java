@@ -15,7 +15,7 @@ import lombok.Setter;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
-@Entity
+@Entity(name = "tags")
 @Table(name = "tags")
 @NoArgsConstructor
 @AllArgsConstructor

@@ -32,9 +32,10 @@ public abstract class BaseEntity<ID> implements Serializable{
   // @Id
   // @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "base_sequence")
+  @SequenceGenerator(name = "base_sequence", sequenceName = "base_sequence", allocationSize = 21, initialValue = 1500)
   private Long id;
+
 
   private boolean deleted= Boolean.FALSE;
 

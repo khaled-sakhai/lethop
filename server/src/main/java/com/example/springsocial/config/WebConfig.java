@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -20,6 +21,8 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
@@ -65,5 +68,9 @@ public class WebConfig implements WebMvcConfigurer{
   public void addInterceptors(InterceptorRegistry registry) {
       registry.addInterceptor(rateLimitingInterceptor);
   }
+
+
+
+
 
 }

@@ -1,24 +1,29 @@
 package com.example.springsocial.service.admin;
 
+import com.example.springsocial.entity.Image;
+import com.example.springsocial.entity.postRelated.Category;
 import com.example.springsocial.entity.postRelated.Post;
+import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.repository.PostRepo;
+import com.example.springsocial.service.ImageService;
 import com.example.springsocial.specification.PostSpecification;
 import com.example.springsocial.util.Constants;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class PostAdmin {
     private final PostRepo postRepo;
-
-
-
+    private final ImageService imageService;
 
     public Page<Post> findAll(Boolean isAnonymous,Long userId,Long postId,String category,String tag, int pageNo,int pageSize,String sortBy,String sortDirection){
         Specification<Post> spec= this.adminSpec(isAnonymous,userId,postId).and(this.userSpec(category,tag));
@@ -31,21 +36,41 @@ public class PostAdmin {
     public Page<Post> findDeleted(int pageNo,int pageSize,String sortBy,String sortDirection){
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, sort);
-        return postRepo.findAllDeleted(paging);
+        return postRepo.adminFindAllDeleted(paging);
     }
 
     public Optional<Post> findAnyPostById(long postId){
-        return postRepo.findAnyPostById(postId);
+        return postRepo.adminFindById(postId);
     }
-    public void finalDeleteById(Post post){
-        post.getUser().getPosts().remove(post);
+
+    @Transactional
+    public void finalDeletePost(Post post){
+        User user = post.getUser();
+        post.setUser(null);
+        Category category = post.getCategory();
+        user.getPosts().remove(post);
         post.getLikedByUsers().clear();
         post.getPostComments().clear();
         post.getSavedByUsers().clear();
         post.getListTags().clear();
-        post.getCategory().removePostFromCategory(post);
-        postRepo.deletePostById(post.getId());
+
+        List<Image> imgs=post.getPostImages();
+        imgs.forEach(image -> {
+            try {
+                imageService.finalDeleteImages(image);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        post.getPostImages().clear();
+
+        if (category != null) {
+            category.getPosts().remove(post);
+            post.setCategory(null);
+        }
+        postRepo.adminDeleteById(post.getId());
     }
+
     private Specification<Post> userSpec(String category, String TagName){
         return Specification
                 .where(PostSpecification.postWithCategory(category, Constants.AllowedCategory[0]))

@@ -135,6 +135,7 @@ post1.setTitle("how did i lose 10kg");
 post1.setContent("This is my way to lose 10 kg");
 
 postRepo.save(post1);;
+    user2.addPost(post1);
 good.addPostToCategory(post1);
 post1.setUser(user2);
 post1.setCategory(good);
@@ -145,6 +146,7 @@ post4.setTitle("how did i lose 100kg");
      post4.setContent("This is my way to lose 100 kg in a year");
 
     postRepo.save(post4);
+    user2.addPost(post4);
     good.addPostToCategory(post4);
     post4.setUser(user2);
     post4.setCategory(good);
@@ -157,6 +159,7 @@ post2.setContent("This is my way to lose 1 kg in a year");
     postRepo.save(post2);
     learn.addPostToCategory(post2);
     post2.setUser(user2);
+    user2.addPost(post2);
     post2.setCategory(learn);
     post2.setListTags(tags2);
 
@@ -166,6 +169,7 @@ post3.setContent("This is my way to lose 1000 kg in a year");
 
 
     postRepo.save(post3);
+    user2.addPost(post3);
     question.addPostToCategory(post3);
 
       post3.setCategory(question);

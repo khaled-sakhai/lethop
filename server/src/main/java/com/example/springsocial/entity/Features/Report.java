@@ -23,7 +23,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
+@Entity(name = "Reports")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -26,15 +26,7 @@ public interface UserRepo extends BaseRepository<User, Long> , JpaSpecificationE
 
   boolean existsByEmail(String email);
 
+  @Query(nativeQuery = true, value = "SELECT * FROM users WHERE email = :email")
+  Optional<User> findAnyUserByEmail(String email);
 
-  @Query(nativeQuery = true, value = "SELECT * FROM users WHERE deleted = true")
-  Page<User> findAllDeleted(Pageable pageable);
-
-  @Query(nativeQuery = true, value = "SELECT * FROM users WHERE id = :postId")
-  Optional<User> findAnyUserById(@Param("postId") Long postId);
-
-  @Modifying
-  @Transactional
-  @Query(value = "DELETE FROM users WHERE id = :userId", nativeQuery = true)
-  void deleteUserById(@Param("userId") Long userId);
 }

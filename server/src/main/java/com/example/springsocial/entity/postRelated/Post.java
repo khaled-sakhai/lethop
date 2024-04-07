@@ -25,7 +25,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
-@Entity
+@Entity(name = "posts")
 @Table(name = "posts")
 @AllArgsConstructor
 @NoArgsConstructor

@@ -42,7 +42,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Entity
+@Entity(name = "profiles")
 @Table(name = "profiles")
 @AllArgsConstructor
 @NoArgsConstructor

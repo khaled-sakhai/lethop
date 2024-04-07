@@ -25,7 +25,8 @@ public class PostRequest {
     private String content;
     private String tags;
     private String Category;
-    
+
+    @JsonProperty("is_anonymous")
     private boolean isAnonymous=false;
     @JsonProperty("is_tag_modified")
     private boolean isTagModifies=false;

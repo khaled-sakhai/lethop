@@ -18,7 +18,7 @@ import org.hibernate.annotations.Where;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "notifications")
 @Table(name = "notifications")
 public class Notification extends BaseEntity<Long> {
     @Enumerated(EnumType.STRING)

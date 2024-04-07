@@ -25,17 +25,8 @@ public interface PostRepo extends BaseRepository<Post, Long>, JpaSpecificationEx
     Page<Post> findByListTagsTagName(String tagName,Pageable pageable);
     Page<Post> findByCategoryCategory(String category, Pageable pageable);
 
-    @Query("SELECT DISTINCT p FROM Post p LEFT JOIN p.listTags t LEFT JOIN p.category c WHERE (t.tagName = :tagName OR c.category = :category)")
+    @Query("SELECT DISTINCT p FROM posts p LEFT JOIN p.listTags t LEFT JOIN p.category c WHERE (t.tagName = :tagName OR c.category = :category)")
     Page<Post> findByListTagsTagNameOrCategoryCategory(@Param("tagName") String tagName, @Param("category") String category, Pageable pageable);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM posts WHERE deleted = true")
-    Page<Post> findAllDeleted(Pageable pageable);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM posts WHERE id = :postId")
-    Optional<Post> findAnyPostById(@Param("postId") Long postId);
-
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM posts WHERE id = :postId", nativeQuery = true)
-    void deletePostById(@Param("postId") Long postId);
 }

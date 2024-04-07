@@ -71,26 +71,31 @@ public class PostAdminController {
     }
 
     @GetMapping(path = "api/admin/post/{postId}")
-    public ResponseEntity<PostDtoAdmin> findAnyPostById(@PathVariable long postId){
+    public ResponseEntity<Post> findAnyPostById(@PathVariable long postId){
         Optional<Post>  post = postAdmin.findAnyPostById(postId);
         if(post.isPresent()){
-            return ResponseEntity.status(HttpStatus.OK).body(new PostDtoAdmin(post.get()));
+            return ResponseEntity.status(HttpStatus.OK).body(post.get());
         }
         else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-
 }
 
 
     @PostMapping(path = "api/admin/post/edit/{postId}")
-    public ResponseEntity<String> editPost(@PathVariable() Long postId, @RequestPart("post") PostRequest postRequest,
+    public ResponseEntity<String> editPost(@PathVariable() Long postId,
+                                           @RequestPart("post") PostRequest postRequest,
                                            @RequestParam(required = false) MultipartFile postImage,
-                                           Principal principal) throws IOException {
+                                           @RequestParam(required = false) Boolean delete
+                                           ) throws IOException {
         Optional<Post> postObj = postService2.findPostById(postId);
         if(postObj.isPresent()){
             Post post = postObj.get();
             post.setAnonymous(postRequest.isAnonymous());
             post.setTitle(postRequest.getTitle());
             post.setContent(postRequest.getContent());
+            if (delete!=null){
+                post.setDeleted(delete);
+            }
+
             if(postRequest.isTagModifies()){
                 post.removeTags();
                 Set<Tag> tags= tagService.setTagsToPost(postRequest.getTags());
@@ -125,7 +130,7 @@ public class PostAdminController {
             }
             postService2.deletePost(post);
             if(finalDelete){
-                postAdmin.finalDeleteById(post);
+                postAdmin.finalDeletePost(post);
             }
             return ResponseEntity.ok("Post removed successfully");
         }

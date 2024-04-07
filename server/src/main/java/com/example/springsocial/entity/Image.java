@@ -12,12 +12,14 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 
-@Entity
+@Entity(name = "images")
 @Table(name = "images")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE profiles SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Image extends BaseEntity<Long> {
     private String url;
     private String fileName;

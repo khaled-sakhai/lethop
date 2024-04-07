@@ -37,15 +37,13 @@ public class ReportDto implements Serializable {
     @JsonProperty("reply_id")
     private Long replyId;
 
+    private boolean isDeleted=false;
+
     public ReportDto(Report report){
-        String profilePictureUrlReported = report.getRelatedUser().getUserProfile().getProfilePicture() != null ? report.getRelatedUser().getUserProfile().getProfilePicture().getUrl() : null;
-        String profilePictureUrl = report.getRelatedUser().getUserProfile().getProfilePicture() != null ? report.getRelatedUser().getUserProfile().getProfilePicture().getUrl() : null;
 
-        this.reported= new UserInfo(report.getRelatedUser().getId(),report.getRelatedUser().getUserProfile().getFullName(),profilePictureUrlReported);
-        String profilePictureUrlReporter = report.getReporter().getUserProfile().getProfilePicture() != null ? report.getReporter().getUserProfile().getProfilePicture().getUrl() : null;
-
-        this.reporter= new UserInfo(report.getReporter().getId(),report.getReporter().getUserProfile().getFullName(),profilePictureUrlReporter);
-
+        this.reported= new UserInfo(report.getRelatedUser());
+        this.reporter= new UserInfo(report.getReporter());
+        this.isDeleted=report.isDeleted();
         this.resourceType=report.getResourceType().name();
         this.feedback=report.getFeedback();
         this.date= ProjectUtil.convertDateToString(report.getCreatedDate());

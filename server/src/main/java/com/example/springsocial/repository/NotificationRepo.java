@@ -22,7 +22,7 @@ public interface NotificationRepo extends BaseRepository<Notification,Long>, Jpa
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM Notification p WHERE p IN :notifs")
+    @Query("DELETE FROM notifications p WHERE p IN :notifs")
     void deleteAllNotifications(List<Notification> notifs);
 
     

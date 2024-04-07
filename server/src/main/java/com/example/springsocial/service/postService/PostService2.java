@@ -57,8 +57,7 @@ public class PostService2 {
     }
 
     public Optional<Post> getPostById(Long postId){
-        Optional<Post> post = postRepo.findById(postId);
-        return post;
+        return postRepo.findById(postId);
     }
 
     @CacheEvict(cacheNames="feed", allEntries=true)

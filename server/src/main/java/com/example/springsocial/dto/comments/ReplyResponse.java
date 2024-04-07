@@ -9,10 +9,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReplyResponse {
+public class ReplyResponse implements Serializable {
     private Long commentId;
     private String content;
     private String lastModifiedDate;
@@ -23,10 +25,8 @@ public class ReplyResponse {
         this.content=reply.getContent();
         this.commentId= reply.getComment().getId();
         this.lastModifiedDate= ProjectUtil.convertDateToString(reply.getLastModifiedDate());
-        userInfo = new UserInfo();
-        userInfo.setUserId(user.getId());
-        userInfo.setUserName(user.getUserProfile().getFullName());
-        userInfo.setUserImageUrl(user.getUserProfile().getProfilePicture().getUrl());
+        userInfo = new UserInfo(reply.getUser());
+
     }
 
 

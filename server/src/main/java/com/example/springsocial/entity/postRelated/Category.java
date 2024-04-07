@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.example.springsocial.base.BaseEntity;
@@ -27,7 +28,7 @@ import lombok.Setter;
 import org.hibernate.search.annotations.Field;
 
 
-@Entity
+@Entity(name = "categories")
 @Table(name = "categories")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,6 +48,7 @@ public class Category extends BaseEntity<Long>{
     inverseJoinColumns = @JoinColumn(name = "post_id")
   )
  @JsonIgnoreProperties("category")
+  @JsonIgnore
   private List<Post> posts = new ArrayList<>();
 
   public void removePostFromCategoryById(long postId) {
