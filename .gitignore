@@ -1,25 +1,31 @@
-# Spring Boot
-/server/target/
-!/server/.mvn/wrapper/maven-wrapper.jar
-!/server/src/main/resources/application.properties
+# IDE Specific files
+**/.idea/
+**/.vscode/
+**/.project
+**/.classpath
+**/target/
 
-# Firebase
-/server/**/firebase-adminsdk.json
+# Maven/Gradle build files
+**/pom.xml
+**/build.gradle
 
-# IDE/Editor specific
-/server/.idea/
-/server/.vscode/
+# Test coverage reports
+**/coverage/
 
-# Maven
-/server/log/
-/server/*.log
+# Spring Boot application properties
+server/application.properties
 
-# Eclipse
-/server/.classpath
-/server/.project
-/server/.settings/
+# Specific configuration files (modify as needed)
+server/firebase.json
 
-# IntelliJ IDEA
-/server/*.iml
-/server/*.ipr
-/server/*.iws
+# Ignore any OS specific temporary files
+*.swp
+*.log
+*.pid
+
+# Ignore any personal IDE settings files
+*.iml
+
+# Ignore generated class files from Lombok (if using)
+**/.lombok.log
+**/.projectlombok.log
