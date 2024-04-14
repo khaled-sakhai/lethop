@@ -9,6 +9,7 @@ import com.example.springsocial.entity.postRelated.Reply;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.service.admin.ComRepAdmin;
 import com.example.springsocial.service.postService.CommentReplayService;
+import com.example.springsocial.util.PathConstants;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,12 +22,13 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping(path = PathConstants.API_V1+PathConstants.ADMIN_END_POINT)
 public class CommentReplyController {
 
     private final ComRepAdmin comRepAdmin;
     private final CommentReplayService commentReplayService;
 
-    @GetMapping(value = "/api/admin/comments")
+    @GetMapping(value = "comments")
     public ResponseEntity<Page<CommentResponse>> findAllComment(@RequestParam(required = false)Long userId,
                                                                 @RequestParam(required = false) Long postId,
                                                                 @RequestParam(required = false) Long commentId,
@@ -42,7 +44,7 @@ public class CommentReplyController {
         }
         return new ResponseEntity<>(commentsDtos, HttpStatus.OK);
     }
-    @GetMapping(value = "/api/admin/replies")
+    @GetMapping(value = "replies")
 
     public ResponseEntity<Page<ReplyResponse>> findAllReplies(@RequestParam(required = false) Long userId,
                                                               @RequestParam(required = false) Long replyId,
@@ -59,7 +61,7 @@ public class CommentReplyController {
         return new ResponseEntity<>(repliesDtos, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/admin/comments/deleted")
+    @GetMapping(value = "comments/deleted")
 
     public ResponseEntity<Page<CommentResponse>> findDeletedComments(
                                     @RequestParam(defaultValue = "0") int page,
@@ -73,7 +75,7 @@ public class CommentReplyController {
         }
         return new ResponseEntity<>(commentsDtos, HttpStatus.OK);
     }
-    @GetMapping(value = "/api/admin/replies/deleted")
+    @GetMapping(value = "replies/deleted")
 
     public  ResponseEntity<Page<ReplyResponse>> findDeletReply(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "lastModifiedDate")@ValidPostSortBy String sortBy,
@@ -87,7 +89,7 @@ public class CommentReplyController {
         return new ResponseEntity<>(repliesDtos, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/admin/comment/{commentId}")
+    @GetMapping(value = "comment/{commentId}")
     public ResponseEntity<Comment> findComment(@PathVariable Long commentId){
         Optional<Comment> commentOptional = comRepAdmin.findAnyComment(commentId);
         if (commentOptional.isPresent()){
@@ -106,7 +108,7 @@ public class CommentReplyController {
     }
 
     @Transactional
-    @DeleteMapping(value = "/api/admin/comment/{commentId}")
+    @DeleteMapping(value = "comment/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable long commentId,@RequestParam Boolean finalDelete){
         Optional<Comment> commentOptional = comRepAdmin.findAnyComment(commentId);
         if(commentOptional.isPresent()){
@@ -121,7 +123,7 @@ public class CommentReplyController {
         else return ResponseEntity.badRequest().body("Comment Not Removed");
     }
 
-    @PutMapping (value = "/api/admin/comment/{commentId}")
+    @PutMapping (value = "comment/{commentId}")
     public ResponseEntity<String> editComment(@PathVariable long commentId, @RequestBody CommentRequest commentRequest,@RequestParam(required = false) Boolean delete){
         Optional<Comment> commentOptional = comRepAdmin.findAnyComment(commentId);
         if(commentOptional.isPresent()){
@@ -138,7 +140,7 @@ public class CommentReplyController {
     }
 
     @Transactional
-    @DeleteMapping(value = "/api/admin/reply/{replyId}")
+    @DeleteMapping(value = "reply/{replyId}")
     public ResponseEntity<String> deleteReply(@PathVariable long replyId,@RequestParam Boolean finalDelete){
         Optional<Reply> replyOptional = comRepAdmin.findAnyReply(replyId);
         if(replyOptional.isPresent()){
@@ -153,7 +155,7 @@ public class CommentReplyController {
         else return ResponseEntity.badRequest().body("Reply Not Removed");
     }
 
-    @PutMapping (value = "/api/admin/reply/{replyId}")
+    @PutMapping (value = "reply/{replyId}")
     public ResponseEntity<String> editReply(@PathVariable long replyId, @RequestBody CommentRequest commentRequest,@RequestParam(required = false) Boolean delete){
         Optional<Reply> replyOptional = comRepAdmin.findAnyReply(replyId);
         if(replyOptional.isPresent()){

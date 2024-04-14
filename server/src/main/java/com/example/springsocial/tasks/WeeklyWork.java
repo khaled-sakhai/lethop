@@ -19,12 +19,14 @@ import com.example.springsocial.service.postService.PostService;
 import com.example.springsocial.service.postService.PostService2;
 import com.example.springsocial.service.postService.TagService;
 import com.example.springsocial.specification.AppSpecefication;
+import com.example.springsocial.specification.PostSpecification;
 import com.example.springsocial.specification.UserSpecification;
 import com.example.springsocial.util.EmailTemplates;
 
 import com.example.springsocial.util.ProjectUtil;
 import lombok.AllArgsConstructor;
 
+import org.jboss.logging.annotations.Pos;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -56,10 +58,12 @@ public class WeeklyWork {
     @Scheduled(cron = "0 0 0 * * MON")
     public void sendWeeklyPosts(){
         Specification<User> spec=Specification.where(UserSpecification.byActive(true));
+        //// filter only users who want to receive emails .
         List<User> users = userRepo.findAll(spec);
         Sort sort = Sort.by(Sort.Direction.fromString("desc"), "likesCount");
         Pageable paging = PageRequest.of(1, 10, sort);
-        List<Post> postsPage= postRepo.findAll(paging).stream().toList();
+        Specification<Post> postSpecification = Specification.where(PostSpecification.createdLastXDays(7));
+        List<Post> postsPage= postRepo.findAll(postSpecification,paging).stream().toList();
 
         for(User user:users){
             // this sends best posts by likes (any tag,any category)// not the best approach
@@ -88,18 +92,26 @@ public class WeeklyWork {
         Specification<Notification> spec = spec1.or(spec2);
 
         List<Notification> notfs= notificationRepo.findAll(spec);
-        notificationRepo.deleteAllNotifications(notfs);
+        notfs.forEach(n->{
+            Long id=n.getId();
+            n.setUser(null);
+            n.setReply(null);
+            n.setFromUser(null);
+            n.setRelatedComment(null);
+            notificationRepo.adminDeleteById(id);
+        });
+
     }
 
     @Scheduled(cron = "0 0 0 * * MON")
     public void removeOldTokens(){
         List<Token> tokens = tokenRepo.findAllByIsLoggedOut(true);
-        tokenRepo.deleteAll(tokens);
+        tokens.forEach(t->tokenRepo.adminDeleteById(t.getId()));
     }
 
     @Scheduled(cron = "0 0 0 * * MON")
     public void remindNonVerifiedUser(){
-        Specification<User> spec=Specification.where(UserSpecification.byActive(false).and(UserSpecification.byProvider("local")));
+        Specification<User> spec=Specification.where(UserSpecification.byActive(false));
         List<User> users = userRepo.findAll(spec);
 
         for(User user:users){

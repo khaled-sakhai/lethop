@@ -18,16 +18,7 @@ public class CategoryService {
     @Autowired
     private CategoryRepo categoryRepo;
 
-    public Category saveCategory(Category category){
-        Category categoryFromDB = findByCategory(category.getCategory());
 
-        if(categoryFromDB == null){
-            return categoryRepo.save(category);
-        }
-        else{
-            return categoryFromDB;
-        }
-    }
 
     public Category SetPostCategory(String categoryString){
         if (categoryString==null || categoryString.isBlank() || !Arrays.asList(Constants.AllowedCategory).contains(categoryString.toLowerCase())){

@@ -33,13 +33,10 @@ public class CommentReplayService {
     private CommentRepo commentRepo;
     @Autowired
     private ReplyRepo replyRepo;
-     @Autowired
-    private UserRepo userRepo;
     @Autowired 
     private PostRepo postRepo;
 
-    @Autowired
-    private PostService postService;
+
 
     public Page<Comment> findCommentsByPostId(Long postId,
                                               int pageNo,
@@ -151,16 +148,5 @@ public class CommentReplayService {
         .orElseThrow(() -> new EntityNotFoundException("comment not found"));
     }
 
-
-  public Reply addReplyToComment(Long commentId, Reply reply,User user) {
-        // Fetch the comment by ID and set it for the reply
-        Comment comment = commentRepo.findById(commentId).orElseThrow(() -> new EntityNotFoundException("Comment not found"));
-        reply.setComment(comment);
-        user.getUserReplies().add(reply);
-        //user.updateRepliesCounter();
-        comment.addReplayToComment(reply);
-        comment.updateNumberOfReplies();
-        return replyRepo.save(reply);
-    }
 
 }

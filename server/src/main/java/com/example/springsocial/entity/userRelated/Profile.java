@@ -77,11 +77,12 @@ public class Profile extends BaseEntity<Long>{
   private String summary;
 
   @JsonIgnore
-  @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL )
+  @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
   private User user;
 
-  @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+  @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "profile_image_id", referencedColumnName = "id")
+  @JsonIgnore
   private Image profilePicture;
 
   @Enumerated(EnumType.STRING)

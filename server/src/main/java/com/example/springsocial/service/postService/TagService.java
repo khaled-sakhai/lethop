@@ -35,9 +35,4 @@ public class TagService {
         else tags.add(this.saveTag(new Tag(Constants.AllowedTags[0])));
         return tags;
     }
-
-    public Optional<Tag> findByTag(String tag){
-        return tagRepo.findByTagName(tag);
-    }
-
 }

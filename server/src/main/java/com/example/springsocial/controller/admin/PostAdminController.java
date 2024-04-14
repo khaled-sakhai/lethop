@@ -11,6 +11,7 @@ import com.example.springsocial.service.admin.PostAdmin;
 import com.example.springsocial.service.postService.CategoryService;
 import com.example.springsocial.service.postService.PostService2;
 import com.example.springsocial.service.postService.TagService;
+import com.example.springsocial.util.PathConstants;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping(path = PathConstants.API_V1+PathConstants.ADMIN_END_POINT)
 public class PostAdminController {
     private final PostAdmin postAdmin;
     private final PostService2 postService2;
@@ -35,7 +37,7 @@ public class PostAdminController {
     private final CategoryService categoryService;
     private final ImageService imageService;
 
-    @GetMapping(path = "api/v1/public/post")
+    @GetMapping(path = "post")
     public ResponseEntity<Page<PostDto>> findAll(@RequestParam(required = false) Boolean isAnonymous,
                                  @RequestParam(required = false) Long userId,
                                  @RequestParam(required = false) Long postId,
@@ -55,7 +57,7 @@ public class PostAdminController {
         return new ResponseEntity<>(postDtos, HttpStatus.OK);
     }
 
-    @GetMapping(path = "api/v1/public/post/deleted")
+    @GetMapping(path = "post/deleted")
     public ResponseEntity<Page<PostDtoAdmin>> findDeleted(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "last_modified_date") @ValidPostSortBy String sortBy,
                                   @RequestParam(defaultValue = "20") int size,
@@ -70,7 +72,7 @@ public class PostAdminController {
        return new ResponseEntity<>(postDtos, HttpStatus.OK);
     }
 
-    @GetMapping(path = "api/admin/post/{postId}")
+    @GetMapping(path = "post/{postId}")
     public ResponseEntity<Post> findAnyPostById(@PathVariable long postId){
         Optional<Post>  post = postAdmin.findAnyPostById(postId);
         if(post.isPresent()){
@@ -80,7 +82,7 @@ public class PostAdminController {
 }
 
 
-    @PostMapping(path = "api/admin/post/edit/{postId}")
+    @PostMapping(path = "post/edit/{postId}")
     public ResponseEntity<String> editPost(@PathVariable() Long postId,
                                            @RequestPart("post") PostRequest postRequest,
                                            @RequestParam(required = false) MultipartFile postImage,
@@ -117,7 +119,7 @@ public class PostAdminController {
         return ResponseEntity.badRequest().body("Post was not updated successfully");
     }
 
-    @DeleteMapping(path = "api/admin/post/{postId}/delete")
+    @DeleteMapping(path = "post/{postId}/delete")
     @Transactional
     public ResponseEntity<String> removePost(@PathVariable Long postId,@RequestParam boolean finalDelete,
                                              Principal principal) throws Exception{

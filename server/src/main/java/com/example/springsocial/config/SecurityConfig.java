@@ -35,6 +35,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] WHITE_LIST_URL = {
+                        "/ws",
+                        "messages/**","chat/**","app/**","user/**",
                         "/api/v1/public/**",
                         "/confirm-account/**",
                         "/signup/**",

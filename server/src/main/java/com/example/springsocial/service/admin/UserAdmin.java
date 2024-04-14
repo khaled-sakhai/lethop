@@ -12,6 +12,7 @@ import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.repository.*;
 import com.example.springsocial.security.Token.Token;
 import com.example.springsocial.security.Token.TokenRepo;
+import com.example.springsocial.service.FireBaseService;
 import com.example.springsocial.service.ProfileService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.specification.UserSpecification;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,9 @@ public class UserAdmin {
     private final ProfileService profileService;
     private final UserService userService;
     private final RoleRepo roleRepo;
+    private final FireBaseService fireBaseService;
+    private final ImageAdmin imageAdmin;
+
 
 
     public Page<User> findAll(Boolean isActive,String provider,Boolean needProfileUpdate,Long userId,String role,int pageNo, int pageSize, String sortBy, String sortDirection){
@@ -73,7 +78,7 @@ public class UserAdmin {
     }
 
     @Transactional
-    public void finalDeleteById(User user){
+        public void finalDeleteUser(User user) throws IOException {
         user.getUserInterests().clear();
         user.getUserReplies().clear();
         Profile userProfile = user.getUserProfile();

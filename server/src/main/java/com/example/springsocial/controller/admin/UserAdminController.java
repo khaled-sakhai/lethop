@@ -1,5 +1,6 @@
 package com.example.springsocial.controller.admin;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,7 @@ import com.example.springsocial.dto.profile.ProfileDto;
 import com.example.springsocial.dto.user.RegisterDto;
 import com.example.springsocial.dto.user.UserDto;
 import com.example.springsocial.service.admin.UserAdmin;
+import com.example.springsocial.util.PathConstants;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,8 +22,9 @@ import com.example.springsocial.entity.userRelated.User;
 
 import com.example.springsocial.service.UserService;
 
-@RestController
+@RestController()
 @AllArgsConstructor
+@RequestMapping(path = PathConstants.API_V1+PathConstants.ADMIN_END_POINT)
 public class UserAdminController {
 
     private final UserAdmin userAdmin;
@@ -30,7 +33,7 @@ public class UserAdminController {
 
 
 
-   @GetMapping(value = "/api/admin/users")
+   @GetMapping(value = "users")
    public ResponseEntity<Page<UserDto>>  getAllUsers(@RequestParam(required = false) Boolean isActive,
                                  @RequestParam(required = false) String provider,
                                  @RequestParam(required = false) Long userId,
@@ -47,7 +50,7 @@ public class UserAdminController {
        }
        return new ResponseEntity<>(userDtos, HttpStatus.OK);
    }
-    @GetMapping(value = "/api/admin/user/id/{userId}")
+    @GetMapping(value = "user/id/{userId}")
     public ResponseEntity<User>  getUserById(@PathVariable Long userId){
         Optional<User> userOptional = userAdmin.findAnyUserById(userId);
         if (userOptional.isPresent()){
@@ -55,7 +58,7 @@ public class UserAdminController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    @GetMapping(value = "/api/admin/user/email/{email}")
+    @GetMapping(value = "user/email/{email}")
     public ResponseEntity<User>  getUserByEmail(@PathVariable String email){
         Optional<User> userOptional = userAdmin.findAnyUserByEmail(email);
         if (userOptional.isPresent()){
@@ -64,13 +67,13 @@ public class UserAdminController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-   @DeleteMapping(path = "api/admin/user/{userId}")
+   @DeleteMapping(path = "user/{userId}")
    @Transactional
-   public ResponseEntity<String> removeUser(@PathVariable long userId,@RequestParam(required = false) boolean finalDelete){
+   public ResponseEntity<String> removeUser(@PathVariable long userId,@RequestParam(required = false) boolean finalDelete) throws IOException {
        Optional<User> user = userAdmin.findAnyUserById(userId);
        if(user.isPresent()){
            if(finalDelete){
-               userAdmin.finalDeleteById(user.get());
+               userAdmin.finalDeleteUser(user.get());
            }
            else{
                userService.deleteUser(user.get());
@@ -80,13 +83,13 @@ public class UserAdminController {
        else return ResponseEntity.badRequest().body("Not Removed");
    }
 
-    @PostMapping (path = "api/admin/user/new")
+    @PostMapping (path = "user/new")
     public void addUser(@RequestBody RegisterDto registerDto){
        userAdmin.adminAddNewUser(registerDto);
    }
 
    @Transactional
-   @PutMapping(path = "api/admin/user/{userId}/edit")
+   @PutMapping(path = "user/{userId}/edit")
    public ResponseEntity<String> editUser(@PathVariable Long userId,
                         @RequestPart RegisterDto registerDto,
                         @RequestParam(required = false) List<String> roles){

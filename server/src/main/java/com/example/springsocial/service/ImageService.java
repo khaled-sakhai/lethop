@@ -56,26 +56,7 @@ public class ImageService {
     public void finalDeleteImages(Image image) throws IOException {
             fireBaseService.deleteFile(image.getFileName());
     }
-    public Image findByFileName(String fileName){
-        return imageRepo.findByFileName(fileName);
-    }
 
-    public void deletImageByFileName(String fileName){
-      // imageRepo.deletByFileName(fileName);
-    }
-
-    public Image findImageById(Long imageId) {
-        Optional<Image> image = imageRepo.findById(imageId);
-        try {
-            image.isPresent();
-              return image.get();
-        } catch (Exception e) {
-            
-            System.out.println("image doesnt exist");
-             return null;
-        }
-       
-    }
 
     public void deletImage(Image image){
          imageRepo.delete(image);

@@ -50,45 +50,14 @@ public class PostService {
     }
 
 
-    public Post createNewPost(Post post){  
-        return postRepo.save(post);
-    }
-
-    public Post updatePost(Post post){
-        return postRepo.save(post);
-    }
-
-    public Optional<Post> findAnyPostById(Long id){
-        return postRepo.findById(id);
-    }
 
     
     public Optional<Post> findById(Long id){
         return postRepo.findPostById(id);
     }
 
-    public Page<Post> findByUserId(Long userId,Pageable pageable){
-        return postRepo.findPostsByUserId(userId,pageable);
-    }
-
-    public Page<Post> findByTag(String tag,Pageable pageable){
-        return postRepo.findByListTagsTagName(tag,pageable);
-    }
-
-    public Page<Post> findByCategory(String category,Pageable pageable){
-        return postRepo.findByCategoryCategory(category,pageable);
-    }
-
-    //feed page
-    public Page<Post> findPostsByTagOrCategory(String tag,String category,Pageable pageable){
-        return postRepo.findByListTagsTagNameOrCategoryCategory(tag,category,pageable);
-    }
 
 
-
-    public void removePostById(Long id){
-         postRepo.deleteById(id);
-    }
 
 
     public void savePost(Post post,User user) throws Exception{
@@ -107,44 +76,6 @@ public class PostService {
         postRepo.save(post);
     }
 
-    public void unsavePost(User user,Post post) throws Exception{
-        if(!user.getSavedPosts().contains(post)){     
-            throw new Exception("This post is not on your saved posts list, you can't unsave what's not saved");
-        }
-        user.getSavedPosts().removeIf(p->p.getId()==post.getId());        
-        post.getSavedByUsers().removeIf(u->u.getId()==user.getId());
-
-        user.updateSavedCounter();
-        post.updateSavedCount();
-        userService.updateUser(user);
-        postRepo.save(post);
-    }
-
-
-    public void likePost(User user,Post post) throws Exception{
-        if(user.getLikedPosts().contains(post)){
-            throw new Exception("you've already liked this post");
-        }
-        user.getLikedPosts().add(post);
-        post.getLikedByUsers().add(user);;
-
-        user.updateLikedCounter();
-        post.updateLikedCount();
-        userService.updateUser(user);
-        postRepo.save(post);
-    }
-
-    public void unlikePost(User user,Post post) throws Exception{
-        if(!user.getLikedPosts().contains(post)){
-            throw new Exception("you're already unliked this post, no need to unlinke it again");
-        }
-        user.getLikedPosts().removeIf(p-> p.getId()==post.getId());
-        post.getLikedByUsers().removeIf(u-> u.getId()==user.getId());
-        user.updateLikedCounter();
-        post.updateLikedCount();
-        userService.updateUser(user);
-        postRepo.save(post);
-    }
 
 
 

@@ -10,6 +10,7 @@ import com.example.springsocial.security.UserPrincipal;
 import com.example.springsocial.security.Token.TokenRepo;
 import com.example.springsocial.service.ProfileService;
 import com.example.springsocial.service.UserService;
+import com.example.springsocial.util.PathConstants;
 import com.example.springsocial.validator.permessions.ValidUser;
 
 import java.security.Principal;
@@ -34,26 +35,18 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
 
-    @Autowired
-    private ProfileService profileService;
+    private final UserService userService;
+    
 
-    @Autowired
-    private TokenRepo tokenRepo;
-
-    @Autowired
-    private RoleRepo roleRepo;
-
-    @GetMapping("api/v1/user/me")
+    @GetMapping(PathConstants.API_V1+"user/me")
     @PreAuthorize("hasRole('USER')")
     public User getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         return userService.findByEmail(userPrincipal.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
     }
 
-    @DeleteMapping("api/v1//user")
+    @DeleteMapping(PathConstants.API_V1+"/user")
     public ResponseEntity<String> removeUser(Principal principal){
         Optional<User> user = userService.findByEmail(principal.getName());
         if (user.isPresent()) {
@@ -63,7 +56,7 @@ public class UserController {
         return ResponseEntity.badRequest().body("user removing failed");
     }
 
-    @PostMapping("api/v1/user/password")
+    @PostMapping(PathConstants.API_V1+"user/password")
     public ResponseEntity<String> updatePassword(Principal principal,
                                                   @RequestParam("password") String newPassword, 
                                                   @RequestParam("oldpassword") String oldPassword){
@@ -82,7 +75,7 @@ public class UserController {
             return ResponseEntity.badRequest().body("password change has failed!");
     }
 
-    @PostMapping("/user/email/update")
+    @PostMapping(PathConstants.API_V1+"user/email/update")
     public ResponseEntity<String> updateUserEmail(Principal principal,@RequestBody Map<String, String> requestBody){
         String email = requestBody.get("email");
         User user = userService.findByEmail(email).orElseThrow();
@@ -91,7 +84,7 @@ public class UserController {
     }
 
     // send request / generate code,email user
-    @GetMapping("api/v1/public/password/reset")
+    @GetMapping(PathConstants.API_V1+PathConstants.API_PUBLIC+"password/reset")
     @ValidUser()
     public ResponseEntity<String> resetPassword(@RequestParam @Email String email){
         User user = userService.findByEmail(email).orElseThrow();
@@ -102,7 +95,7 @@ public class UserController {
     }
 
     /// user click on the link { activate the verify code}
-    @GetMapping("api/v1/public/password/verify")
+    @GetMapping(PathConstants.API_V1+PathConstants.API_PUBLIC+"password/verify")
     public ResponseEntity<String> resetPasswordVerification(@RequestParam("code") String verificationCode){
         try {
            userService.validateVerificationCode(verificationCode);
@@ -113,7 +106,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(path = "api/v1/public/password/reset")
+    @PostMapping(path = PathConstants.API_V1+PathConstants.API_PUBLIC+"password/reset")
     public ResponseEntity<String> userPasswordResetVerification(@RequestBody PasswordRequest passwordRequest){
       try{
         userService.userPasswordResetVerification(passwordRequest.getVerificationCode(),passwordRequest.getPassword());

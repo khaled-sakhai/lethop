@@ -15,7 +15,6 @@ public class UserSpecification {
 
 
     public static Specification<User> byProvider(String provider ){
-
         return (root, query, criteriaBuilder) -> {
             if(provider==null || provider.isBlank() || provider.length()<5){
                 return null;

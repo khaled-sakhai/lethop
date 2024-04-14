@@ -1,1 +1,28 @@
-server/com.example.springsocial.entity.postRelated.Post
+/server/com.example.springsocial.entity.postRelated.Post/
+# Spring Boot
+/server/target/
+!/server/.mvn/wrapper/maven-wrapper.jar
+!/server/application.properties
+
+# Firebase
+/server/**/firebase-adminsdk.json
+
+# IDE/Editor specific
+/server/.idea/
+/server/.vscode/
+
+# Maven
+/server/log/
+/server/*.log
+/server/target/
+
+# Eclipse
+/server/.classpath
+/server/.project
+/server/.settings/
+
+# IntelliJ IDEA
+/server/*.iml
+/server/*.ipr
+/server/*.iws
+/server/.idea/

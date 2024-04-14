@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import com.example.springsocial.dto.profile.PreferencesDto;
 import com.example.springsocial.service.*;
+import com.example.springsocial.util.PathConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,21 +36,17 @@ import com.example.springsocial.util.ProjectUtil;
 @RestController
 @AllArgsConstructor
 public class ProfileController {
-    
 
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
 
-  @Autowired
-  private ProfileService profileService;
+  private final ProfileService profileService;
 
  private final FireBaseService fireBaseService;
 
-  @Autowired
-  private ImageService imageService;
+  private final ImageService imageService;
     
 
-  @PutMapping("/api/v1/auth/register/profile")
+  @PutMapping(PathConstants.API_V1+"register/profile")
   public ResponseEntity<String> updateProfile(@RequestBody @Valid ProfileDto profileDto,Principal principal
   ) throws UsernameNotFoundException {
 
@@ -68,7 +65,7 @@ public class ProfileController {
     return ResponseEntity.ok().body("profile updated successfully") ;
   }
 
-  @DeleteMapping("/api/v1/profile/picture")
+  @DeleteMapping(PathConstants.API_V1+"profile/picture")
   public boolean removeProfilePicture(Principal principal) throws IOException {
     Profile profile = getUserFromPrincipal(principal).getUserProfile();
 
@@ -91,7 +88,7 @@ public class ProfileController {
 
   }
 
-    @PostMapping("/api/v1/auth/register/profile/picture")
+    @PostMapping(PathConstants.API_V1+"register/profile/picture")
     public ResponseEntity<String> updateProfilePic(@RequestParam(required = true) MultipartFile file, Principal principal) throws Exception{
     Profile profile = getUserFromPrincipal(principal).getUserProfile();    
     Image profileImage = new Image();
@@ -112,7 +109,7 @@ public class ProfileController {
     }
     }
 
-    @PostMapping(path = "api/v1/user/preferences")
+    @PostMapping(path = PathConstants.API_V1+"user/preferences")
     public ResponseEntity<String> changePreferences(@RequestBody PreferencesDto preferencesDto,Principal principal){
       User user= userService.findByEmail(principal.getName()).orElseThrow();
       List<String> tagList = Arrays.asList(preferencesDto.getTags().split(","));
@@ -120,7 +117,7 @@ public class ProfileController {
       return ResponseEntity.status(HttpStatus.OK).body("User preferences has been sat!");
     }
 
-    @GetMapping("api/v1/public/user/{userid}")
+    @GetMapping(PathConstants.API_V1+PathConstants.API_PUBLIC+"user/{userid}")
     public ResponseEntity<ProfileResponse> getUserProfile(@PathVariable Long userid){
       Optional<User> user = userService.findById(userid);
       if(user.isPresent()){

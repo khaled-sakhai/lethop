@@ -30,6 +30,10 @@ public class FireBaseService {
         if (multipartFile == null || multipartFile.isEmpty() || multipartFile.getSize() <= 0) {
             throw new IllegalArgumentException("No file uploaded or the file is empty");
         }
+        if (multipartFile.getSize() > Constants.MAX_FILE_SIZE) {
+            throw new IllegalArgumentException("Profile picture size exceeds the limit of 1MB.");
+        }
+
         String fileName = multipartFile.getOriginalFilename();
         if (!this.isFileAnImage(fileName)) {
             throw new IllegalArgumentException("File type is not supported! Please use one of the following formats: jpg, jpeg, png, gif");

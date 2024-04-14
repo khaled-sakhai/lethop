@@ -2,6 +2,7 @@ package com.example.springsocial.util;
 
 public class Constants {
     public static final int MAX_PAGE_SIZE = 20;
+    public static final int MAX_FILE_SIZE= 2097152;// 2MB = 2* 1MB = 2 * 1024 * 1024 bytes;
 
     public static final String  BUCKET_NAME = "lethop-1d201.appspot.com";
     public static final String  DOWNLOAD_URL="https://firebasestorage.googleapis.com/v0/b/"+BUCKET_NAME+"/o/%s?alt=media";

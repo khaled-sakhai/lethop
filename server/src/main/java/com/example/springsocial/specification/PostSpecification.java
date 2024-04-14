@@ -7,10 +7,27 @@ import com.example.springsocial.entity.userRelated.User;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.Date;
 
 public class PostSpecification {
 
-    public static Specification<Post> postId(Long postId){
+    public static Specification<Post> createdLastXDays(Integer daysAgo) {
+        return(
+                Root<Post> root,
+                CriteriaQuery<?> criteriaQuery,
+                CriteriaBuilder builder) ->{
+            if (daysAgo==null || daysAgo <= 0){
+                return null;
+            }
+            Date today = new Date();
+            Date daysAgoDate = new Date(today.getTime() - (daysAgo * 24 * 60 * 60 * 1000));
+         return  builder.between(root.get("createdAt"), daysAgoDate, today);
+        };
+    }
+
+
+
+        public static Specification<Post> postId(Long postId){
         return(
                 Root<Post> root,
                 CriteriaQuery<?> criteriaQuery,

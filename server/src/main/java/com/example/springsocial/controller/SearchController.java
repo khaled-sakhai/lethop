@@ -3,6 +3,7 @@ package com.example.springsocial.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.springsocial.util.PathConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,10 +23,10 @@ import com.example.springsocial.validator.validators.ValidPostSortBy;
 @AllArgsConstructor
 public class SearchController {
  
-    @Autowired
-    private SearchService searchService;
 
-    @GetMapping("/api/v1/public/search")
+    private final SearchService searchService;
+
+    @GetMapping(PathConstants.SEARCH_ENDPOINT)
     public ResponseEntity<List<PostDto>>  searchPosts(
     @RequestParam String searchText, 
     @RequestParam(defaultValue = "0") int page,
@@ -41,13 +42,6 @@ public class SearchController {
        .map(PostDto::new)
        .collect(Collectors.toList());
         return new ResponseEntity<>(postDtos, HttpStatus.OK);
-    }
-
-
-    @GetMapping("/api/v1/public/2/search")
-    public List<Post>  searchPosts(
-    @RequestParam String searchText) {
-      return searchService.searchPosts(searchText);
     }
 
 

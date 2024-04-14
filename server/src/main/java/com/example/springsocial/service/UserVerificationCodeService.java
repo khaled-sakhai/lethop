@@ -20,13 +20,5 @@ public class UserVerificationCodeService {
     }
 
 
-    public Optional<UserVerificationCode> findByConfirmationCode(String verificationCode){
-        return userVerificationCodeRepo.findByConfirmationCode(verificationCode);
-    }
-
-    public void removeAfterVerify(UserVerificationCode userVerificationCode){
-         userVerificationCodeRepo.delete(userVerificationCode);
-    }
-
     
 }

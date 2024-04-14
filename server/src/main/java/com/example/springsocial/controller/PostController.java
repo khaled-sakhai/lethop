@@ -11,6 +11,7 @@ import com.example.springsocial.entity.Image;
 import com.example.springsocial.enums.NotificationType;
 import com.example.springsocial.service.*;
 import com.example.springsocial.service.postService.PostService2;
+import com.example.springsocial.util.PathConstants;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -76,7 +77,7 @@ public class PostController {
 
 
 
-  @GetMapping("api/v1/public/feed")
+  @GetMapping(PathConstants.API_V1+PathConstants.API_PUBLIC+"feed")
   public  ResponseEntity<Page<PostDto>> getFeed(
   @RequestParam(required = false) String category,
   @RequestParam(required = false) String tag,
@@ -92,7 +93,7 @@ public class PostController {
       return new ResponseEntity<>(postDtos, HttpStatus.OK);
 
   }
-  @GetMapping("api/v1/public/post/{postId}")
+  @GetMapping(PathConstants.API_V1+PathConstants.API_PUBLIC+"post/{postId}")
   public ResponseEntity<PostDto> getPostById(@PathVariable Long postId){
         Optional<Post> post= postService2.getPostById(postId);
         if(post.isPresent()){
@@ -101,7 +102,7 @@ public class PostController {
         else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
   }
 
-    @GetMapping("api/v1/public/user/posts/me")
+    @GetMapping(PathConstants.API_V1+"user/posts/me")
     public ResponseEntity<Page<PostDto>> findPostsByUser(@RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "20") int size,
                                                          @RequestParam(defaultValue = "lastModifiedDate") @ValidPostSortBy String sortBy,
@@ -122,7 +123,7 @@ public class PostController {
     }
 
 
-    @GetMapping("api/v1/user/saved")
+    @GetMapping(PathConstants.API_V1+"/user/saved")
     public ResponseEntity<Page<PostDto>>  getUserSavedPosts(
                                        @RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "20") int size,
@@ -146,7 +147,7 @@ public class PostController {
 
      
 
-    @GetMapping("api/v1/user/liked")
+    @GetMapping(PathConstants.API_V1+"/user/liked")
     public ResponseEntity<Page<PostDto>>  getUserLikedPosts(
                                        @RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "20") int size,
@@ -169,7 +170,7 @@ public class PostController {
 
      /////////////////////////////
 
-    @GetMapping("api/v1/public/post/saved/{postId}")
+    @GetMapping(PathConstants.API_V1+PathConstants.API_PUBLIC+"post/saved/{postId}")
     public ResponseEntity<List<UserInfo>> getPostSavedBy(@PathVariable Long postId){
         return postService.findById(postId)
                 .map(post -> ResponseEntity.ok(post.getSavedByUsers().stream()
@@ -178,8 +179,17 @@ public class PostController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping(PathConstants.API_V1+PathConstants.API_PUBLIC+"post/liked/{postId}")
+    public ResponseEntity<List<UserInfo>> getPostLikedBy(@PathVariable Long postId){
+        return postService.findById(postId)
+                .map(post -> ResponseEntity.ok(post.getLikedByUsers().stream()
+                        .map(UserInfo::new)
+                        .collect(Collectors.toList())))
+                .orElse(ResponseEntity.notFound().build());
+    }
 
-    @PostMapping(path = "api/v1/post/create")
+
+    @PostMapping(path = PathConstants.API_V1+"post/create")
     public ResponseEntity<String> createPost(@RequestPart(value = "post",required = true) PostRequest postRequest,
     @RequestParam(required = false) List<MultipartFile> postImages,
         Principal principal) throws Exception{
@@ -199,7 +209,7 @@ public class PostController {
        return ResponseEntity.ok("Post added successfully");
     }
 
-    @PostMapping(path = "api/v1/post/edit/{postId}")
+    @PostMapping(path = PathConstants.API_V1+"post/edit/{postId}")
     public ResponseEntity<String> editPost(@PathVariable() Long postId, @RequestPart("post") PostRequest postRequest,
                                            @RequestParam(required = false) MultipartFile postImage,
                                            Principal principal) throws IOException {
@@ -230,7 +240,7 @@ public class PostController {
          return ResponseEntity.badRequest().body("Post was not updated successfully");
     }
 
-    @DeleteMapping(path = "api/v1/post/{postId}/delete")
+    @DeleteMapping(path = PathConstants.API_V1+"post/{postId}/delete")
     public ResponseEntity<String> removePost(@PathVariable Long postId,
                                              Principal principal) throws Exception{
       Optional<Post> post = postService.findById(postId);
@@ -247,7 +257,7 @@ public class PostController {
     }
 
 
-    @PostMapping(path = "api/v1/post/{postId}/save")
+    @PostMapping(path = PathConstants.API_V1+"post/{postId}/save")
     public ResponseEntity<String> savePost(@PathVariable Long postId,Principal principal) throws Exception{
       User user= utilService.getUserFromPrincipal(principal);
       Optional<Post> post = postService.findById(postId);
@@ -260,7 +270,7 @@ public class PostController {
       return ResponseEntity.badRequest().body("Post was not saved successfully");
     }
 
-    @PostMapping(path = "api/v1/post/{postId}/unsave")
+    @PostMapping(path = PathConstants.API_V1+"post/{postId}/unsave")
     public ResponseEntity<String> unSavePost(@PathVariable Long postId,Principal principal) throws Exception{
         User user= utilService.getUserFromPrincipal(principal);
       Optional<Post> post = postService.findById(postId);
@@ -275,7 +285,7 @@ public class PostController {
 
   
     
-    @PostMapping(path = "api/v1/post/{postid}/like")
+    @PostMapping(path = PathConstants.API_V1+"post/{postid}/like")
     public ResponseEntity<String> likePost(@PathVariable Long postid,Principal principal) throws Exception{
       User user= userService.findByEmail(principal.getName()).orElseThrow();
       Optional<Post> post = postService2.getPostById(postid);
@@ -290,7 +300,7 @@ public class PostController {
       return ResponseEntity.badRequest().body("Post was not liked successfully");
     }
 
-    @PostMapping(path = "api/v1/post/{postId}/unlike")
+    @PostMapping(path = PathConstants.API_V1+"post/{postId}/unlike")
     public ResponseEntity<String> unlikePost(@PathVariable Long postId,Principal principal) throws Exception{
       User user= userService.findByEmail(principal.getName()).get();
       Optional<Post> post = postService2.getPostById(postId);

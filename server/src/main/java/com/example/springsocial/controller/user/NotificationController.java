@@ -7,6 +7,7 @@ import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.service.NotificationService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.PostService2;
+import com.example.springsocial.util.PathConstants;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final UserService userService;
 
-    @GetMapping(path = "api/v1/user/notifications")
+    @GetMapping(path = PathConstants.API_V1+"user/notifications")
     public ResponseEntity<Page<NotificationDto>> getAllNotification(Principal principal,
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                     @RequestParam(defaultValue = "lastModifiedDate") String sortBy,
@@ -41,14 +42,14 @@ public class NotificationController {
         return new ResponseEntity<>(notifs, HttpStatus.OK);
     }
 
-    @PutMapping("api/v1/user/notifications/")
+    @PutMapping(PathConstants.API_V1+"user/notifications/")
     public ResponseEntity<String> readAll(Principal principal){
         User user = userService.findByEmail(principal.getName()).orElseThrow();
         notificationService.readAllNotifs(user.getId());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("All notification has been marked read!");
     }
 
-    @PutMapping(path = "api/v1/notification/{notificationId}")
+    @PutMapping(path = PathConstants.API_V1+"notification/{notificationId}")
     public ResponseEntity<NotificationDto> readNotification(@PathVariable Long notificationId,Principal principal){
         Notification notification = notificationService.findById(notificationId).orElseThrow();
         notificationService.readNotification(notification);

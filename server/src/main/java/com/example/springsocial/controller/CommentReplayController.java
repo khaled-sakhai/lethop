@@ -13,6 +13,7 @@ import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Reply;
 import com.example.springsocial.enums.NotificationType;
 import com.example.springsocial.service.NotificationService;
+import com.example.springsocial.util.PathConstants;
 import com.example.springsocial.validator.validators.ValidCommentReplySortBy;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
@@ -44,7 +45,7 @@ public class CommentReplayController {
     private PostService2 postService;
     private final NotificationService notificationService;
 
-    @PostMapping(path = "api/v1/post/{postId}/comment")
+    @PostMapping(path = PathConstants.API_V1+"post/{postId}/comment")
     public ResponseEntity<String> addComment(@PathVariable Long postId,
                                              @RequestBody @Valid CommentRequest commentRequest,
                                              Principal principal){
@@ -65,7 +66,7 @@ public class CommentReplayController {
         }
     }
 
-    @GetMapping(path = "api/v1/public/post/{postId}/comments")
+    @GetMapping(path = PathConstants.API_V1+PathConstants.API_PUBLIC+"post/{postId}/comments")
     public ResponseEntity<Page<CommentResponse>> getPostComments(@PathVariable Long postId,
                                                                  @RequestParam(defaultValue = "0") int page,
                                                                  @RequestParam(defaultValue = "lastModifiedDate") @ValidCommentReplySortBy String sortBy,
@@ -87,7 +88,7 @@ public class CommentReplayController {
         }
     }
 
-    @GetMapping(path = "api/v1/user/comments")
+    @GetMapping(path = PathConstants.API_V1+"/user/comments")
     public ResponseEntity<Page<CommentResponse>> getUserComments(Principal principal,
                                                                  @RequestParam(defaultValue = "0") int page,
                                                                  @RequestParam(defaultValue = "lastModifiedDate") @ValidCommentReplySortBy String sortBy,
@@ -106,7 +107,7 @@ public class CommentReplayController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping(path = "api/v1/comment/{commentId}")
+    @PutMapping(path = PathConstants.API_V1+"comment/{commentId}")
     public ResponseEntity<String> updateComment(@PathVariable Long commentId,
                                                 @RequestBody @Valid CommentRequest commentRequest,
                                                 Principal principal){
@@ -120,7 +121,7 @@ public class CommentReplayController {
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid request, please try again");
         }
     }
-    @DeleteMapping(path = "api/v1/comment/{commentId}")
+    @DeleteMapping(path = PathConstants.API_V1+"comment/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId,
                                                 Principal principal){
         try {
@@ -134,7 +135,7 @@ public class CommentReplayController {
     }
 
 
-    @PostMapping(path = "api/v1/post/{postId}/comment/{commentId}/reply")
+    @PostMapping(path = PathConstants.API_V1+"post/{postId}/comment/{commentId}/reply")
     public ResponseEntity<String> addReply(@PathVariable Long postId,
                                              @PathVariable Long commentId,
                                              @RequestBody @Valid CommentRequest commentRequest,
@@ -150,7 +151,7 @@ public class CommentReplayController {
         }
     }
 
-    @GetMapping(path = "api/v1/public/post/{postId}/comment/{commentId}/replies")
+    @GetMapping(path = PathConstants.API_V1+PathConstants.API_PUBLIC+"post/{postId}/comment/{commentId}/replies")
     public ResponseEntity<Page<ReplyResponse>> getCommentReplies(@PathVariable Long postId,
                                                                  @PathVariable Long commentId,
                                                                  @RequestParam(defaultValue = "0") int page,
@@ -174,7 +175,7 @@ public class CommentReplayController {
     }
 
 
-    @PutMapping(path = "api/v1/comment/{replyId}")
+    @PutMapping(path = PathConstants.API_V1+"comment/{replyId}")
     public ResponseEntity<String> updateReply( @PathVariable Long replyId,
                                                 @RequestBody @Valid CommentRequest commentRequest,
                                                 Principal principal){
@@ -188,7 +189,7 @@ public class CommentReplayController {
             return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid request, please try again");
         }
     }
-    @DeleteMapping(path = "api/v1/replay/{replyId}")
+    @DeleteMapping(path = PathConstants.API_V1+"replay/{replyId}")
     public ResponseEntity<String> deleteReply(
                                                 @PathVariable Long replyId,
                                                 Principal principal){

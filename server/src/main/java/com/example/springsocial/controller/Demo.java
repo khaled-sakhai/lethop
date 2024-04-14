@@ -1,17 +1,25 @@
 package com.example.springsocial.controller;
 
+import com.example.springsocial.entity.Features.Notification;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Post;
+import com.example.springsocial.repository.NotificationRepo;
+import com.example.springsocial.repository.PostRepo;
+import com.example.springsocial.repository.UserRepo;
+import com.example.springsocial.repository.UserVerificationCodeRepo;
 import com.example.springsocial.security.Token.TokenRepo;
 import com.example.springsocial.service.FireBaseService;
 import com.example.springsocial.service.NotificationService;
 import com.example.springsocial.service.UserService;
+import com.example.springsocial.service.emailService.EmailSenderService;
 import com.example.springsocial.service.postService.CommentReplayService;
 import com.example.springsocial.service.postService.PostService;
 
+import com.example.springsocial.specification.AppSpecefication;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,11 +41,11 @@ private PostService postService;
     private CommentReplayService commentReplayService;
     private final NotificationService notificationService;
 
-    @Autowired
-    private TokenRepo tokenRepo;
-
 
     private final FireBaseService imageService;
+    private final NotificationRepo notificationRepo;
+
+
 
     @PostMapping("api/v1/public/2")
     public String upload(@RequestParam("file") MultipartFile multipartFile) {
@@ -78,9 +86,9 @@ private PostService postService;
     }
 
     @GetMapping("/api/v1/public/1")
-    public String getToken(){
-        //return tokenRepo.findAll();
-        return "Hello world 2";
+    public void getToken(){
+
+
     }
 
 

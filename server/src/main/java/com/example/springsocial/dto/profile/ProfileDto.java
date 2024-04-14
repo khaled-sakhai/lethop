@@ -39,4 +39,8 @@ public class ProfileDto {
 
   @Size(min = 0, max = 400, message = "summary must be between 0 and 400 characters")
   private String summary;
+
+  private boolean isNotificationEmailed=true;
+  private boolean isPostEmailed=true;
+
 }

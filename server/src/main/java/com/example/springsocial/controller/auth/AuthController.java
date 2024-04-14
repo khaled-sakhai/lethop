@@ -15,6 +15,7 @@ import com.example.springsocial.service.ProfileService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.UserVerificationCodeService;
 import com.example.springsocial.service.emailService.EmailSenderService;
+import com.example.springsocial.util.PathConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -55,7 +56,7 @@ public class AuthController {
 
 
 
-    @PostMapping("/login")
+    @PostMapping(PathConstants.LOGIN_END_POINT)
     public ResponseEntity<?> authenticateUser(@RequestBody @Valid  LoginDto loginDto,HttpServletRequest request) {
       String userAgent = request.getHeader("User-Agent");
 
@@ -67,7 +68,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("/signup")
+    @PostMapping(PathConstants.SIGN_UP)
     public ResponseEntity<?> registerUser( @RequestBody @Valid RegisterDto registerDto) {
         if(userService.isEmailTaken(registerDto.getEmail())) {
             throw new BadRequestException("Email address already in use.");
@@ -91,7 +92,7 @@ public class AuthController {
         .body( "User registered successfully!, pleaase verify your email, an email was send to: "+ user.getEmail());
     }
 
-    @PostMapping("/check-email")
+    @PostMapping(PathConstants.EMAIL+"check")
     public ResponseEntity<?> isEmailTaken(@RequestBody @Valid  RegisterDto registerDto){
         boolean result = userService.isEmailTaken(registerDto.getEmail());
         if (result) {
@@ -103,7 +104,7 @@ public class AuthController {
     }
 
 
-    @GetMapping(path = "/confirm-account")
+    @GetMapping(path = PathConstants.EMAIL+"confirm")
     public ResponseEntity<String> userEmailVerification(@RequestParam("verify") String verificationCode) throws Exception{
       if(userService.userEmailVerification(verificationCode)){
 
@@ -114,7 +115,7 @@ public class AuthController {
 
 
 
-  @PostMapping("/api/v1/auth/refresh")
+  @PostMapping(PathConstants.REFRESH_TOKEN)
   public TokenResponse refreshToken(
     HttpServletRequest request,
     HttpServletResponse response

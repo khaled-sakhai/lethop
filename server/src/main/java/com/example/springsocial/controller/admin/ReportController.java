@@ -14,6 +14,7 @@ import com.example.springsocial.service.ReportService;
 import com.example.springsocial.service.UserService;
 import com.example.springsocial.service.postService.CommentReplayService;
 import com.example.springsocial.service.postService.PostService2;
+import com.example.springsocial.util.PathConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping(path = PathConstants.API_V1+PathConstants.ADMIN_END_POINT)
 
 public class ReportController {
 
@@ -33,7 +35,7 @@ public class ReportController {
     private final ReportService reportService;
     private final CommentReplayService commentReplayService;
 
-    @GetMapping(path = "api/admin/reports")
+    @GetMapping(path = "reports")
     public ResponseEntity<Page<ReportDto>> getAllReports(Principal principal,
                                                          @RequestParam(defaultValue = "0") int page,
                                                          @RequestParam(defaultValue = "lastModifiedDate") String sortBy,
@@ -46,14 +48,14 @@ public class ReportController {
         return new ResponseEntity<>(reportDtos, HttpStatus.OK);
     }
 
-    @GetMapping(path = "api/admin/report/{reportId}")
+    @GetMapping(path = "report/{reportId}")
     public ResponseEntity<ReportDto> getRepportById(Principal principal,
                                                     @PathVariable Long reportId){
         Report report= reportService.findById(reportId).orElseThrow();
         return new ResponseEntity<>(new ReportDto(report), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "api/admin/report/{reportId}")
+    @DeleteMapping(path = "report/{reportId}")
     public ResponseEntity<String> removeReportById(Principal principal,
                                                     @PathVariable Long reportId){
        reportService.deleteReport(reportId);
@@ -61,45 +63,7 @@ public class ReportController {
     }
 
 
-    @PostMapping(path = "api/v1/report")
-    public ResponseEntity<String> addReport(@RequestBody ReportRequest reportRequest, Principal principal){
-        Report report=new Report();
-        User reporter = userService.findByEmail(principal.getName()).orElseThrow();
-        User reported= null;
-        Post post = null;Comment comment=null;Reply reply=null;
-        switch (reportRequest.getResourceType()) {
-            case "USER" -> {
-                reported=userService.findById(reportRequest.getReported()).orElseThrow();
-            }
-            case "POST" -> {
-                 post = postService2.findPostById(reportRequest.getPostId()).orElseThrow();
-                 reported=post.getUser();
-            }
-            case "COMMENT" -> {
-                 post = postService2.findPostById(reportRequest.getPostId()).orElseThrow();
-                 comment = commentReplayService.findCommentById(reportRequest.getCommentId()).orElseThrow();
-                 reported=comment.getUser();
-            }
-            case "REPLY" -> {
-                 post = postService2.findPostById(reportRequest.getPostId()).orElseThrow();
-                 comment = commentReplayService.findCommentById(reportRequest.getCommentId()).orElseThrow();
-                 reply = commentReplayService.findReplyById(reportRequest.getReplyId()).orElseThrow();
-                 reported=reply.getUser();
-            }
-        }//end switch
 
-        report.setFeedback(reportRequest.getFeedback());
-        report.setReporter(reporter);
-        report.setRelatedUser(reported);
-        report.setType(ReportType.valueOf(reportRequest.getType()));
-        report.setResourceType(ResourceType.valueOf( reportRequest.getResourceType()));
-        report.setRelatedPost(post);
-        report.setRelatedComment(comment);
-        report.setRelatedReply(reply);
-        reportService.createReport(report);
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Thank you for sending this report!");
-    }
 
 
 }

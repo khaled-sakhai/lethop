@@ -74,6 +74,7 @@ public class PostService2 {
 
     public Optional<Post> findPostById(Long postId){
          return postRepo.findById(postId);
+
     }
 
     @PostOwner
@@ -171,10 +172,6 @@ public class PostService2 {
               .and(PostSpecification.postWithTag(TagName, Constants.AllowedTags[0]));
     }
 
-    private Specification<Post> adminSpec(boolean isDelete,boolean isAnonymous,Long userId){
-        return Specification.where(PostSpecification.isAnonymous(isDelete)).and(PostSpecification.postByUserId(userId))
-        ;
-    }
 
 
 }

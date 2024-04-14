@@ -3,6 +3,7 @@ package com.example.springsocial.entity.userRelated;
 import com.example.springsocial.entity.postRelated.Comment;
 import com.example.springsocial.entity.postRelated.Reply;
 import com.example.springsocial.entity.postRelated.Tag;
+import com.example.springsocial.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -65,6 +66,12 @@ public class User extends BaseEntity<Long> {
 
   @Column(name = "needProfileUpdate", columnDefinition = "boolean default false")
   private boolean needProfileUpdate = true;
+
+  @JsonIgnore
+  private Date activationDate;
+
+  @Enumerated(EnumType.STRING)
+  private UserStatus status=UserStatus.OFFLINE;
 
   // user relationships
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)

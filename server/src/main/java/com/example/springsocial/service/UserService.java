@@ -119,6 +119,7 @@ public class UserService {
       if (userVerificationCode.getType().equals(VerificationType.SIGNUP) && userVerificationCode.isConfirmed()) {
         User user = userVerificationCode.getUser();
         user.setActive(true);
+        user.setActivationDate(userVerificationCode.getLastModifiedDate());
         this.updateUser(user);
         userVerificationCodeRepo.deleteById(userVerificationCode.getId());
         return true;
