@@ -2,10 +2,7 @@
 # Spring Boot
 /server/target/
 !/server/.mvn/wrapper/maven-wrapper.jar
-application.properties
-
 # Firebase
-/server/**/firebase-adminsdk.json
 server/src/main/resources/
 # IDE/Editor specific
 /server/.idea/
