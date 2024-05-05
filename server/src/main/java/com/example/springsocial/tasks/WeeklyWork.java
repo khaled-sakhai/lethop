@@ -23,11 +23,8 @@ import com.example.springsocial.specification.PostSpecification;
 import com.example.springsocial.specification.UserSpecification;
 import com.example.springsocial.util.EmailTemplates;
 
-import com.example.springsocial.util.ProjectUtil;
 import lombok.AllArgsConstructor;
 
-import org.jboss.logging.annotations.Pos;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

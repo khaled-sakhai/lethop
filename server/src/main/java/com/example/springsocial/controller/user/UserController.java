@@ -1,5 +1,6 @@
 package com.example.springsocial.controller.user;
 
+import com.example.springsocial.dto.user.UserDto;
 import com.example.springsocial.exception.ResourceNotFoundException;
 import com.example.springsocial.repository.RoleRepo;
 import com.example.springsocial.dto.user.PasswordRequest;
@@ -41,9 +42,13 @@ public class UserController {
 
     @GetMapping(PathConstants.API_V1+"user/me")
     @PreAuthorize("hasRole('USER')")
-    public User getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
-        return userService.findByEmail(userPrincipal.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+    public ResponseEntity<UserDto> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        Optional<User> userOptional = userService.findByEmail(userPrincipal.getEmail());
+        if (userOptional.isPresent()){
+            return ResponseEntity.ok().body(new UserDto());
+        }
+        else return ResponseEntity.badRequest().body(null);
+
     }
 
     @DeleteMapping(PathConstants.API_V1+"/user")

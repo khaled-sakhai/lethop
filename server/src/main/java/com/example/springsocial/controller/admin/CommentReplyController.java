@@ -76,8 +76,7 @@ public class CommentReplyController {
         return new ResponseEntity<>(commentsDtos, HttpStatus.OK);
     }
     @GetMapping(value = "replies/deleted")
-
-    public  ResponseEntity<Page<ReplyResponse>> findDeletReply(@RequestParam(defaultValue = "0") int page,
+    public  ResponseEntity<Page<ReplyResponse>> findDeleteReply(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "lastModifiedDate")@ValidPostSortBy String sortBy,
                                @RequestParam(defaultValue = "20") int size,
                                @RequestParam(defaultValue = "desc") String sortDirection){
