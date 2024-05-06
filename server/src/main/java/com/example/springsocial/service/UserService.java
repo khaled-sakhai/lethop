@@ -33,8 +33,7 @@ public class UserService {
   @Autowired
   private RoleRepo roleRepo;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
 
   @Autowired
   private ProfileService profileService;

@@ -3,6 +3,7 @@ package com.example.springsocial.validator.permessions;
 import java.security.Principal;
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,11 +19,12 @@ import com.example.springsocial.service.UserService;
 
 @Aspect
 @Component
+@AllArgsConstructor
 public class ValidateUserAspect {
     
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
 
     @Around("@annotation(ValidUser)")
     public Object checkUserActive(ProceedingJoinPoint joinPoint) throws Throwable {

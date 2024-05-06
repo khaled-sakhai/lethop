@@ -19,6 +19,7 @@ import com.example.springsocial.service.ImageService;
 import com.example.springsocial.service.ProfileService;
 import com.example.springsocial.service.UserService;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -33,23 +34,14 @@ import org.springframework.util.StringUtils;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private JwtService jwtService;
+    private final ProfileService profileService;
 
-    @Autowired
-    private TokenService tokenService;
-    @Autowired
-    private ProfileService profileService;
-
-    @Autowired
-    private ImageService imageService;
-    @Autowired
-    private RoleRepo roleRepo;
+    private final RoleRepo roleRepo;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
