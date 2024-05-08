@@ -8,7 +8,9 @@ import com.example.springsocial.security.Token.Token;
 import com.example.springsocial.security.Token.TokenService;
 import com.example.springsocial.service.AuthService;
 import com.example.springsocial.service.UserService;
+import com.example.springsocial.service.UtilService;
 import com.example.springsocial.util.CookieUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -26,31 +28,16 @@ import java.util.Optional;
 import static com.example.springsocial.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
+@AllArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private AppProperties appProperties;
+    private final UtilService utilService;
 
-    private JwtService jwtService;
-
-    @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private AuthService authService;
-
-    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
 
-    @Autowired
-    OAuth2AuthenticationSuccessHandler(JwtService jwtService, AppProperties appProperties,
-                                       HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
-        this.jwtService = jwtService;
-        this.appProperties = appProperties;
-        this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
-    }
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -75,7 +62,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         String userAgent = request.getHeader("User-Agent");
-        Token token = authService.updateTokenInDB(authentication.getName(),null,userAgent);
+        Token token = utilService.updateTokenInDB(authentication.getName(),null,userAgent);
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("access", token.getAccessToken()).queryParam("refresh", token.getRefreshToken())
                 .build().toUriString();

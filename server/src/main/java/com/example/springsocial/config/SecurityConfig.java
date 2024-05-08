@@ -60,7 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js"};
     private static final String[] ADMIN_LIST_URL = {"/api/admin/**"};
 
-
     private final CustomUserDetailsService customUserDetailsService;
 
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -71,8 +70,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final LogoutService logoutHandler;
     private final PasswordEncoder passwordEncoder;
-
-
 
     private final JwtFilter jwtFilter;
 
@@ -95,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 
-    
+
 
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)

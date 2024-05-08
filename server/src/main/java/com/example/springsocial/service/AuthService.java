@@ -15,6 +15,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,19 +25,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class AuthService {
 
-  @Autowired
-  private JwtService jwtService;
+  private final JwtService jwtService;
 
-  @Autowired
-  private AuthenticationManager authenticationManager;
+  private final AuthenticationManager authenticationManager;
 
-  @Autowired
-  private TokenService tokenService;
+  private final TokenService tokenService;
 
-  @Autowired
-  private UserService userService;
+  private final UtilService utilService;
+
 
 
   public TokenResponse authenticateAndGetToken(String email, String password,String userAgent) {
@@ -48,14 +47,12 @@ public class AuthService {
 
     if (authentication.isAuthenticated()) {
       SecurityContextHolder.getContext().getAuthentication().getDetails();
-      Token token = updateTokenInDB(email,null,userAgent);
+      Token token = utilService.updateTokenInDB(email,null,userAgent);
       return new TokenResponse(token.getAccessToken(), token.getRefreshToken());
     } else {
       throw new UsernameNotFoundException("invalid user request !");
     }
   }
-
-
 
 
   public TokenResponse refreshToken(String authHeader,String userAgent) throws IOException {
@@ -66,16 +63,16 @@ public class AuthService {
     }
     refreshToken = authHeader.substring(7);
 
-   Token tokenDB = tokenService
-      .findByRefreshToken(refreshToken).orElseThrow();
-   User dbUser=tokenDB.getUser();
+    Token tokenDB = tokenService
+            .findByRefreshToken(refreshToken).orElseThrow();
+    User dbUser=tokenDB.getUser();
     userEmail = jwtService.extractUsername(refreshToken);
 
     TokenResponse tokenResponse = new TokenResponse();
 
     if (userEmail != null && !tokenDB.isLoggedOut()) {
       if (jwtService.isTokenValid(refreshToken, dbUser.getEmail())) {
-        Token token = updateTokenInDB(dbUser.getEmail(), refreshToken,userAgent);
+        Token token = utilService.updateTokenInDB(dbUser.getEmail(), refreshToken,userAgent);
         tokenResponse.setAccessToken(token.getAccessToken());
         tokenResponse.setRefreshToken(refreshToken);
       } else {
@@ -85,36 +82,9 @@ public class AuthService {
 
     return tokenResponse;
   }
-  @Transactional
-  public Token updateTokenInDB(
-    String email,
-    String refreshToken,String userAgent
-  ) {
-    User user = userService.findByEmail(email).orElseThrow();
-    Token token = new Token();
-    if(refreshToken!=null){
-      token.setRefreshToken(refreshToken);
-    }else {
-      revokeAllTokensByEmail(user);
-      token.setRefreshToken(jwtService.generateRefreshToken(user.getEmail()));
-    }
-    token.setUserAgent(userAgent);
-    token.setLoggedOut(false);
 
-    token.setAccessToken(jwtService.generateToken(user.getEmail()));
-    tokenService.addToken(token);
-    token.setUser(user);
-    user.addToken(token);
-    userService.updateUser(user);
-    return token;
-  }
 
-  public void revokeAllTokensByEmail(User user){
-    List<Token> userTokens=user.getTokens();
-    for(Token token:userTokens){
-      token.setLoggedOut(true);
-    }
-  }
+
 
 
 }
