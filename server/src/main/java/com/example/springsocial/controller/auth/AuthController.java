@@ -1,5 +1,6 @@
 package com.example.springsocial.controller.auth;
 
+import com.example.springsocial.dto.user.EmailRequest;
 import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.enums.APPRole;
 import com.example.springsocial.enums.AuthProvider;
@@ -93,8 +94,8 @@ public class AuthController {
     }
 
     @PostMapping(PathConstants.EMAIL+"check")
-    public ResponseEntity<?> isEmailTaken(@RequestBody @Valid  RegisterDto registerDto){
-        boolean result = userService.isEmailTaken(registerDto.getEmail());
+    public ResponseEntity<?> isEmailTaken(@RequestBody @Valid EmailRequest emailRequest){
+        boolean result = userService.isEmailTaken(emailRequest.getEmail());
         if (result) {
             return ResponseEntity.ok()
         .body( "Valid email, Please continue the registration");
