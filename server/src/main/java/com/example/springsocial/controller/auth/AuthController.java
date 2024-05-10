@@ -97,11 +97,11 @@ public class AuthController {
     public ResponseEntity<?> isEmailTaken(@RequestBody @Valid EmailRequest emailRequest){
         boolean result = userService.isEmailTaken(emailRequest.getEmail());
         if (result) {
-            return ResponseEntity.ok()
-        .body( "Valid email, Please continue the registration");
+            return ResponseEntity.badRequest()
+                    .body( "You can't use this email, it's already registered for another user");
         }
-        return ResponseEntity.badRequest()
-        .body( "You can't use this email, it's already registered for another user");
+        return ResponseEntity.ok()
+                .body( "Valid email, Please continue the registration");
     }
 
 
