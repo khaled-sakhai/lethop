@@ -48,6 +48,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         clearAuthenticationAttributes(request, response);
+
+
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
@@ -83,7 +85,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         return appProperties.getOauth2().getAuthorizedRedirectUris()
                 .stream()
                 .anyMatch(authorizedRedirectUri -> {
-                    // Only validate host and port. Let the clients use different paths if they want to
+                    // Only validate host and port. tLet the clients use different paths if they wan to
                     URI authorizedURI = URI.create(authorizedRedirectUri);
                     if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
                             && authorizedURI.getPort() == clientRedirectUri.getPort()) {

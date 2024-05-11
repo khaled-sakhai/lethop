@@ -45,7 +45,8 @@ public class UserController {
     public ResponseEntity<UserDto> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         Optional<User> userOptional = userService.findByEmail(userPrincipal.getEmail());
         if (userOptional.isPresent()){
-            return ResponseEntity.ok().body(new UserDto());
+
+            return ResponseEntity.ok().body(new UserDto(userOptional.get()));
         }
         else return ResponseEntity.badRequest().body(null);
 

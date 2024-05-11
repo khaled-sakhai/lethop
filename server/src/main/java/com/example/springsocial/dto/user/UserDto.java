@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto implements Serializable {
+    private Long id;
     private boolean isActive;
     private String provider;
     private String email;
