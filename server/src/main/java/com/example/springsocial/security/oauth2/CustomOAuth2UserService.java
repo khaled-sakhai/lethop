@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -92,9 +93,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setEmail(oAuth2UserInfo.getEmail());
        // user.setImageUrl(oAuth2UserInfo.getImageUrl());
         /// since the user signed up with a social media -- no need for extra email verification
-        Date d = user.getCreatedDate();
+    
         user.setActive(true);
-        user.setActivationDate(d);
+        user.setActivationDate(new Date());
 
         Profile profile = new Profile();
         Image image = new Image();
