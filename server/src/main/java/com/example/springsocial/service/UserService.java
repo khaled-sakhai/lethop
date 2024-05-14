@@ -5,7 +5,6 @@ import com.example.springsocial.entity.userRelated.Role;
 import com.example.springsocial.entity.userRelated.User;
 import com.example.springsocial.entity.Features.UserVerificationCode;
 import com.example.springsocial.enums.APPRole;
-import com.example.springsocial.enums.AuthProvider;
 import com.example.springsocial.enums.VerificationType;
 import com.example.springsocial.repository.RoleRepo;
 import com.example.springsocial.repository.TagRepo;
@@ -147,7 +146,7 @@ public class UserService {
      userVerificationCodeRepo.save(userVerificationCode);
      SimpleMailMessage mailMessage = new SimpleMailMessage();
      if(type== VerificationType.PASSWORD){
-      mailMessage=EmailTemplates.passwordRessetEmail(user.getUserProfile().getFullName(), user.getEmail(), userVerificationCode.getConfirmationCode());
+      mailMessage=EmailTemplates.passwordResetEmail(user.getUserProfile().getFullName(), user.getEmail(), userVerificationCode.getConfirmationCode());
      }
      if(type== VerificationType.SIGNUP){
       mailMessage=EmailTemplates.newUserEmail(user.getUserProfile().getFullName(), user.getEmail(), userVerificationCode.getConfirmationCode());

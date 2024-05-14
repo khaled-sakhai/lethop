@@ -18,7 +18,7 @@ public class EmailTemplates {
 
              "شكراً لتسجيلك في موقعنا!\n" +
             "لتفعيل حسابك، يرجى النقر على الرابط التالي:\n\n" +
-            PathConstants.PRODUCTION_URL+"/auth/email/confirm?verify="+userVerificationCode +
+            PathConstants.PRODUCTION_URL+"auth/email/confirm?verify="+userVerificationCode +
              "\n\n" +
             "إذا كنت لم تقم بتسجيل في موقعنا، يرجى تجاهل هذا البريد الإلكتروني.\n\n" +
             "شكراً لك،\n" +
@@ -27,7 +27,7 @@ public class EmailTemplates {
   }
   
 
-  public static SimpleMailMessage passwordRessetEmail(String userName,String email,String userVerificationCode){
+  public static SimpleMailMessage passwordResetEmail(String userName, String email, String userVerificationCode){
     SimpleMailMessage mailMessage = new SimpleMailMessage();
      mailMessage.setTo(email);
         mailMessage.setSubject("Password Reset!");
