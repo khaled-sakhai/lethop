@@ -2,6 +2,8 @@ package com.example.springsocial.util;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +31,10 @@ public class ProjectUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return localDateTime.format(formatter);
     }
-
+    public static Date convertStringToDate(String dateString) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // Format matching your cursor
+        return dateFormat.parse(dateString);
+    }
 
   public static String generateRandomId() {
     return UUID.randomUUID().toString().replace("-", "");

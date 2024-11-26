@@ -129,6 +129,8 @@ tags3.add(tag);
 
 
 Post post1 = new Post();Post post2 = new Post();Post post3 = new Post();Post post4 = new Post();
+    Post post5 = new Post();
+    Post post6= new Post();
 
 post1.setAnonymous(true);
 post1.setTitle("how did i lose 10kg");
@@ -142,7 +144,7 @@ post1.setCategory(good);
 post1.setListTags(tags3);
 
 
-post4.setTitle("how did i lose 100kg");
+post4.setTitle("how did i lose 400kg");
      post4.setContent("This is my way to lose 100 kg in a year");
 
     postRepo.save(post4);
@@ -180,9 +182,26 @@ post3.setContent("This is my way to lose 1000 kg in a year");
 
 
 
+    post5.setTitle("how did i lose 500kg");
+    post5.setContent("This is my way to lose 100 kg in a year");
+
+    postRepo.save(post5);
+    user2.addPost(post5);
+    good.addPostToCategory(post5);
+    post5.setUser(user2);
+    post5.setCategory(good);
+    post5.setListTags(tags2);
 
 
+    post6.setTitle("how did i lose 600kg");
+    post6.setContent("This is my way to lose 100 kg in a year");
 
+    postRepo.save(post6);
+    user2.addPost(post6);
+    good.addPostToCategory(post6);
+    post6.setUser(user2);
+    post6.setCategory(good);
+    post6.setListTags(tags2);
 
 
 

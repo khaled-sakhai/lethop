@@ -93,7 +93,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setEmail(oAuth2UserInfo.getEmail());
        // user.setImageUrl(oAuth2UserInfo.getImageUrl());
         /// since the user signed up with a social media -- no need for extra email verification
-    
+
         user.setActive(true);
         user.setActivationDate(new Date());
 

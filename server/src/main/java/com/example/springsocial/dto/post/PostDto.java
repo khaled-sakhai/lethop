@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -51,15 +52,22 @@ public class PostDto implements Serializable {
         post.getListTags().forEach(tag->this.tags.add(tag.getTagName()));
         post.getPostImages().forEach(img->this.images.add(new ImageDto(img)));
         this.lastModifiedDate = ProjectUtil.convertDateToString(post.getLastModifiedDate());
+
         this.likedCounter=post.getLikesCount();
         this.commentCounter=post.getCommentsCount();
         this.savedCounter=post.getSavesCount();
         this.Category = post.getCategory().getCategory();
         this.postUserInfo=new UserInfo(post.getUser());
 
-
-
     }
-    
+    public Object getSortValue(String sortBy) throws ParseException {
+        return switch (sortBy) {
+            case "lastModifiedDate" -> lastModifiedDate;
+            case "likesCount" -> likedCounter;
+            case "commentsCount" -> commentCounter;
+            case "savesCount" -> savedCounter;
+            default -> throw new IllegalArgumentException("Invalid sortBy field");
+        };
+    }
 
 }

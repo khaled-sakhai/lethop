@@ -2,6 +2,7 @@ package com.example.springsocial.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ import com.example.springsocial.enums.NotificationType;
 import com.example.springsocial.service.*;
 import com.example.springsocial.service.postService.PostService2;
 import com.example.springsocial.util.PathConstants;
+import com.example.springsocial.util.ProjectUtil;
 import com.example.springsocial.validator.validators.ValidPostSortBy;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -74,6 +76,34 @@ public class PostController {
   private UtilService utilService;
 
   private final NotificationService notificationService;
+
+
+
+    @GetMapping(PathConstants.API_V1+PathConstants.API_PUBLIC+"feed1")
+    public  ResponseEntity<Map<String, Object>>  getFeedByCursor(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false) String cursorPostId,
+            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "lastModifiedDate") @ValidPostSortBy String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection
+    ) throws ParseException {
+        List<PostDto> postDos = postService2.getFeedByCursor(category, tag, cursorPostId, size, sortBy, sortDirection);
+        if (postDos.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        // Generate the next cursor directly
+
+        PostDto lastPost = postDos.get(postDos.size()-1);
+        String newCursor = String.format("%s:%s,id:%s", sortBy,
+                lastPost.getSortValue(sortBy),
+                lastPost.getPostId());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("posts", postDos);
+        response.put("cursor", newCursor);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 
 

@@ -69,9 +69,10 @@ public class WebConfig implements WebMvcConfigurer{
 
   @Bean
   public RateLimiter rateLimiter() {
+    // allow 500 requests per 10 minutes, note: this is the total requests not user specific request.
       RateLimiterConfig config = RateLimiterConfig.custom()
-              .limitForPeriod(10)
-              .limitRefreshPeriod(Duration.ofSeconds(1))
+              .limitForPeriod(500)
+              .limitRefreshPeriod(Duration.ofSeconds(10))
               .timeoutDuration(Duration.ofMillis(100))
               .build();
       return RateLimiter.of("globalRateLimiter", config);

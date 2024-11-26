@@ -1,13 +1,16 @@
 package com.example.springsocial.service.postService;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.example.springsocial.dto.post.PostDto;
 import com.example.springsocial.entity.postRelated.Category;
 import com.example.springsocial.entity.postRelated.Tag;
 import com.example.springsocial.entity.userRelated.User;
+import com.example.springsocial.util.ProjectUtil;
 import com.example.springsocial.validator.permessions.PostOwner;
 import com.example.springsocial.util.Constants;
 
@@ -31,6 +34,7 @@ import com.example.springsocial.specification.PostSpecification;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Predicate;
 
 @Service
 public class PostService2 {
@@ -44,11 +48,68 @@ public class PostService2 {
     @PersistenceContext
     private EntityManager entityManager;
 
-   @Cacheable(value = "feed")
+    //@Cacheable(value = "feed")
+    public List<PostDto>getFeedByCursor(String category,String tagName,String cursor,
+                                 int pageSize,String sortBy,String sortDirection) throws ParseException {
+        Specification<Post> spec = userSpec(category, tagName);
+        if (cursor != null) {
+            String[] cursorParts = cursor.split(",");
+            String cursorFieldValue = cursorParts[0].split(":",2)[1];  // Extract the field value from the cursor
+            Long cursorId = Long.parseLong(cursorParts[1].split(":")[1]);  // Extract the post ID from the cursor
+            if ("lastModifiedDate".equals(sortBy)) {
+                Date cursorDate = ProjectUtil.convertStringToDate(cursorFieldValue);
+
+            spec = spec.and((root, query, criteriaBuilder) -> {
+                Predicate cursorPredicate = sortDirection.equalsIgnoreCase("ASC")
+                        ? criteriaBuilder.greaterThan(root.get(sortBy), cursorDate)
+                        : criteriaBuilder.lessThan(root.get(sortBy), cursorDate);
+
+                Predicate idPredicate = sortDirection.equalsIgnoreCase("ASC")
+                        ? criteriaBuilder.greaterThan(root.get("id"), cursorId)
+                        : criteriaBuilder.lessThan(root.get("id"), cursorId);
+
+                return criteriaBuilder.or(cursorPredicate, idPredicate);
+            });
+        } else {
+            Integer cursorCountValue = Integer.parseInt(cursorFieldValue);  // Parse integer for count-based sorting
+
+            spec = spec.and((root, query, criteriaBuilder) -> {
+                Predicate cursorPredicate = sortDirection.equalsIgnoreCase("ASC")
+                        ? criteriaBuilder.greaterThan(root.get(sortBy), cursorCountValue)
+                        : criteriaBuilder.lessThan(root.get(sortBy), cursorCountValue);
+
+                Predicate idPredicate = sortDirection.equalsIgnoreCase("ASC")
+                        ? criteriaBuilder.greaterThan(root.get("id"), cursorId)
+                        : criteriaBuilder.lessThan(root.get("id"), cursorId);
+
+                return criteriaBuilder.or(cursorPredicate, idPredicate);
+            });
+        }
+    }
+
+
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy); // Simple sort creation
+        Pageable pageable = PageRequest.of(0, pageSize, sort); // Always page 0 for cursor-based
+        Page<Post> postsPage = postRepo.findAll(spec, pageable);
+
+
+        return postsPage.getContent().stream()
+                .map(PostDto::new)
+                .collect(Collectors.toList());
+    }
+
+
+
+    @Cacheable(value = "feed")
      public Page<PostDto>getFeedPosts(String category,String TagName,
                                        int pageNo,int pageSize,String sortBy,String sortDirection){
         Specification<Post> spec = userSpec(category, TagName);
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+
+
+
+
+       Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, sort);
 
        Page<Post>  postsPage= postRepo.findAll(spec,paging);
