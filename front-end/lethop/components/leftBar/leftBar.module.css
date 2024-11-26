@@ -1,0 +1,19 @@
+.leftBar{
+    overflow: auto;
+    position: sticky;
+    top: 7rem;
+order: 3;
+    height: calc(100vh - 10rem);
+    position: sticky;
+    overflow: auto;
+    flex: 0 0 30rem;
+    width: 30rem;
+    align-self:flex-start;
+}
+
+@media (max-width: 900px) {
+    /* Your CSS rules go here */
+    .leftBar {
+      display: none; /* Example rule: hides the element */
+    }
+  }

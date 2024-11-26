@@ -1,0 +1,18 @@
+.rightBar{
+    top: 7rem;
+    order: 2;
+    height: calc(100vh - 10rem);
+    position: sticky;
+    overflow: auto;
+    flex: 0 0 30rem;
+    width: 30rem;
+    align-self:flex-start;
+    @apply transition duration-1000 ease-out;
+
+}
+.rightBar >*:not(:first-child){
+}
+
+.rightBar h3{
+    @apply text-dark bg-gray-2 py-4 mt-8 mb-4;
+}

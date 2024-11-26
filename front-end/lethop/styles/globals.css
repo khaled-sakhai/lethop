@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+body {
+
+  margin: 0 auto;
+  width: calc(100vw - 4%);
+    font-size: 1.6rem;
+    /**line-height: 2rem; **/
+    background-color: var(--bg--orange);
+  }
+html{
+    font-size: 62.5%
+}
+
+:root{
+  /* primary*/
+  --text-dark:#323232;
+  --bg--orange:#FFFAF2;
+  --button-bg:#758045;
+  --bg-white:#FFFCF8;
+  --border-first:#F0ECE2;
+  --border-seconde:#F4F0EB;
+  --text-color:#4A4A4A;
+
+
+  --bg-gray:#B2B2B2;
+
+  --gray-light-color:#F0EEEA;
+  --gray-text-color:#A9AAAA;
+
+  --orange-light-color:#FFF0E0;
+  --orange-dark-color:#FF9525;
+
+  --orange-color:#D8A977;
+  --bg-orange:#FFF0E0;
+  --orange-text:#FF8D17;
+
+  --orange-dark-text:#CB9051;
+
+
+  /*extra*/
+  --blue-light:#56A4FF;
+  --green-light:#8CBE00;
+  --pink-light:#FD6B6A;
+
+}@layer base {
+  /* Hide scrollbar by default */
+  .bar {
+    overflow: auto; /* Ensure scrolling works */
+  }
+
+  /* Initially hide scrollbar */
+  .bar::-webkit-scrollbar {
+    width: 12px; /* Set the width of the scrollbar */
+  }
+
+  .bar::-webkit-scrollbar-track {
+    cursor: pointer;
+
+    background: transparent; /* Hide track background initially */
+  }
+
+  .bar::-webkit-scrollbar-thumb {
+    background: transparent; /* Hide thumb initially */
+  }
+
+  /* Show scrollbar on hover */
+  .bar:hover::-webkit-scrollbar-track {
+    background: inherit; /* Restore track background on hover */
+  }
+
+  .bar:hover::-webkit-scrollbar-thumb {
+    background: #e3dfd7; /* Restore thumb background on hover */
+    border-radius: 10px; /* Add rounding */
+  }
+
+  .bar:hover::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
+
+    background: #c5c0b6
+    }
+}
