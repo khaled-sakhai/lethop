@@ -93,8 +93,13 @@ public class Profile extends BaseEntity<Long>{
 
 
   public void setProfileCountry(String country){
-    //if you send united states of america--- it'll become UNITED_STATES_OF_AMERICA
-    if(ProjectUtil.isInEnum(Country.class,country)){
+    //if you send United States of america--- it'll become UNITED_STATES_OF_AMERICA
+    // empty string: no country
+    //wrong country text? assign Egypt
+    if (country==null||country.trim().isEmpty()){
+      this.country=null;
+    }
+    else if(ProjectUtil.isInEnum(Country.class,country)){
       this.country = Country.valueOf(country.replaceAll("\\s+", "_").toUpperCase());
      }
     else{

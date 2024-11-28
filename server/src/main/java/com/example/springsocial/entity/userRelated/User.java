@@ -27,7 +27,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -54,6 +56,14 @@ public class User extends BaseEntity<Long> {
    private String email;
    @JsonIgnore
    private String password;
+
+  @Column(name = "user_name", nullable = false, unique = true)
+  @NotBlank(message = "Username cannot be blank.")
+  @Pattern(
+          regexp = "^[a-zA-Z0-9-]+$",
+          message = "Username must only contain letters, numbers, and dashes, with no spaces."
+  )
+   private String username;
 
     @NotNull
     @Enumerated(EnumType.STRING)

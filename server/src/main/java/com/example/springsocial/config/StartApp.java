@@ -72,6 +72,8 @@ public class StartApp implements CommandLineRunner {
         User user1 = new User();
         user1.setEmail("as@as.com");
         user1.setPassword(passwordEncoder.encode("123456789"));
+        user1.setUsername("asa")
+        ;
         user1.setActive(true);
     user1.setProvider(AuthProvider.local);
     userRepo.save(user1);
@@ -96,6 +98,7 @@ public class StartApp implements CommandLineRunner {
   User user2 = new User();
   user2.setEmail("as@as.net");
   user2.setPassword(passwordEncoder.encode("as"));
+  user2.setUsername("asaw");
   user2.setActive(true);
   user2.setProvider(AuthProvider.local);
   userRepo.save(user2);

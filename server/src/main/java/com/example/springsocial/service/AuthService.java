@@ -46,7 +46,6 @@ public class AuthService {
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
     if (authentication.isAuthenticated()) {
-      SecurityContextHolder.getContext().getAuthentication().getDetails();
       Token token = utilService.updateTokenInDB(email,null,userAgent);
       return new TokenResponse(token.getAccessToken(), token.getRefreshToken());
     } else {

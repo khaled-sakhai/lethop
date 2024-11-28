@@ -62,12 +62,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
-        System.out.println("Here first service");
+
 
         if(oAuth2UserInfo.getEmail().isEmpty()){
                         throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
-
         Optional<User> userOptional = userService.findByEmail(oAuth2UserInfo.getEmail());
         User user;
         if(userOptional.isPresent()) {
@@ -87,24 +86,31 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+        String email=oAuth2UserInfo.getEmail();
+        String emailWithoutProvider= email.substring(0, email.indexOf("@")).replace(".","-");
         User user = new User();
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
-        user.setEmail(oAuth2UserInfo.getEmail());
-       // user.setImageUrl(oAuth2UserInfo.getImageUrl());
-        /// since the user signed up with a social media -- no need for extra email verification
+        user.setEmail(email);
+       /// user.setImageUrl(oAuth2UserInfo.getImageUrl());
 
+       /// since the user signed up with a social media -- no need for extra email verification
         user.setActive(true);
         user.setActivationDate(new Date());
+        System.out.printf("user name: ===>"+ emailWithoutProvider);
+        if (!userService.isUserNameTaken(emailWithoutProvider)) {
+            user.setUsername(emailWithoutProvider);
+        }
+         else {
+            int randomDigit = (int) (Math.random() * 10);
+            user.setUsername(emailWithoutProvider+randomDigit);
+        }
 
         Profile profile = new Profile();
         Image image = new Image();
         image.setUrl(oAuth2UserInfo.getImageUrl());
         image.setFileName("oauth2-image");
-      
         profile.setProfilePicture(image);
-        profile.setFirstName(oAuth2UserInfo.getName());
-
 
         profile.setUser(user);
         user.setUserProfile(profile);

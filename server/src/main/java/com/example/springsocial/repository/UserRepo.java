@@ -25,6 +25,7 @@ public interface UserRepo extends BaseRepository<User, Long> , JpaSpecificationE
   Optional<User> findByEmail(String email);
 
   boolean existsByEmail(String email);
+  boolean existsByUsername(String username);
 
   @Query(nativeQuery = true, value = "SELECT * FROM users WHERE email = :email")
   Optional<User> findAnyUserByEmail(String email);

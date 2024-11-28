@@ -38,7 +38,6 @@ public class TokenService {
   }
 
   public List<Token> findByEmail(String email){
-    System.out.println("Trying with emailxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     return tokenRepo.findByUserEmail(email);
     
   }

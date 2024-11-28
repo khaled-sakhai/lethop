@@ -1,8 +1,6 @@
 package com.example.springsocial.dto.user;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,4 +22,17 @@ public class RegisterDto {
   @NotEmpty(message = "Password must not be empty")
   @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
   private String password;
+
+
+  @NotEmpty(message = "First name must not be empty")
+  @Size(min = 3, max = 20, message = "First name must be between 6 and 20 characters")
+  private  String firstName;
+
+  @NotEmpty(message = "Last name must not be empty")
+  @Size(min = 3, max = 20, message = "Last name must be between 6 and 20 characters")
+  private  String lastName;
+
+  @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "Country should only contain letters and spaces.")
+  private String country;
+
 }

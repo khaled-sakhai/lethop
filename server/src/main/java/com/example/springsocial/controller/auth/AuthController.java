@@ -71,18 +71,31 @@ public class AuthController {
 
     @PostMapping(PathConstants.SIGN_UP)
     public ResponseEntity<?> registerUser( @RequestBody @Valid RegisterDto registerDto) {
-        if(userService.isEmailTaken(registerDto.getEmail())) {
+        if(userService.isEmailTaken(registerDto.getEmail()) ) {
             throw new BadRequestException("Email address already in use.");
         }
+
+        String username = registerDto.getEmail().substring(0,registerDto.getEmail().indexOf('@'));
+
+        if (!userService.isUserNameTaken(username)) {
+            username+= (int) (Math.random() * 10);
+        }
+
+
         // Creating user's account
         User user = new User();
         
         user.setEmail(registerDto.getEmail().toLowerCase());
         user.setPassword(registerDto.getPassword());
+        user.setUsername(username);
         user.setProvider(AuthProvider.local);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         //new profile to user
         Profile profile = new Profile();
+        profile.setProfileCountry(registerDto.getCountry());
+        profile.setFirstName(registerDto.getFirstName());
+        profile.setLastName(registerDto.getLastName());
+
         profile.setUser(user);
         user.setUserProfile(profile);
         profileService.createNewProfile(profile);
@@ -90,7 +103,7 @@ public class AuthController {
         // set confirmation code
         userService.confirmationCodeSend(user, VerificationType.SIGNUP);
         return ResponseEntity.ok()
-        .body( "User registered successfully!, pleaase verify your email, an email was send to: "+ user.getEmail());
+        .body( "User registered successfully!, please verify your email, an email was send to: "+ user.getEmail());
     }
 
     @PostMapping(PathConstants.EMAIL+"check")
