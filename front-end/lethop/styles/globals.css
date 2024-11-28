@@ -14,9 +14,10 @@ body {
 
   margin: 0 auto;
   width: calc(100vw - 4%);
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     /**line-height: 2rem; **/
     background-color: var(--bg--orange);
+    font-weight: 500;
   }
 html{
     font-size: 62.5%
@@ -28,6 +29,8 @@ html{
   --bg--orange:#FFFAF2;
   --button-bg:#758045;
   --bg-white:#FFFCF8;
+
+
   --border-first:#F0ECE2;
   --border-seconde:#F4F0EB;
   --text-color:#4A4A4A;

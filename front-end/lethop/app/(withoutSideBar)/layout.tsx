@@ -11,7 +11,7 @@ import React from "react";
 
 import Provider from "../../redux/provider";
 
-const marhey = Marhey({ subsets: ["arabic"] });
+// const marhey = Marhey({ subsets: ["arabic"] });
 
 export default function RootLayout({
   children,
@@ -46,7 +46,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" dir="rtl">
-      <body className={`${marhey.className} ${styles.layout}`}>
+      <body className={` ${styles.layout}`}>
         <Provider>
           <Header show={showSideBar} setShow={setShowSideBar} />
 

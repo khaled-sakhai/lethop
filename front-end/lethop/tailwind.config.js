@@ -32,6 +32,7 @@ module.exports = {
       colors: {
         'white':'#FFFAF2',
         'white-2':'#FFFCF8',
+        'white-3':'#FFFCFA',
         'dark':'#323232',
         'dark-2':'#4A4A4A',
         'green': '#758045',
@@ -43,8 +44,10 @@ module.exports = {
         'orange-5':'#D8A977',
         'gray':'#B2B2B2',
         'gray-2':'#F0EEEA',
+        'gray-3':'#F4F0EB',
         'blue':'#56A4FF',
         'pink':'#FD6B6A'
+        
 
       },
     },

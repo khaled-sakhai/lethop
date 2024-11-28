@@ -7,6 +7,7 @@ import styles from "./dynamicForm.module.css";
 // Define the props for the DynamicForm component
 interface DynamicFormProps<T extends FieldValues> {
   schema: AnyObjectSchema;
+  buttonText:string,
   onSubmit: SubmitHandler<T>;
   fields: Array<{
     name: Path<T>; // Correctly typing `name` as `Path<T>`
@@ -18,7 +19,7 @@ interface DynamicFormProps<T extends FieldValues> {
 
 const DynamicForm = <T extends Record<string, any>>({
   schema,
-  onSubmit,
+  onSubmit,buttonText,
   fields,
 }: DynamicFormProps<T>) => {
   const {
@@ -35,7 +36,7 @@ const DynamicForm = <T extends Record<string, any>>({
         <div key={field.name} className={styles.form_item}>
           <label className={styles.form_label}>{field.label}</label>
           {field.type === "select" ? (
-            <select {...register(field.name)}>
+            <select {...register(field.name)} className={styles.form_select}>
               <option value="">اختر {field.label.toLowerCase()}</option>
               {field.options?.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -57,7 +58,7 @@ const DynamicForm = <T extends Record<string, any>>({
           )}
         </div>
       ))}
-      <button type="submit">Submit</button>
+      <button className={styles.form_button} type="submit">{buttonText}</button>
     </form>
   );
 };
