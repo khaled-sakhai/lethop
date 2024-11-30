@@ -57,30 +57,7 @@ export default function RootLayout({
               setter={setShowSideBar}
             />
 
-            <main className={styles.main}>
-              {children}
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-              <p className="py-10">done! </p>
-            </main>
+            <main className={styles.main}>{children}</main>
           </section>
         </Provider>
       </body>

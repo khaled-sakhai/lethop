@@ -1,13 +1,14 @@
-.register{
-    @apply p-4 border border-gray-3 bg-white-3 flex flex-col gap-y-4;
+.register {
+  @apply p-4 border border-gray-3 bg-white-3 flex gap-y-4;
 }
 
-.register h2{
-    @apply text-4xl py-5;
+.register > * {
+  @apply w-2/3;
+}
+.register h2 {
+  @apply text-4xl py-5;
 }
 
-
-
-.intro{
-    @apply flex gap-y-2 flex-col;
+.intro {
+  @apply flex gap-y-20 flex-col;
 }

@@ -3,6 +3,8 @@
 import RegisterForm from "@/components/forms/registerForm";
 import styles from "./page.module.css";
 import React from "react";
+import SocialForm from "@/components/forms/SocialForm";
+import Divider from "@/common/divider";
 
 export default function Page() {
   return (
@@ -14,8 +16,10 @@ export default function Page() {
           بجميع الميزات التي نقدمها. الأمر سريع، سهل، ومجاني!
         </p>
         <p>سجل الآن وابدأ رحلتك معنا!</p>
+        <SocialForm />
       </section>
 
+      {/* <Divider dividerText={"او"} /> */}
       <RegisterForm />
     </div>
   );

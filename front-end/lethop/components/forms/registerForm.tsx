@@ -3,15 +3,14 @@ import * as yup from "yup";
 import DynamicForm from "@/common/DynamicForm";
 import { countries } from "@/assets/countries";
 
-type RegisterFormInputs ={
-  
+type RegisterFormInputs = {
   username: string;
   email: string;
   password: string;
   firstName: string;
   lastName: string;
   country: string;
-}
+};
 const registerSchema = yup.object().shape({
   username: yup
     .string()
@@ -44,8 +43,8 @@ const RegisterForm: React.FC = () => {
         { name: "username", label: "اسم المستخدم", type: "text" },
         { name: "email", label: "الايميل", type: "email" },
         { name: "password", label: "كلمة السر", type: "password" },
-        { name: "firstName", label: "اسم العائلة", type: "text" },
-        { name: "lastName", label: "اللقب", type: "text" },
+        { name: "firstName", label: "الاسم", type: "text" },
+        { name: "lastName", label: "اسم العائلة", type: "text" },
         {
           name: "country",
           label: "البلد",
