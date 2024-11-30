@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, SubmitHandler, Path, FieldValues } from "react-hook-form";
+import { SubmitHandler, Path, FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AnyObjectSchema } from "yup";
 import styles from "./dynamicForm.module.css";

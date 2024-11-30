@@ -9,6 +9,7 @@ order: 3;
     flex: 0 0 30rem;
     width: 30rem;
     align-self:flex-start;
+    
 }
 
 @media (max-width: 900px) {

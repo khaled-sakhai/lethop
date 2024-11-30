@@ -7,10 +7,8 @@
 }
 
 
-.content >*{
-    padding: 1rem;
-    background-color: var(--bg-white );
-    border: 2px solid var(--border-seconde);
+.content > *{
+    @apply p-4 bg-white-2 border-2 border-gray-3;
 }
 
 .main{ background-color: var(--bg--orange);
@@ -19,4 +17,5 @@
     min-width: 0;
     flex: 1; /* formerly flex: 1 0 auto; */
     order:2;
+   
 }

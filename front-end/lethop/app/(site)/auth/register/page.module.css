@@ -1,0 +1,14 @@
+
+.register {
+    @apply p-4 border border-gray-3 bg-white-3 flex gap-y-3 flex-col content-center items-center min-h-96 ; 
+  }
+  
+ 
+  .register h2 {
+    @apply text-4xl py-4 ;
+  }
+  
+  .intro {
+    @apply flex gap-y-4 flex-col text-dark-2 flex-col w-1/3; 
+  }
+  

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, type JSX } from 'react';
 import styles from './extra.module.css'
 import {ChevronDownIcon} from '@heroicons/react/24/outline';
 import{UserPlusIcon,UserIcon,BuildingLibraryIcon,BookOpenIcon,GlobeAltIcon,EnvelopeIcon,} from '@heroicons/react/24/outline';

@@ -1,15 +1,12 @@
 import React from "react";
 import styles from "./leftBar.module.css";
 
-interface barProps {
-  show: Boolean;
-  small: Boolean;
-}
 
-export default function LeftBar({ show, small }: barProps) {
+
+export default function LeftBar() {
   return (
     <aside
-      className={`${show && small ? "hidden" : `${styles.leftBar} ${`bar`}`} `}
+      className={styles.leftBar}
     >
       {/* Leftbar Content */}
       {/* <h4 className='pb-4'>إعلانات:</h4>

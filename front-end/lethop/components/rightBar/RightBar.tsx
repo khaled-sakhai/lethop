@@ -8,33 +8,32 @@ import MainMenu from "./MainMenu";
 import TagsMenu from "./TagsMenu";
 import WebMenu from "./WebMenu";
 import ClickAwayListener from "react-click-away-listener";
-
-interface barProps {
+import Search from "../header/Search";
+interface BarProps {
   show: boolean;
-  small: boolean;
-  setter: any;
+  setter: (value: boolean) => void;
 }
 
-export default function RightBar({ show, small, setter }: barProps) {
-  const pathname = usePathname();
-
-  //
-  if (pathname === "/" || pathname === "/post") {
-  }
-
-  function handleClickAway(event: Event): void {
-    if (small) {
-      setter(false);
-    }
-  }
+export default function RightBar({ show, setter }: BarProps) {
+ 
 
   return (
-    <ClickAwayListener onClickAway={handleClickAway}>
-      <aside className={show ? `${styles.rightBar} ${`bar`}` : "hidden"}>
+    <>
+      {/* Backdrop */}
+      {show && (
+        <div
+          className={styles.backdrop}
+          onClick={() => setter(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`${styles.rightBar} ${show ? styles.show : ''} ${`bar`}`}>
         {/* <MainMenu /> */}
+        
         <TagsMenu />
-        <WebMenu />
+        <WebMenu /><br></br><br></br><br></br><br></br><br></br>
       </aside>
-    </ClickAwayListener>
+    </>
   );
 }

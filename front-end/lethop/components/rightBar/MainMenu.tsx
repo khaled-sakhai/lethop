@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type JSX } from 'react';
 import styles from './mainMenu.module.css'
 import{FireIcon,HomeIcon,BuildingLibraryIcon,BookOpenIcon,GlobeAltIcon,EnvelopeIcon,} from '@heroicons/react/24/outline';
 import Link from 'next/link';

@@ -23,7 +23,9 @@ html{
     font-size: 62.5%
 }
 
-:root{
+
+:root{ 
+
   /* primary*/
   --text-dark:#323232;
   --bg--orange:#FFFAF2;
@@ -55,6 +57,8 @@ html{
   --blue-light:#56A4FF;
   --green-light:#8CBE00;
   --pink-light:#FD6B6A;
+
+ 
 
 }@layer base {
   /* Hide scrollbar by default */
