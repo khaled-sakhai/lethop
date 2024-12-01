@@ -1,10 +1,12 @@
 import React from "react";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 import DynamicForm from "@/common/DynamicForm";
 import { countries } from "@/assets/countries";
+import { useRouter } from "next/navigation";
+import { useRegisterMutation } from "@/redux/features/authApiSlice";
 
 type RegisterFormInputs = {
-  username: string;
   email: string;
   password: string;
   firstName: string;
@@ -12,10 +14,6 @@ type RegisterFormInputs = {
   country: string;
 };
 const registerSchema = yup.object().shape({
-  username: yup
-    .string()
-    .required("Username is required")
-    .min(3, "At least 3 characters"),
   email: yup
     .string()
     .required("Email is required")
@@ -30,17 +28,29 @@ const registerSchema = yup.object().shape({
 });
 
 const RegisterForm: React.FC = () => {
+  const router = useRouter();
+  const [register, { isLoading }] = useRegisterMutation();
+
   const onSubmit = (data: RegisterFormInputs) => {
-    console.log("Register Data:", data);
+    const { email, password, firstName, lastName, country } = data;
+    register({ email, password, firstName, lastName, country })
+      .unwrap()
+      .then((res) => {
+        toast.success("تم ارسال بريد الكتروني لتفعيل حسابك1");
+        router.push("/auth/login");
+      })
+      .catch((res) => {
+        toast.error("حدث خطا اثناء التسجيل, الرجاء المحاولة مجددا");
+      });
   };
 
   return (
     <DynamicForm<RegisterFormInputs>
       schema={registerSchema}
       onSubmit={onSubmit}
+      onLoad={isLoading}
       buttonText="تسجيل"
       fields={[
-        { name: "username", label: "اسم المستخدم", type: "text" },
         { name: "email", label: "الايميل", type: "email" },
         { name: "password", label: "كلمة السر", type: "password" },
         { name: "firstName", label: "الاسم", type: "text" },

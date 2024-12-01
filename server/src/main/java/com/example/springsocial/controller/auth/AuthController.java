@@ -71,23 +71,23 @@ public class AuthController {
 
     @PostMapping(PathConstants.SIGN_UP)
     public ResponseEntity<?> registerUser( @RequestBody @Valid RegisterDto registerDto) {
+        System.out.println(registerDto);
         if(userService.isEmailTaken(registerDto.getEmail()) ) {
             throw new BadRequestException("Email address already in use.");
         }
 
         String username = registerDto.getEmail().substring(0,registerDto.getEmail().indexOf('@'));
 
-        if (!userService.isUserNameTaken(username)) {
+        if (userService.isUserNameTaken(username)) {
             username+= (int) (Math.random() * 10);
         }
-
 
         // Creating user's account
         User user = new User();
         
         user.setEmail(registerDto.getEmail().toLowerCase());
         user.setPassword(registerDto.getPassword());
-        user.setUsername(username);
+        user.setUsername(username.toLowerCase().replace(".",""));
         user.setProvider(AuthProvider.local);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         //new profile to user
@@ -101,9 +101,9 @@ public class AuthController {
         profileService.createNewProfile(profile);
         userService.addUser(user);
         // set confirmation code
-        userService.confirmationCodeSend(user, VerificationType.SIGNUP);
+      userService.confirmationCodeSend(user, VerificationType.SIGNUP);
         return ResponseEntity.ok()
-        .body( "User registered successfully!, please verify your email, an email was send to: "+ user.getEmail());
+        .body("{\"message\": \"User registered successfully! Please verify your email, an email was sent to: " + user.getEmail() + "\"}");
     }
 
     @PostMapping(PathConstants.EMAIL+"check")
@@ -111,10 +111,10 @@ public class AuthController {
         boolean result = userService.isEmailTaken(emailRequest.getEmail());
         if (result) {
             return ResponseEntity.badRequest()
-                    .body( "You can't use this email, it's already registered for another user");
+                    .body("{\"message\": \"You can't use this email, it's already registered for another user \"}");
         }
         return ResponseEntity.ok()
-                .body( "Valid email, Please continue the registration");
+                .body( "{\"message\": \"Valid email, Please continue the registration \"}");
     }
 
 
@@ -122,9 +122,9 @@ public class AuthController {
     public ResponseEntity<String> userEmailVerification(@RequestParam("verify") String verificationCode) throws Exception{
       if(userService.userEmailVerification(verificationCode)){
 
-        return ResponseEntity.ok().body("Congratulations! your account is fully activated");
+        return ResponseEntity.ok().body("{\"message\": \"Congratulations! your account is fully activated \"}");
       }
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("verification code is not valid, please try again or contact us");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"verification code is not valid, please try again or contact us\"}");
     }
 
 

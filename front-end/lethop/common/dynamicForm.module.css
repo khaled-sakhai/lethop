@@ -1,5 +1,5 @@
 .form {
-  @apply border border-gray p-8 w-full md:w-1/3  pt-8 gap-4 flex flex-col;
+  @apply border border-gray bg-white  p-8 w-full md:w-1/3  pt-8 gap-4 flex flex-col;
 }
 
 .form_label {
@@ -13,7 +13,7 @@
 }
 .form_input,
 .form_select {
-  @apply bg-gray-3 border border-gray p-4 opacity-80;
+  @apply bg-gray-3 border border-gray p-4 opacity-90;
 }
 
 .form_error {
@@ -31,5 +31,8 @@
 }
 
 .form_button {
-  @apply bg-pink border-2 border-gray py-4 hover:bg-blue;
+  @apply bg-pink border-2 justify-center border-gray py-6 hover:bg-blue flex;
 }
+/*
+@apply flex w-full   bg-indigo-600 px-3 py-1.5 text-sm font-semibold  text-white shadow-sm 
+*/

@@ -1,7 +1,7 @@
 package com.example.springsocial.util;
 
 public class PathConstants {
-    public static final String PRODUCTION_URL="https://shark-app-d5irv.ondigitalocean.app/";
+    public static final String PRODUCTION_URL="http://localhost:3000/";
     public   static final String API_V1 = "api/v1/";
     public static final String API_PUBLIC="public/";
     public static final String ADMIN_END_POINT="admin/";

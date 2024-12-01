@@ -23,7 +23,7 @@ export default function Category() {
             <li key={e.id} className=" py-7">
               <Link
                 href={e.url}
-                className="text-2xl  p-6 font-bold transition duration-150 text-gray hover:text-dark border-b-[5px] border-transparent hover:border-green  text-nowrap	"
+                className="p-6 font-bold transition duration-150 text-gray hover:text-dark border-b-[5px] border-transparent hover:border-green  text-nowrap	"
               >
                 {e.name}
               </Link>

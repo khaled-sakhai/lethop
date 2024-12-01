@@ -3,11 +3,13 @@ import { SubmitHandler, Path, FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AnyObjectSchema } from "yup";
 import styles from "./dynamicForm.module.css";
+import Spinner from "./Spinder";
 
 // Define the props for the DynamicForm component
 interface DynamicFormProps<T extends FieldValues> {
   schema: AnyObjectSchema;
-  buttonText:string,
+  buttonText: string;
+  onLoad: boolean;
   onSubmit: SubmitHandler<T>;
   fields: Array<{
     name: Path<T>; // Correctly typing `name` as `Path<T>`
@@ -19,7 +21,9 @@ interface DynamicFormProps<T extends FieldValues> {
 
 const DynamicForm = <T extends Record<string, any>>({
   schema,
-  onSubmit,buttonText,
+  onLoad,
+  onSubmit,
+  buttonText,
   fields,
 }: DynamicFormProps<T>) => {
   const {
@@ -58,7 +62,9 @@ const DynamicForm = <T extends Record<string, any>>({
           )}
         </div>
       ))}
-      <button className={styles.form_button} type="submit">{buttonText}</button>
+      <button className={styles.form_button} type="submit" disabled={onLoad}>
+        {onLoad ? <Spinner sm /> : `${buttonText}`}
+      </button>
     </form>
   );
 };

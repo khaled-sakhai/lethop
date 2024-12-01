@@ -1,3 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Noto+Naskh+Arabic:wght@400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Noto+Naskh+Arabic:wght@400..700&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,56 +15,65 @@
 }
 
 body {
-
   margin: 0 auto;
   width: calc(100vw - 4%);
-    font-size: 1.4rem;
-    /**line-height: 2rem; **/
-    background-color: var(--bg--orange);
-    font-weight: 500;
-  }
-html{
-    font-size: 62.5%
+  font-size: 1.6rem;
+  line-height: 2.3rem;
+  background-color: var(--bg--orange);
+}
+html {
+  font-size: 62.5%;
 }
 
-
-:root{ 
-
+:root {
   /* primary*/
-  --text-dark:#323232;
-  --bg--orange:#FFFAF2;
-  --button-bg:#758045;
-  --bg-white:#FFFCF8;
+  --text-dark: #323232;
+  --bg--orange: #fffaf2;
+  --button-bg: #758045;
+  --bg-white: #fffcf8;
 
+  --border-first: #f0ece2;
+  --border-seconde: #f4f0eb;
+  --text-color: #4a4a4a;
 
-  --border-first:#F0ECE2;
-  --border-seconde:#F4F0EB;
-  --text-color:#4A4A4A;
+  --bg-gray: #b2b2b2;
 
+  --gray-light-color: #f0eeea;
+  --gray-text-color: #a9aaaa;
 
-  --bg-gray:#B2B2B2;
+  --orange-light-color: #fff0e0;
+  --orange-dark-color: #ff9525;
 
-  --gray-light-color:#F0EEEA;
-  --gray-text-color:#A9AAAA;
+  --orange-color: #d8a977;
+  --bg-orange: #fff0e0;
+  --orange-text: #ff8d17;
 
-  --orange-light-color:#FFF0E0;
-  --orange-dark-color:#FF9525;
-
-  --orange-color:#D8A977;
-  --bg-orange:#FFF0E0;
-  --orange-text:#FF8D17;
-
-  --orange-dark-text:#CB9051;
-
+  --orange-dark-text: #cb9051;
 
   /*extra*/
-  --blue-light:#56A4FF;
-  --green-light:#8CBE00;
-  --pink-light:#FD6B6A;
+  --blue-light: #56a4ff;
+  --green-light: #8cbe00;
+  --pink-light: #fd6b6a;
 
- 
+  /* fonts */
+  --tab: "Zain", "Open Sans", serif;
+  --head: "Noto Kufi Arabic", "Open Sans", serif;
+  --base: "Noto Naskh Arabic", "Open Sans", serif;
+}
 
-}@layer base {
+@layer base {
+  header {
+    @apply font-tab;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-head;
+  }
+
+  p {
+    @apply font-base;
+  }
   /* Hide scrollbar by default */
   .bar {
     overflow: auto; /* Ensure scrolling works */
@@ -94,6 +107,6 @@ html{
   .bar:hover::-webkit-scrollbar-thumb:hover {
     cursor: pointer;
 
-    background: #c5c0b6
-    }
+    background: #c5c0b6;
+  }
 }
