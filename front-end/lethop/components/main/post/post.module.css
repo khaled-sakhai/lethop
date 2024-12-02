@@ -1,31 +1,3 @@
 .post {
   @apply bg-white-2 border border-gray-4 flex-col gap-y-6	 p-4 rounded-lg my-8 flex;
 }
-.post_signature {
-  @apply flex gap-4 items-center font-tag;
-}
-
-.post_info {
-  @apply flex justify-between grow;
-}
-
-.post_info_image {
-  @apply flex-none;
-}
-.post_info_right {
-  @apply flex flex-col;
-}
-
-.post_info_right_top,
-.post_info_right_bottom {
-  @apply flex;
-}
-.post_info_right span {
-  @apply flex gap-2 pl-2;
-}
-.post_info_item {
-  @apply flex  items-center;
-}
-.post_info_icon {
-  @apply text-pink;
-}

@@ -2,7 +2,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import DynamicForm from "@/common/DynamicForm";
-import { countries } from "@/assets/countries";
+import { countries } from "@/public/assets/countries";
 import { useRouter } from "next/navigation";
 import { useRegisterMutation } from "@/redux/features/authApiSlice";
 

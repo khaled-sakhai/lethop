@@ -36,7 +36,7 @@ module.exports = {
         base: "1.6rem",
         head: "2rem",
         tab: "2rem",
-        tag: "1.4rem",
+        tag: "1.5rem",
         mob: "1.8rem",
       },
       fontWeight: {

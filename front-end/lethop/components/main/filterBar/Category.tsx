@@ -17,7 +17,7 @@ export default function Category() {
 
   return (
     <section className="">
-      <ul className="flex gap-6 p-y-10 ">
+      <ul className="flex p-y-10 ">
         {tags.map((e, i) => {
           return (
             <li key={e.id} className=" py-7">

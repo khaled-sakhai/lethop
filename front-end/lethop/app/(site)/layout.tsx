@@ -23,8 +23,8 @@ export default function RootLayout({
 
   return (
     <html lang="en" dir="rtl">
-      <Setup />
-      <body className={`'font-tab' ${styles.layout}`}>
+      <body className={`'font-tab' ${styles.layout}`}> 
+        <Setup />
         <Provider>
           <Header show={showSideBar} setShow={setShowSideBar} />
           <RightBar show={showSideBar} setter={setShowSideBar} />

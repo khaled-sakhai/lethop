@@ -22,8 +22,9 @@ export default function RootLayout({
 
   return (
     <html lang="en" dir="rtl">
-      <Setup />
+      
       <body className={` ${styles.layout}`}>
+        <Setup />
         <Provider>
           <Header show={showSideBar} setShow={setShowSideBar} />
 
