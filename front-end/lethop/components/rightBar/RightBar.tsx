@@ -15,24 +15,27 @@ interface BarProps {
 }
 
 export default function RightBar({ show, setter }: BarProps) {
- 
-
   return (
     <>
       {/* Backdrop */}
       {show && (
-        <div
-          className={styles.backdrop}
-          onClick={() => setter(false)}
-        />
+        <div className={styles.backdrop} onClick={() => setter(false)} />
       )}
 
       {/* Sidebar */}
-      <aside className={`${styles.rightBar} ${show ? styles.show : ''} ${`bar`}`}>
+      <aside
+        className={`${styles.rightBar} ${show ? styles.show : ""} ${`bar`}`}
+      >
         {/* <MainMenu /> */}
-        
+        {show && <Search mobile={true} />}
+
         <TagsMenu />
-        <WebMenu /><br></br><br></br><br></br><br></br><br></br>
+        <WebMenu />
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
       </aside>
     </>
   );

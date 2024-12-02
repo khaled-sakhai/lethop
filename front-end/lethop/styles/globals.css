@@ -16,10 +16,10 @@
 
 body {
   margin: 0 auto;
-  width: calc(100vw - 4%);
   font-size: 1.6rem;
   line-height: 2.3rem;
   background-color: var(--bg--orange);
+  @apply w-full lg:w-[calc(100vw-4%)];
 }
 html {
   font-size: 62.5%;
@@ -28,11 +28,13 @@ html {
 :root {
   /* primary*/
   --text-dark: #323232;
-  --bg--orange: #fffaf2;
+  --bg--orange-1: #fffaf2;
+  --bg--orange: #f5f0e8;
   --button-bg: #758045;
   --bg-white: #fffcf8;
 
   --border-first: #f0ece2;
+  --border-third: #f2ede6;
   --border-seconde: #f4f0eb;
   --text-color: #4a4a4a;
 

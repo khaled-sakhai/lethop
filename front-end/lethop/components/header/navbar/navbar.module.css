@@ -1,17 +1,17 @@
-.navbar{
-    @apply py-2;
+.navbar {
+  @apply py-2;
 }
 
-.navbar ul{
-    @apply flex items-center gap-4;
+.navbar ul {
+  @apply flex items-center gap-4;
 }
 .navbar ul button:first-child {
-  @apply  bg-orange-3 hover:bg-orange text-orange-1 hover:text-orange-3 border border-orange font-bold py-2 px-3 rounded-3xl	 inline-flex items-center;
+  @apply bg-orange-3 hover:bg-orange text-orange-1 hover:text-orange-3 border border-orange font-bold py-2 px-3 rounded-3xl	 md:inline-flex items-center hidden;
 }
 
-.links{
-    @apply bg-green rounded-3xl px-4 py-1 hover:bg-orange text-orange-3 ;
+.links {
+  @apply bg-green rounded-3xl px-4 py-1 hover:bg-orange text-orange-3;
 }
 .navbar ul button:not(:first-child) {
-  @apply  bg-green hover:bg-orange text-orange-3  py-3 px-3 rounded-3xl	 inline-flex items-center ;
+  @apply bg-green hover:bg-orange text-orange-3  py-3 px-3 rounded-3xl	 inline-flex items-center;
 }

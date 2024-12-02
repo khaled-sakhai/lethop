@@ -19,7 +19,6 @@ export default function Navbar() {
     <nav className={styles.navbar}>
       <ul>
         <button>
-          {" "}
           <span>تحميل التطبيق</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"

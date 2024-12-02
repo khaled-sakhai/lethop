@@ -11,6 +11,7 @@ import React from "react";
 
 import Provider from "../../redux/provider";
 import { Setup } from "@/common/util";
+import BottomNav from "@/components/BottomNav";
 
 export default function RootLayout({
   children,
@@ -40,6 +41,7 @@ export default function RootLayout({
             </main>
             <LeftBar />
           </section>
+          <BottomNav />
         </Provider>
       </body>
     </html>

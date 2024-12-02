@@ -4,6 +4,14 @@ import Image from "next/image";
 import profile from "../../../assets/profile.jpg";
 import postPicture from "../../../assets/post-pic.png";
 import { PostProps } from "@/type/Post";
+import styles from "./post.module.css";
+import {
+  ClockIcon,
+  EllipsisHorizontalIcon,
+  TagIcon,
+  UserCircleIcon,
+  HashtagIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Post({ post }: { post: PostProps }) {
   const [text, setText] = useState<string>(post.textLines.slice(0, 200));
@@ -15,24 +23,49 @@ export default function Post({ post }: { post: PostProps }) {
     setText(post.textLines);
   }
   return (
-    <div className=" flex flex-col gap-y-6	border p-4 rounded-lg shadow-md bg-white-2 my-8 flex">
-      <div className="flex items-center mb-4 gap-x-2 gap-y-2">
-        <Image
-          src={profile}
-          alt="Profile Picture"
-          width={50}
-          height={50}
-          className="rounded-full"
-        />
-        <div className="ml-4">
-          <h2 className="">{post.title}</h2>
-          <div className="text-gray-500  font-tag">
-            <span>تاريخ: {post.date} - </span>
-            <span className="ml-2">الوسم: {post.tag} - </span>
-            <span className="ml-2">القسم: تحفيز</span>
-          </div>
+    <div className={styles.post}>
+      <div className={styles.post_signature}>
+        <div className={styles.post_info_image}>
+          <Image
+            src={profile}
+            alt="Profile Picture"
+            width={45}
+            height={45}
+            className="rounded-full"
+          />
         </div>
+
+        <section className={styles.post_info}>
+          <div className={styles.post_info_right}>
+            <div className={styles.post_info_right_top}>
+              <span>بواسطة: mohamed khaled</span>
+            </div>
+            <div className={styles.post_info_right_bottom}>
+              <span className={styles.post_info_item}>
+                <ClockIcon className={`${styles.post_info_icon} size-6`} />
+                {post.date}
+              </span>
+
+              <span className={styles.post_info_item}>
+                <HashtagIcon className={`${styles.post_info_icon} size-6`} />
+                {post.tag}
+              </span>
+
+              <span className={styles.post_info_item}>
+                <TagIcon className={`${styles.post_info_icon} size-6`} /> قصص
+                نجاح
+              </span>
+            </div>
+          </div>
+
+          <div className={styles.post_info_left}>
+            <span>
+              <EllipsisHorizontalIcon className="size-12" />
+            </span>
+          </div>
+        </section>
       </div>
+
       {/* <Image 
 		src={postPicture}
     width={600}
@@ -40,7 +73,7 @@ export default function Post({ post }: { post: PostProps }) {
 		 
 		  className="rounded-2xl" 
 		  /> */}
-
+      <h2 className="text-orange-4">{post.title}</h2>
       <p className="mb-2 whitespace-pre-line">
         {toggleText ? post.textLines : post.textLines.slice(0, 200)}
       </p>

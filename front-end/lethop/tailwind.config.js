@@ -37,6 +37,7 @@ module.exports = {
         head: "2rem",
         tab: "2rem",
         tag: "1.4rem",
+        mob: "1.8rem",
       },
       fontWeight: {
         base: "400", // Normal weight for base font
@@ -64,6 +65,7 @@ module.exports = {
         gray: "#B2B2B2",
         "gray-2": "#F0EEEA",
         "gray-3": "#F4F0EB",
+        "gray-4": "#e0ddd8",
         blue: "#56A4FF",
         pink: "#FD6B6A",
       },
@@ -93,6 +95,12 @@ module.exports = {
         ".font-tag": {
           fontFamily: theme("fontFamily.tab"),
           fontSize: theme("fontSize.tag"),
+          fontWeight: theme("fontWeight.tab"),
+          lineHeight: theme("lineHeight.tab"),
+        },
+        ".font-mob": {
+          fontFamily: theme("fontFamily.tab"),
+          fontSize: theme("fontSize.mob"),
           fontWeight: theme("fontWeight.tab"),
           lineHeight: theme("lineHeight.tab"),
         },

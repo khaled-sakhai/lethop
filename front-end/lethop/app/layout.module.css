@@ -1,20 +1,13 @@
-.layout {
-}
 .content {
   gap: 2rem;
   display: flex;
   flex-wrap: nowrap;
-  box-shadow: 0px 0px 10px 10px rgba(240, 236, 226, 0.5);
-}
-
-.content > * {
-  @apply p-4 bg-white-2 border-2 border-gray-3;
+  /* box-shadow: 0px 0px 10px 10px rgba(240, 236, 226, 0.5); */
 }
 
 .main {
+  margin-top: 0.7rem;
   background-color: var(--bg--orange);
-  border: 1.5px solid var(--border-seconde);
-  padding: 1rem;
   min-width: 0;
   flex: 1; /* formerly flex: 1 0 auto; */
   order: 2;

@@ -12,6 +12,7 @@ import React from "react";
 
 import Provider from "../../redux/provider";
 import { Setup } from "@/common/util";
+import BottomNav from "@/components/BottomNav";
 
 export default function RootLayout({
   children,
@@ -26,12 +27,12 @@ export default function RootLayout({
       <body className={`'font-tab' ${styles.layout}`}>
         <Provider>
           <Header show={showSideBar} setShow={setShowSideBar} />
-
           <RightBar show={showSideBar} setter={setShowSideBar} />
 
           <section className={styles.content}>
             <main className={` 'font-head' ${styles.main}`}>{children}</main>
           </section>
+          <BottomNav />
         </Provider>
       </body>
     </html>

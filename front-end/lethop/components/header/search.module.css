@@ -1,12 +1,11 @@
 .search {
-    padding: 1rem;
-    height: 1.5rem;
-    background-color: var(--bg-white);
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    border-radius: 1.2rem;
-    @apply lg:w-[30%] md:w-[24%] sm:w-[15%] w-[10%];
-  }
-  .search::-webkit-search-cancel-button {
-    cursor: pointer;
-  }
+  padding: 1rem;
+
+  background-color: var(--bg-white);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  border-radius: 1.2rem;
+}
+.search::-webkit-search-cancel-button {
+  cursor: pointer;
+}

@@ -4,7 +4,7 @@ import Tags from "./filterBar/Tags";
 
 export default function FilterBar() {
   return (
-    <section className=" rounded-t-xl border border-gray bg-white-2">
+    <section className=" rounded-t-xl border border-gray-4 bg-white-2">
       <Category />
       {/* <Tags /> */}
     </section>
