@@ -22,7 +22,7 @@ body {
   @apply w-full lg:w-[calc(100vw-4%)];
 }
 html {
-  font-size: 62.5%;
+  @apply text-[52%] sm:text-[56.5%] md:text-[58.5%] xl:text-[62.5%]
 }
 
 :root {

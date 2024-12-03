@@ -1,0 +1,11 @@
+.post_interaction{
+   @apply flex items-center justify-between mt-4 font-tag;
+}
+
+.post_interaction_right{
+    @apply flex gap-2
+}
+
+.post_interaction_button{
+    @apply bg-gray-2 border border-gray-4 rounded-2xl	 px-4 py-2
+}
