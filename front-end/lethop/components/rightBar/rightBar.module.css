@@ -9,7 +9,7 @@
   z-index: 1000; /* Above the backdrop */
   transition: right 0.3s ease-in-out;
 
-  @apply py-4 bg-white-2 border-2 border-gray-3  lg:w-[33rem] lg:right-[-33rem] lg:h-[93vh] lg:pr-4  ;
+  @apply py-4 bg-white-2 border-2 border-gray-3  lg:w-[33rem] lg:right-[-38rem] lg:h-[93vh] lg:pr-4  ;
 }
 
 .rightBar > * {
