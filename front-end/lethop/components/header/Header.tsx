@@ -10,18 +10,21 @@ interface headerProps {
 }
 export default function Header({ show, setShow }: headerProps) {
   const classes =
-    " size-16 cursor-pointer  text-dark-2 hover:bg-gray-2 hover:text-dark";
+    " size-16 cursor-pointer  text-dark-2 hover:bg-gray-2 hover:text-dark hidden lg:block";
   const handleClick = () => {
     setShow((prevState: boolean) => !prevState);
   };
   // xl:hidden
   return (
     <header className={styles.header}>
-      {show ? (
+     
+         {show ? (
         <XMarkIcon className={classes} onClick={handleClick} />
       ) : (
         <Bars3Icon className={classes} onClick={handleClick} />
       )}
+    
+     
       <Logo />
       <Search mobile={false} />
 

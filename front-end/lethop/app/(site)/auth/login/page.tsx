@@ -11,9 +11,10 @@ export default function page() {
     <div className={styles.register}>
       <section className={styles.intro}>
         <h2>تسجيل الدخول:</h2>
-      </section>
+      </section> <SocialForm />     
+      <Divider dividerText={"او"} /> 
+
       <LoginForm />
-      <Divider dividerText={"او"} /> <SocialForm />
     </div>
   );
 }

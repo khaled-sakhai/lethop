@@ -29,10 +29,11 @@ export default function RootLayout({
           <Header show={showSideBar} setShow={setShowSideBar} />
           <RightBar show={showSideBar} setter={setShowSideBar} />
 
-          <section className={styles.content}>
+          
             <main className={` 'font-head' ${styles.main}`}>{children}</main>
-          </section>
-          <BottomNav />
+          
+          <BottomNav setSideBare={setShowSideBar} showSideBare={showSideBar} isLoggedIn={true}/>
+
         </Provider>
       </body>
     </html>

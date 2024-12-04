@@ -9,6 +9,5 @@
   margin-top: 0.7rem;
   background-color: var(--bg--orange);
   min-width: 0;
-  flex: 1; /* formerly flex: 1 0 auto; */
-  order: 2;
+  
 }

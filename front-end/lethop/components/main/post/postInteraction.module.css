@@ -3,7 +3,7 @@
 }
 
 .post_interaction_right{
-    @apply flex gap-2
+    @apply flex gap-2 flex-wrap
 }
 
 .post_interaction_button,.post_interaction_button_like{

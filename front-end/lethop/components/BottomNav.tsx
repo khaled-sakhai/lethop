@@ -3,37 +3,66 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { FC } from "react";
-
-export default function BottomNav() {
+type props = {
+  setSideBare: any;
+  showSideBare: boolean;
+  isLoggedIn: boolean;
+};
+export default function BottomNav({
+  setSideBare,
+  showSideBare,
+  isLoggedIn,
+}: props) {
   const pathname = usePathname();
 
   console.log(pathname);
   const navItems = [
     {
+      onclick: () => {
+        setSideBare((prev: boolean) => !prev);
+      },
+      label: "القائمة",
+      icon: HamburgerIcon,
+      show: true,
+    },
+    {
       href: "/",
       label: "الرئيسية",
       icon: HomeIcon,
+      show: true,
+    },
+    {
+      href: "/posts/new",
+      label: "إضافة منشور",
+      icon: AddIcon,
+      show: isLoggedIn,
     },
     {
       href: "/auth/profile",
       label: "حسابي",
-      icon: ForumsIcon,
-      logedin: true,
+      icon: MyAccountIcon,
+      show: isLoggedIn,
     },
-    { href: "/auth/register", label: "تسجيل", icon: SignUpIcon },
-    { href: "/auth/login", label: "دخول", icon: LoginIcon },
+    {
+      href: "/auth/register",
+      label: "تسجيل",
+      icon: SignUpIcon,
+      show: !isLoggedIn,
+    },
+    { id:1,href: "/auth/login", label: "دخول", icon: LoginIcon, show: !isLoggedIn },
   ];
 
   return (
     <nav
       className={`fixed bottom-0 left-0 w-full bg-white border-t border-gray-4 block z-[1001] lg:z-0 lg:hidden`}
     >
-      <div className="flex justify-around items-center py-2">
+      <div className="flex justify-around items-center py-2 flex-wrap">
         {navItems.map(
-          ({ href, label, icon: Icon, logedin }) =>
-            !logedin && (
+          ({ href, label, icon: Icon, show, onclick }) =>
+            show &&
+            (href ? (
               <Link
-                key={href}
+                key={label}
                 href={href}
                 className={`flex flex-col items-center font-mob  ${
                   pathname === href ? "text-dark" : "text-gray"
@@ -42,7 +71,18 @@ export default function BottomNav() {
                 <Icon />
                 <span>{label}</span>
               </Link>
-            )
+            ) : (
+              <button
+                key={label}
+                onClick={onclick}
+                className={`flex flex-col items-center font-mob  ${
+                  pathname === href ? "text-dark" : "text-gray"
+                } hover:text-dark`}
+              >
+                <Icon />
+                <span>{label}</span>
+              </button>
+            ))
         )}
       </div>
     </nav>
@@ -66,6 +106,35 @@ const HomeIcon = () => (
   </svg>
 );
 
+const HamburgerIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2}
+    stroke="currentColor"
+    className="w-8 h-8"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M4 6h16M4 12h16M4 18h16"
+    />
+  </svg>
+);
+
+const AddIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2}
+    stroke="currentColor"
+    className="w-8 h-8"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+  </svg>
+);
 const SignUpIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +152,7 @@ const SignUpIcon = () => (
   </svg>
 );
 
-const ForumsIcon = () => (
+const MyAccountIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -95,7 +164,7 @@ const ForumsIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      d="M7.5 9.75L4.5 12.75M4.5 12.75L7.5 15.75M4.5 12.75h12M13.5 9.75L16.5 12.75M16.5 12.75L13.5 15.75M16.5 12.75H4.5"
+      d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
     />
   </svg>
 );

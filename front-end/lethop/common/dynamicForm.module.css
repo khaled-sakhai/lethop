@@ -1,5 +1,5 @@
 .form {
-  @apply border border-gray bg-white  p-8 w-full md:w-1/3  pt-8 gap-4 flex flex-col;
+  @apply border border-gray bg-white  p-8  mb-[10%] md:mb-4 gap-4 flex flex-col w-[90%] md:w-[50%] lg:w-[33%];
 }
 
 .form_label {

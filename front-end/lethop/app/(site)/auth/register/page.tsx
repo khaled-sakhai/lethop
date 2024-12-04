@@ -16,7 +16,7 @@ export default function Page() {
         <SocialForm />
       </section>
       <Divider dividerText={"او"} />
-
+     
       <RegisterForm />
     </div>
   );

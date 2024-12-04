@@ -42,8 +42,8 @@ export default function RootLayout({
             </main>
             <LeftBar />
           </section>
-          <BottomNav />
-        </Provider>
+          <BottomNav setSideBare={setShowSideBar} showSideBare={showSideBar} isLoggedIn={true}/>
+        </Provider >
       </body>
     </html>
   );

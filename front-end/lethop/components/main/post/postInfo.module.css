@@ -16,7 +16,7 @@
   
   .post_info_right_top,
   .post_info_right_bottom {
-    @apply flex;
+    @apply flex flex-wrap;
   }
   .post_info_right span {
     @apply flex gap-2 pl-2;
