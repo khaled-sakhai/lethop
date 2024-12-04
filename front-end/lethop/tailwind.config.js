@@ -34,7 +34,7 @@ module.exports = {
 
       fontSize: {
         base: "1.6rem",
-        head: "2rem",
+        head: "1.8rem",
         tab: "2rem",
         tag: "1.5rem",
         mob: "1.8rem",
@@ -62,6 +62,7 @@ module.exports = {
         "orange-3": "#FFF0E0",
         "orange-4": "#CB9051",
         "orange-5": "#D8A977",
+        "orange-6":"#ddd8d1",
         gray: "#B2B2B2",
         "gray-2": "#F0EEEA",
         "gray-3": "#F4F0EB",

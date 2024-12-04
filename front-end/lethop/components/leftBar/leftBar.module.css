@@ -6,8 +6,8 @@
   height: calc(100vh - 10rem);
   position: sticky;
   overflow: auto;
-  flex: 0 0 40rem;
-  width: 40rem;
+  flex: 0 0 35rem;
+  width: 35rem;
   align-self: flex-start;
   @apply p-4 bg-white-2 border border-gray-4 rounded-t-xl;
 }

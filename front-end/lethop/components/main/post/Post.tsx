@@ -39,7 +39,7 @@ export default function Post({ post }: { post: PostProps }) {
       </div> 
       
       
-      <PostInteraction />
+      <PostInteraction category={post.category}/>
     </div>
   );
 }

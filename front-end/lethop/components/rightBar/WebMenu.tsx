@@ -20,11 +20,11 @@ export default function WebMenu() {
   return (
     <>
     <h3> <span>مصادر:</span></h3>
-    <ul>
+    <ul className='flex flex-col gap-2'>
 {lastItem.map((e,i)=>{
 return (
 <li key={e.id} className='text-dark  py-1'>
-    <Link href={e.url} className='flex gap-x-1	'>
+    <Link href={e.url} className='flex gap-2	'>
     {e.icon} {e.name}
     </Link>
     </li>

@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import profile from "../../../assets/profile.jpg";
 import { PostProps } from "@/type/Post";
+import Link from "next/link";
 
 export default function PostInfo({
   id,
@@ -35,35 +36,32 @@ export default function PostInfo({
       <section className={styles.post_info}>
         <div className={styles.post_info_right}>
           <div className={styles.post_info_right_top}>
-            <span>بواسطة: {author}</span>
-            
-            <span className={styles.post_info_item}>
-              {/* <ClockIcon className={`${styles.post_info_icon} size-6`} /> */}
+            <span className="text-3xl">{author}</span>
+         <span className={styles.post_info_item}>
+               {/* <ClockIcon className={`${styles.post_info_icon} size-6`} /> */}
               {date}
+            </span>
+
+            <span className={styles.post_info_item}>
+              <TagIcon className={`${styles.post_info_icon} size-6`} />
+              {tag}
             </span>
             
          
             
           </div>
-          <div className={styles.post_info_right_bottom}>
+          {/* <div className={styles.post_info_right_bottom}>
             
+         
 
-            <span className={styles.post_info_item}>
-              <HashtagIcon className={`${styles.post_info_icon} size-6`} />
-              {tag}
-            </span>
-
-            <span className={styles.post_info_item}>
-              <TagIcon className={`${styles.post_info_icon} size-6`} />
-              {category}
-            </span>
-          </div>
+          
+          </div> */}
         </div>
 
         <div className={styles.post_info_left}>
-          <span>
+          <Link href={"#"}>
             <EllipsisHorizontalIcon className="size-12" />
-          </span>
+          </Link>
         </div>
       </section>
     </div>
