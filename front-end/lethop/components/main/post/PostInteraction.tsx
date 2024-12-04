@@ -20,9 +20,9 @@ export default function PostInteraction({category}:props) {
 
 
           <button className={styles.post_interaction_button_like}>
-            <Link href={"#"}><ArrowDownCircleIcon className='size-8'/></Link>
+            <Link href={"#"}><ArrowDownCircleIcon className='size-10'/></Link>
             <span>31</span>
-            <Link href={"#"}><ArrowUpCircleIcon className='size-8'/></Link>
+            <Link href={"#"}><ArrowUpCircleIcon className='size-10'/></Link>
           </button>
           <button className={styles.post_interaction_button}><ChatBubbleOvalLeftIcon className='size-8' />  10</button>
           <button className={styles.post_interaction_button}><BookmarkIcon className='size-8' /> حفظ</button>

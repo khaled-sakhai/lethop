@@ -32,7 +32,7 @@ export default function RootLayout({
           
             <main className={` 'font-head' ${styles.main}`}>{children}</main>
           
-          <BottomNav setSideBare={setShowSideBar} showSideBare={showSideBar} isLoggedIn={true}/>
+          <BottomNav setSideBare={setShowSideBar} showSideBare={showSideBar} isLoggedIn={false}/>
 
         </Provider>
       </body>

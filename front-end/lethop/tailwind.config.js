@@ -35,7 +35,7 @@ module.exports = {
       },
 
       fontSize: {
-        base: "1.6rem",
+        base: "1.7rem",
         head: "1.8rem",
         tab: "2rem",
         tag: "1.5rem",

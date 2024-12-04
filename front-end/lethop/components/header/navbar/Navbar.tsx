@@ -2,8 +2,13 @@ import React from "react";
 import styles from "./navbar.module.css";
 import Link from "next/link";
 import Extra from "./Extra";
+import avatar  from "./../../../public/assets/avatar.png";
+import Image from "next/image";	
+import { useAppSelector } from "@/redux/hooks";
 
 export default function Navbar() {
+
+  const { isAuthenticated } = useAppSelector(state => state.auth);
   interface NavbarItem {
     id: number;
     name: string;
@@ -35,6 +40,18 @@ export default function Navbar() {
             />
           </svg>
         </button>
+
+        { <Link className="p-2" href="/profile">
+        <Image
+          src={avatar}
+          alt="Profile Picture"
+          width={35}
+          height={35}
+          className="rounded-full"
+        />
+      </Link>}
+
+
 
         {navbarItems.map((e, i) => {
           return (

@@ -3,7 +3,7 @@ import { SubmitHandler, Path, FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AnyObjectSchema } from "yup";
 import styles from "./dynamicForm.module.css";
-import Spinner from "./Spinder";
+import Spinner from "./Spinner";
 
 // Define the props for the DynamicForm component
 interface DynamicFormProps<T extends FieldValues> {
