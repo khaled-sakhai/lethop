@@ -1,32 +1,52 @@
-import React from "react";
+"use client";
+
+import React, { useState, MouseEvent } from "react";
 import styles from "./category.module.css";
 import Link from "next/link";
-import { TagIcon } from "@heroicons/react/24/outline";
-export default function Category() {
-  interface TagItem {
-    id: number;
-    name: string;
-    url: string;
-  }
+import ExtraDropMenuButton from "./ExtraDropMenu";
+import FilterButton from "./FilterButton";
 
-  const tags: TagItem[] = [
-    { id: 1, name: "تحفيز", url: "/" },
-    { id: 2, name: "أخطاء و ندم", url: "/" },
-    { id: 3, name: "أسئلة و اجوبة", url: "/" },
-  ];
+type CategoryType = {
+  id: number;
+  label: string;
+  url?: string;
+};
+
+//dummy data
+const tags: CategoryType[] = [
+  { id: 1, label: "تحفيز", url: "/" },
+  { id: 2, label: "أخطاء و ندم", url: "/" },
+  { id: 3, label: "أسئلة و اجوبة", url: "/" },
+];
+
+export default function Category() {
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null); // Tracks the open menu
+
+  const toggleMenu = (id: number) => {
+    setOpenMenuId((prevId) => (prevId === id ? null : id)); // Toggle the menu for the clicked button
+  };
 
   return (
     <section className="">
-      <ul className="flex p-y-10 flex-wrap">
+      <ul className="flex p-y-10 flex-wrap ">
         {tags.map((e, i) => {
           return (
-            <li key={e.id} className=" py-7">
-              <Link
-                href={e.url}
-                className="p-6 font-bold transition duration-150 text-gray hover:text-dark border-b-[5px] border-transparent hover:border-green  text-nowrap	"
-              >
-                {e.name}
-              </Link>
+            <li key={e.id}>
+              <FilterButton
+                label={e.label}
+                resetFilter={setOpenMenuId}
+                onclick={() => {
+                  toggleMenu(e.id);
+                }}
+              />
+
+              {openMenuId === e.id && (
+                <ExtraDropMenuButton
+                  category={e.label}
+                  id={e.id}
+                  setMenu={setOpenMenuId}
+                />
+              )}
             </li>
           );
         })}

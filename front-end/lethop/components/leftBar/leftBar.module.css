@@ -9,7 +9,7 @@
   flex: 0 0 35rem;
   width: 35rem;
   align-self: flex-start;
-  @apply p-4 bg-white-2 border border-gray-4 rounded-t-xl;
+  @apply px-4 py-8 bg-white-2 border border-gray-4 rounded-t-xl flex flex-col gap-8;
 }
 
 @media (max-width: 900px) {

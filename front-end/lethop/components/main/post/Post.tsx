@@ -17,7 +17,6 @@ export default function Post({ post }: { post: PostProps }) {
   }
   return (
     <div className={styles.post}>
-      <h2 className="text-orange-4">{post.title}</h2>
       <PostInfo
         id={post.id}
         title={post.title}
@@ -28,18 +27,19 @@ export default function Post({ post }: { post: PostProps }) {
         author={post.author}
         textLines={post.textLines}
       />
+      <h2 className="text-orange-4 text-base">{post.title}</h2>
 
       <div className="mb-2 whitespace-pre-line font-base">
-        {toggleText ? post.textLines : post.textLines.slice(0, 200) +" ..." }
-        <button className="text-blue-500 text-left mr-2 text-dark" onClick={handleText}>
-        
-        {toggleText ? "إخفاء" : "اكمل القراءة"}
-      </button>
-     
-      </div> 
-      
-      
-      <PostInteraction category={post.category}/>
+        {toggleText ? post.textLines : post.textLines.slice(0, 200) + " ..."}
+        <button
+          className="text-blue-500 text-left mr-2 text-dark"
+          onClick={handleText}
+        >
+          {toggleText ? "إخفاء" : "اكمل القراءة"}
+        </button>
+      </div>
+
+      <PostInteraction category={post.category} />
     </div>
   );
 }

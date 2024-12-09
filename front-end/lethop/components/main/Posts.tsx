@@ -5,6 +5,7 @@ import profile from "../../../assets/profile.jpg";
 
 import { PostProps } from "@/type/Post";
 export default function Posts() {
+  //dummy data.
   const posts: PostProps[] = [
     {
       id: 1,
@@ -14,8 +15,8 @@ export default function Posts() {
       date: "قبل 8 ساعات",
       tag: "إدمان",
       category: "تحفيز",
-      author:"Mohamed Ahmed",
-      authorPictureUrl:"/assets/profile.jpg",
+      author: "Mohamed Ahmed",
+      authorPictureUrl: "/assets/profile.jpg",
     },
   ];
   return (

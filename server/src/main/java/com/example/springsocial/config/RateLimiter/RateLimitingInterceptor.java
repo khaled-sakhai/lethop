@@ -15,6 +15,8 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
     @Autowired
     private RateLimiter rateLimiter;
 
+    //This is for testing, in production there are better solutions at the infrastructure level.
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (rateLimiter.acquirePermission()) {

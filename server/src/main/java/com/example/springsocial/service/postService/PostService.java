@@ -30,6 +30,7 @@ import javax.persistence.Query;
 @Transactional
 public class PostService {
 
+    /// moving everything to PostService2
     @Autowired
     private PostRepo postRepo;
 
