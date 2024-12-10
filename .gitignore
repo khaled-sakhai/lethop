@@ -3,7 +3,9 @@
 /server/target/
 !/server/.mvn/wrapper/maven-wrapper.jar
 # Firebase
-/server/src/main/resources/
+
+server/src/main/resources/
+
 # IDE/Editor specific
 /server/.idea/
 /server/.vscode/
